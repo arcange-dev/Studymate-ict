@@ -6,6 +6,8 @@ StudyMate ICT helps learners understand computer-systems concepts, build quizzes
 
 > **Important:** StudyMate ICT does **not** call an AI service and contains no API key. It is a *prompt engineering* application: it builds carefully structured prompts that you copy into an AI assistant of your choice. Everything except that copy step works fully offline.
 
+**Live demo:** <https://studymate-ict-04s0d8-preview.freebuff.site/> — installable from the browser, and it keeps working with the network switched off after the first visit.
+
 ![Dashboard](assets/screenshots/01-dashboard-desktop.png)
 
 ---
@@ -103,8 +105,11 @@ StudyMate-ICT/
 │   ├── dashboard.js            # Feature 7
 │   ├── saved.js                # Saved Learning
 │   └── app.js                  # Router, navigation, badge, global wiring
+├── manifest.webmanifest        # Installable web app metadata (name, icons, shortcuts)
+├── sw.js                       # Service worker: precaches the app for offline use
 ├── assets/
 │   ├── favicon.svg
+│   ├── icons/                  # 192 px, 512 px and maskable app icons
 │   └── screenshots/            # Demonstration images used in the documentation
 ├── README.md
 ├── PROJECT_DOCUMENTATION.md
@@ -133,6 +138,16 @@ python3 -m http.server 8000
 ```
 
 Then open <http://localhost:8000>.
+
+**Option 3 — install it as an app** (Chrome, Edge, or Firefox on Android)
+
+1. Serve the folder (Option 2) or open the live demo.
+2. Wait for the first load to finish, then use the browser's **Install** / **Add to Home screen** action.
+3. Launch it from the app icon: it opens full-screen with no address bar.
+
+`sw.js` precaches `index.html`, the stylesheet, all thirteen scripts, the manifest and the icons (21 files). After one visit the app reloads and navigates with the network switched off, and `manifest.webmanifest` supplies the name, colours and icons the browser needs to install it.
+
+**Network behaviour:** every runtime request is same-origin — there are no fonts, CDNs, analytics or third-party images, so there is nothing that can fail or leak while offline.
 
 No internet connection is needed after the files are on your computer.
 
@@ -171,7 +186,7 @@ Details and all sixteen prompt variants: [`PROMPTS_USED.md`](PROMPTS_USED.md).
 
 ## Testing
 
-16 browser-driven test cases were executed against the served application (functional flows, validation, LocalStorage, navigation, responsive layout, console errors). **All 16 passed** in the final run. Five defects found during testing were fixed and re-tested.
+17 browser-driven checks were executed against the served application (functional flows, validation, LocalStorage, navigation, responsive layout, console errors), plus an offline/service-worker check. **All passed** in the final run. Five defects found during testing were fixed and re-tested.
 
 See [`TESTING_REPORT.md`](TESTING_REPORT.md) for the case-by-case results, including what was and was not tested.
 
@@ -195,6 +210,10 @@ More detail: [`LIMITATIONS_AND_FUTURE_WORK.md`](LIMITATIONS_AND_FUTURE_WORK.md).
 | [TESTING_REPORT.md](TESTING_REPORT.md) | 16 test cases with actual results, defects and limitations |
 | [LIMITATIONS_AND_FUTURE_WORK.md](LIMITATIONS_AND_FUTURE_WORK.md) | Current limitations and possible improvements |
 | [PRESENTATION_GUIDE.md](PRESENTATION_GUIDE.md) | Five-minute capstone demonstration script |
+
+## Licence
+
+Released under the [MIT License](LICENSE). You may use, copy, modify and share the project with attribution.
 
 ## Author and acknowledgements
 

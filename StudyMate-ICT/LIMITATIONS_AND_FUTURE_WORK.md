@@ -66,8 +66,7 @@ Ordered by value against effort.
 2. **Export and import the workspace as JSON.**
    A download/upload pair gives learners a real backup and moves data between devices.
 
-3. **Installable offline PWA.**
-   Add a web app manifest and a service worker that caches the static files, so the app installs on a phone and opens with no connection at all.
+3. ~~**Installable offline PWA.**~~ **Delivered.** `manifest.webmanifest` and `sw.js` precache the 21 application files, so the app installs from the browser and reloads with the network off. Verified with the origin server stopped — see §7 of [`TESTING_REPORT.md`](TESTING_REPORT.md).
 
 4. **Quiz results and spaced repetition.**
    Let the learner record answers, store results locally, and schedule weak topics using simple spaced-repetition intervals. This turns the planner from a one-off schedule into an adaptive one.

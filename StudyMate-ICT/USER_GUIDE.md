@@ -15,6 +15,16 @@ StudyMate ICT runs entirely in your browser. Nothing is installed, nothing is up
 2. The **Dashboard** opens first. It shows your saved items and the six study tools.
 3. Use the sidebar to move between tools. On a phone or tablet, tap the **menu button** (☰) at the top-left; press `Escape` to close it.
 
+### Installing StudyMate as an app
+
+If you opened the app through a web address (the live demo or a local server, not `file://`):
+
+1. Let the first page finish loading — this stores the app on your device.
+2. Use your browser's **Install** / **Add to Home screen** option.
+3. Open it from the new icon. It runs full-screen and still works with Wi-Fi and mobile data switched off.
+
+Nothing is uploaded during this process: the app caches its own files locally, in the same way it stores your notes.
+
 **What StudyMate does and does not do:** it writes a prompt for you. It does **not** contact an AI. After generating a prompt you copy it into an AI assistant you are allowed to use.
 
 ### Understanding the two panels

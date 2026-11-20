@@ -18,7 +18,7 @@
 | Storage | Browser LocalStorage cleared before the run, then populated through the UI |
 | Clipboard | `clipboard-read` / `clipboard-write` permissions granted to the test origin |
 | Console capture | `page.on('console')` for errors and `page.on('pageerror')` for uncaught exceptions, active for the whole run |
-| Result | **17 of 17 automated checks passed** |
+| Result | **17 of 17 automated checks passed**, plus the offline/PWA checks in §7 |
 
 ---
 
@@ -144,3 +144,49 @@ The main untested risk is the external step — what an AI does with these promp
 2. Open <http://localhost:3000>.
 3. Clear site data, then follow TC-01 to TC-17 in order.
 4. For responsive checks, use browser device emulation at 1440, 820 and 375 px and confirm no horizontal scrollbar appears.
+
+---
+
+## 7. Offline, install and network-request audit (added 20 November 2026)
+
+Added when the app was made installable. Every figure below was measured in the running browser, not estimated.
+
+### 7.1 External-request audit
+
+| Check | Method | Result |
+|---|---|---|
+| Third-party runtime requests | Read every shipped file; searched for `http://`, `https://`, `@import`, `@font-face`, `fetch(`, `XMLHttpRequest`, `WebSocket`, `EventSource` | **0 external requests.** The only absolute URLs are SVG XML namespaces (`http://www.w3.org/2000/svg`), which browsers never fetch, plus documentation examples |
+| Fonts | Inspected the CSS font stack | System stack only (`Inter`, `Segoe UI`, system fonts); Inter is used if installed locally, otherwise the system sans-serif is used. Nothing is downloaded |
+| Images | Inspected every `url(...)` and `src` | Local `assets/` files and inline `data:` URIs only |
+| Analytics / telemetry | Full request log during the run | Only the app's own origin appeared |
+
+### 7.2 Service worker and manifest
+
+| Check | Result |
+|---|---|
+| Service worker registration | **PASS** — `sw.js` registers on `http(s)` and is deliberately skipped on `file://` |
+| Activation and scope | **PASS** — state `activated`, scope `/` |
+| Precached files | **PASS** — cache `studymate-ict-v1` holds **21 entries**: document, stylesheet, 13 scripts, manifest, favicon, 3 icons |
+| Manifest parsing | **PASS** — `manifest.webmanifest` served as `application/manifest+json`, parsed by the browser: name, `short_name` "StudyMate", `display: standalone`, 4 icons (192, 512, maskable, SVG) |
+| Manifest icons | **PASS** — `icon-192.png` (192×192), `icon-512.png` (512×512), `icon-512-maskable.png` (512×512, full-bleed) all resolve with `image/png` |
+
+### 7.3 Offline run — origin server stopped
+
+To prove the cache is doing the work, the local server process was **killed** (port 3000 closed) and the page reloaded. A page that must reach the server would have failed.
+
+| Step | Result |
+|---|---|
+| Reload with no server | **PASS** — the app shell rendered from cache |
+| Stylesheet applied | **PASS** — 277 CSS rules active, sidebar 300 px, page background `rgb(246, 249, 252)` |
+| Scripts executed | **PASS** — router, badge and nine navigation links live |
+| Navigation while offline | **PASS** — glossary view showed **41 terms**, library view showed **8 templates** |
+| Feature work while offline | **PASS** — planner generated a 2-day, 45-minute-per-day plan with both sessions rendered |
+| Console errors | **PASS** — none |
+| Deployed origin, network disabled in the browser | **PASS** — reload and glossary navigation both worked from cache on the public URL |
+
+### 7.4 Not tested
+
+- The browser **install prompt** itself: headless Chromium exposes no install UI, so installation was verified only through manifest parsing, icon availability and a working service worker. A human should confirm the "Install app" entry appears in Chrome or Edge.
+- iOS Safari and Android Chrome installed-app behaviour (standalone window, splash screen).
+- Service-worker **upgrade** behaviour after a future deployment (the cache name is versioned, so a new `VERSION` replaces the old cache).
+- Maskable icon cropping on real launchers, other than confirming the glyph sits inside the 80% safe zone.

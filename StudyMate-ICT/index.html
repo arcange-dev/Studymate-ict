@@ -7,6 +7,8 @@
   <meta name="theme-color" content="#0b1c33" />
   <title>StudyMate ICT — AI-assisted ICT study assistant</title>
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="assets/icons/icon-192.png" />
+  <link rel="manifest" href="manifest.webmanifest" />
   <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
@@ -646,5 +648,16 @@
   <script src="js/dashboard.js"></script>
   <script src="js/saved.js"></script>
   <script src="js/app.js"></script>
+  <script>
+    // Offline install support. A service worker needs a secure origin, so this is
+    // skipped when the app is opened straight from disk with file://.
+    if ('serviceWorker' in navigator && /^https?:$/.test(window.location.protocol)) {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('sw.js').catch(function () {
+          /* registration is an enhancement only — the app still runs offline from disk */
+        });
+      });
+    }
+  </script>
 </body>
 </html>
