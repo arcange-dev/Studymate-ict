@@ -17,6 +17,9 @@
       glossSaved: [],
       personalTerms: [],
       activity: [],
+      quizzes: [],
+      plans: [],
+      settings: null,
       counts: { explain: 0, quiz: 0, planner: 0, glossary: 0, source: 0, library: 0 }
     };
   }
@@ -29,6 +32,9 @@
     base.glossSaved = Array.isArray(data.glossSaved) ? data.glossSaved : [];
     base.personalTerms = Array.isArray(data.personalTerms) ? data.personalTerms : [];
     base.activity = Array.isArray(data.activity) ? data.activity : [];
+    base.quizzes = Array.isArray(data.quizzes) ? data.quizzes : [];
+    base.plans = Array.isArray(data.plans) ? data.plans : [];
+    base.settings = data.settings && typeof data.settings === 'object' ? data.settings : null;
     if (data.counts && typeof data.counts === 'object') {
       Object.keys(base.counts).forEach(function (k) {
         base.counts[k] = Number(data.counts[k]) || 0;
@@ -168,12 +174,134 @@
       save();
     },
 
+    /* ---------------- settings ---------------- */
+
+    getSettings: function () {
+      var data = load();
+      return SM.core ? SM.core.normaliseSettings(data.settings) : (data.settings || {});
+    },
+
+    setSettings: function (patch) {
+      var data = load();
+      var next = Object.assign({}, store.getSettings(), patch || {});
+      data.settings = SM.core ? SM.core.normaliseSettings(next) : next;
+      save();
+      return data.settings;
+    },
+
+    /* ---------------- quiz results ---------------- */
+
+    addQuizResult: function (result) {
+      var data = load();
+      var entry = {
+        id: uid(),
+        title: trim(result.title, 120) || 'Practice quiz',
+        score: clamp(result.score, 0, 100),
+        correct: Math.max(0, Number(result.correct) || 0),
+        incorrect: Math.max(0, Number(result.incorrect) || 0),
+        review: Math.max(0, Number(result.review) || 0),
+        total: Math.max(0, Number(result.total) || 0),
+        at: Date.now()
+      };
+      data.quizzes.unshift(entry);
+      data.quizzes = data.quizzes.slice(0, 30);
+      save();
+      return entry;
+    },
+
+    removeQuizResult: function (id) {
+      var data = load();
+      data.quizzes = data.quizzes.filter(function (q) { return q.id !== id; });
+      save();
+    },
+
+    /* ---------------- study plans ---------------- */
+
+    savePlan: function (item) {
+      var data = load();
+      var plan = {
+        id: uid(),
+        title: trim(item.title, 120) || 'Study plan',
+        createdAt: Date.now(),
+        minutes: Number(item.minutes) || 0,
+        difficulty: item.difficulty || '',
+        topics: Array.isArray(item.topics) ? item.topics.slice(0, 12) : [],
+        days: Array.isArray(item.days) ? item.days : []
+      };
+      data.plans.unshift(plan);
+      data.plans = data.plans.slice(0, 10);
+      save();
+      return plan;
+    },
+
+    getPlan: function (id) {
+      var found = null;
+      load().plans.forEach(function (p) { if (p.id === id) found = p; });
+      return found;
+    },
+
+    /** Toggle one session's completion flag and persist it. */
+    toggleSession: function (planId, dayIndex, sessionIndex) {
+      var data = load();
+      var plan = null;
+      data.plans.forEach(function (p) { if (p.id === planId) plan = p; });
+      if (!plan) return null;
+      var day = plan.days[dayIndex];
+      if (!day || !Array.isArray(day.sessions)) return plan;
+      var session = day.sessions[sessionIndex];
+      if (!session || session.kind === 'break') return plan;
+      session.done = !session.done;
+      save();
+      return plan;
+    },
+
+    removePlan: function (id) {
+      var data = load();
+      data.plans = data.plans.filter(function (p) { return p.id !== id; });
+      save();
+    },
+
+    activePlan: function () {
+      var plans = load().plans;
+      return plans.length ? plans[0] : null;
+    },
+
+    /* ---------------- data management ---------------- */
+
+    exportData: function () {
+      return JSON.stringify({
+        app: 'StudyMate ICT',
+        version: 1,
+        exportedAt: new Date().toISOString(),
+        data: load()
+      }, null, 2);
+    },
+
+    /** Import a previously exported file. Returns { ok, message }. */
+    importData: function (json) {
+      var parsed;
+      try {
+        parsed = JSON.parse(String(json || ''));
+      } catch (err) {
+        return { ok: false, message: 'That file is not valid JSON.' };
+      }
+      var payload = parsed && parsed.app === 'StudyMate ICT' ? parsed.data : parsed;
+      if (!payload || typeof payload !== 'object' || !Array.isArray(payload.topics)) {
+        return { ok: false, message: 'That file is not a StudyMate ICT backup.' };
+      }
+      memory = normalise(payload);
+      save();
+      return { ok: true, message: 'Backup imported' };
+    },
+
     clear: function (what) {
       var data = load();
       if (what === 'topics') data.topics = [];
       if (what === 'prompts') data.prompts = [];
       if (what === 'glossSaved') data.glossSaved = [];
       if (what === 'activity') data.activity = [];
+      if (what === 'quizzes') data.quizzes = [];
+      if (what === 'plans') data.plans = [];
       save();
     },
 
@@ -194,10 +322,19 @@
         personal: data.personalTerms.length,
         activity: total,
         counts: data.counts,
+        quizzes: data.quizzes.slice(0, 5),
+        quizCount: data.quizzes.length,
+        plans: data.plans.length,
         recent: data.activity.slice(0, 6)
       };
     }
   };
+
+  function clamp(value, min, max) {
+    var n = Number(value);
+    if (isNaN(n)) return min;
+    return Math.min(max, Math.max(min, Math.round(n)));
+  }
 
   window.SM = window.SM || {};
   SM.store = store;

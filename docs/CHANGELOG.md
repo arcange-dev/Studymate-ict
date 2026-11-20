@@ -1,0 +1,57 @@
+# Changelog — StudyMate ICT
+
+All dates are 2026. The project follows a simple `MAJOR.MINOR.PATCH` scheme; the app version is shown in `package.json`.
+
+## 2.0.0 — 20 November 2026
+
+The release that turned a prompt-only study assistant into an application with a real AI path, without breaking the offline build.
+
+### Added
+
+- **AI endpoint** (`POST /api/ai`) with a provider adapter for any OpenAI-compatible endpoint, server-side key only, 24 000-character body cap, request schema validation, 30 s upstream timeout and an error map that never leaks provider detail. Implemented once in `sites/ai-core.js` and used by both the Node server and the Sites Worker.
+- **Model-output validation**: explanations must contain nine usable sections and exactly five revision questions; quiz questions must be `mcq` with four distinct options and a valid answer index, `truefalse` with a boolean answer, or `short` with a model answer. Malformed output returns 502 instead of rendering.
+- **Rate limiting** per client and per instance (`AI_RATE_LIMIT`, `AI_RATE_WINDOW_MS`, `AI_DAILY_CAP`) with `retry-after` on 429.
+- **Health endpoint** (`GET /api/health`) reporting only whether AI is configured, never the key.
+- **Live explanation UI**: "Explain with AI" renders the validated sections as accessible DOM (definition → revision questions, answers hidden behind `<details>`), with loading, error, retry and disabled states.
+- **Practice quizzes**: "Generate & practise" builds a quiz from pasted notes, renders multiple choice / true-false / short-answer fields, blocks incomplete submission, marks answers in the browser, shows a score, and reviews every wrong or self-check answer with the correct answer, explanation and the quoted source line. Scores are saved to the dashboard.
+- **Study-plan progress**: saved plans keep per-activity tick marks, show a progress bar and percentage, and restore on the next visit. The dashboard shows the active plan's progress.
+- **Settings page** (10th view): theme (device/light/dark, applied before first paint), default explanation level, preferred subjects (pre-fills the planner), reduced motion, larger text, AI disclosure preference, JSON backup export/import and delete-all.
+- **Node server** (`server/node-server.js`): zero-dependency static + API server with CSP, nosniff, frame denial, path-traversal protection, SPA fallback and graceful shutdown.
+- **Render blueprint** (`render.yaml`) and deployment guide, with the API key marked `sync: false` so no secret enters the repository.
+- **`.env.example`** documenting every variable name and default.
+- **`build.sh`** regenerates `dist/` (the deploy bundle) with its exclusions in one place.
+- **Automated tests**: 29 Node tests covering AI validation and schema enforcement, rate limiting, the HTTP surface, traversal protection, key non-disclosure, quiz marking and settings normalisation.
+- **Docs**: `docs/RENDER_DEPLOYMENT.md`, `docs/AI_PROVIDER.md`, `docs/TROUBLESHOOTING.md`, this changelog, and new sections in the testing report, user guide and limitations.
+
+### Changed
+
+- **Quiz page** now offers two paths: live generation with marking, or the copy-paste prompt. The prompt path is unchanged and still works offline.
+- **Explainer page** presents the AI explanation as the main output and keeps the prompt in a collapsible block.
+- **Service worker v3**: precaches 23 files, caches each file independently instead of using all-or-nothing `addAll` (one stalled request used to leave install pending forever), and never intercepts `/api/*`.
+- **Manifest description** now mentions AI explanations and in-browser marking.
+- **Storage schema** gained `quizzes`, `plans` and `settings`; existing data normalises forward without migration steps.
+- **Dashboard** gained recent quiz results and study-plan progress cards, both fed by real stored data.
+
+### Fixed
+
+- A cached health check could disable AI for a whole session; the client now sends `cache: 'no-store'` with a cache-busting query and re-checks when a tool that needs AI is opened.
+- Review items showed the internal option index instead of the chosen option text.
+- Prior-knowledge levels are mapped to the API's three-level contract instead of being sent as display labels.
+
+### Security
+
+- Server-side key only; `/api/health` and every error response are asserted key-free by tests.
+- Foreign `Origin` requests to `/api/ai` are rejected with 403; same-origin is always allowed.
+- All model text is inserted with `textContent`, so a malicious answer cannot inject HTML.
+- CSP, `X-Frame-Options: DENY`, `nosniff`, `Referrer-Policy: same-origin` and a minimal permissions policy on every response.
+
+## 1.1.0 — 20 November 2026
+
+- Installable PWA: `manifest.webmanifest`, three icons, `sw.js` shell precache, offline navigation fallback.
+- Published to a permanent production URL; the preview environment was retired.
+- `LICENSE` (MIT) and the GitHub repository.
+
+## 1.0.0 — 20 November 2026
+
+- Initial capstone: dashboard, ICT concept explainer, quiz-prompt generator, study planner, 41-term glossary, source-grounded learning, eight-template prompt library, saved learning and about page.
+- Seven project documents, a 17-check testing report and a ZIP deliverable.

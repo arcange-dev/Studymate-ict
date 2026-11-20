@@ -1,15 +1,16 @@
-/*
-  StudyMate ICT — offline service worker
+/* StudyMate ICT — offline service worker
   --------------------------------------
   Strategy:
     • On install, precache the complete application shell (HTML, CSS, JS, icons).
     • Navigations and static assets are served cache-first, then network.
     • A navigation that is not cached falls back to the cached "/", so the
       hash router keeps working offline.
+    • API routes are never cached or intercepted: AI answers must be live, and
+      a cached health check would lie about whether a key is configured.
   The app makes no third-party requests, so every cached URL is same-origin.
 */
 
-var VERSION = 'studymate-ict-v1';
+var VERSION = 'studymate-ict-v3';
 var SHELL = [
   './',
   './manifest.webmanifest',
@@ -18,8 +19,10 @@ var SHELL = [
   './assets/icons/icon-192.png',
   './assets/icons/icon-512.png',
   './assets/icons/icon-512-maskable.png',
+  './js/core.js',
   './js/storage.js',
   './js/ui.js',
+  './js/ai.js',
   './js/prompts.js',
   './js/glossary-data.js',
   './js/explainer.js',
@@ -30,6 +33,7 @@ var SHELL = [
   './js/library.js',
   './js/dashboard.js',
   './js/saved.js',
+  './js/settings.js',
   './js/app.js'
 ];
 
@@ -38,7 +42,16 @@ self.addEventListener('install', function (event) {
     caches
       .open(VERSION)
       .then(function (cache) {
-        return cache.addAll(SHELL);
+        // Precache each file independently. cache.addAll() is all-or-nothing:
+        // one stalled request would leave install pending forever and the app
+        // without a worker. Anything missed here is cached on first use.
+        return Promise.all(
+          SHELL.map(function (url) {
+            return cache.add(url).catch(function () {
+              return null;
+            });
+          })
+        );
       })
       .then(function () {
         return self.skipWaiting();
@@ -70,6 +83,7 @@ self.addEventListener('fetch', function (event) {
   if (request.method !== 'GET') return;
   var url = new URL(request.url);
   if (url.origin !== self.location.origin) return;
+  if (url.pathname.indexOf('/api/') === 0) return;
 
   event.respondWith(
     caches.match(request, { ignoreSearch: request.mode === 'navigate' }).then(function (cached) {

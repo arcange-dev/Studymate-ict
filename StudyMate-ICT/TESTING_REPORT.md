@@ -211,3 +211,54 @@ Checks on that origin, in the browser:
 - iOS Safari and Android Chrome installed-app behaviour (standalone window, splash screen).
 - Service-worker **upgrade** behaviour after a future deployment (the cache name is versioned, so a new `VERSION` replaces the old cache).
 - Maskable icon cropping on real launchers, other than confirming the glyph sits inside the 80% safe zone.
+
+---
+
+## 8. AI integration, practice quizzes and settings (20 November 2026)
+
+This section records the tests run for the release that added a real AI endpoint, an interactive practice quiz, study-plan progress tracking and a settings page. Results below are what the commands actually printed in the build environment (Node 26.13.0, Chromium via Playwright, Ubuntu). Nothing in the table is inferred.
+
+### 8.1 Requested QA table
+
+| Test | Expected result | Actual result | Status |
+|---|---|---|---|
+| Application startup | App starts successfully | `node server/node-server.js` printed `listening on http://0.0.0.0:3000`; `GET /` → 200 `text/html`, `GET /planner` → 200 via the SPA fallback; 10 views and 10 nav links rendered in Chromium. | **Pass** |
+| AI explanation | Genuine AI response | Not run against a real provider — no API key was supplied to this environment. The full server path was run against a local stub provider: `POST /api/ai` → 200, nine validated sections rendered ("1. Definition" … "9. Revision questions"), 4 steps, 5 revision Q&As, 2 vocabulary terms; status chip changed to "AI live · stub-model" only after success. | **Blocked** (no key) — stub-path verified |
+| Quiz generation | Valid quiz generated | Stub-provider run: requested 5 questions from pasted notes → 5 rendered question fieldsets with prompts 1–5; malformed-model JSON returns 502 in the automated suite instead of rendering. | **Pass** (stub provider) |
+| Quiz marking | Correct answers marked | Deliberately answered question 1 wrongly and question 4 wrongly → score `60%`, summary "You answered 3 of 5 correctly", 2 review items with the learner's answer, the correct answer, the explanation and the quoted source line. Unanswered submit blocked with "Answer all 5 questions first — 5 still blank." | **Pass** |
+| Study planner | Valid plan generated | 2 topics, 45 minutes/day, 2 days → 2 day cards, each "45 / 45 min used" (no overbooking), 6 tickable activities; ticking one persisted and showed "1 of 6 activities done · 17%" after a reload. | **Pass** |
+| Data persistence | Saved data remains available | After a full page reload: theme `dark` retained, preferred subjects `Hardware, Networking` retained, saved study plan restored with its tick marks, dashboard plan card showed "1 of 6 activities done · 17%", quiz result 60% listed. | **Pass** |
+| Mobile layout | Interface adapts to mobile | At 390×844: sidebar translated off-canvas, no horizontal overflow (`scrollWidth === innerWidth`), menu button visible, `aria-expanded` toggled `true`, navigating closed the menu, quiz view usable. | **Pass** |
+| Production build | Build completes successfully | `./build.sh` → "Built dist/ (24 files)"; Sites production deploy receipt `succeeded`; live URL returned 200 for `/`, `/api/health`, `/sw.js`, `/js/ai.js`, `/settings`. | **Pass** |
+
+### 8.2 Automated tests
+
+Command: `npm test` (Node's built-in runner, no dependencies).
+
+```
+ℹ tests 29
+ℹ pass 29
+ℹ fail 0
+```
+
+| Area | Tests | What they prove |
+|---|---|---|
+| `tests/ai-core.test.js` | 15 | Request validation rejects empty/oversized/unknown input; enum typos are errors, not silent fallbacks; notes-locked prompt contains the notes; code fences are stripped; explanation and quiz schemas are enforced (four distinct options, valid answer index, boolean true/false, five questions); provider auth failure, malformed JSON and timeouts map to safe messages; the API key never appears in any response; window and daily rate limits work. |
+| `tests/server.test.js` | 6 | Static serving with CSP/nosniff/no-cache headers; SPA fallback; 404 for missing assets; path traversal in four encodings never reads a file outside `dist/`; health reports prompt mode without a key and never echoes it; `GET /api/ai` → 405, bad JSON → 400, foreign `Origin` → 403; configured run proxies to the provider with the key only in the upstream header. |
+| `tests/client-core.test.js` | 8 | Multiple choice marked by index; true/false accepts booleans and words; short answers mark full, partial (review) and wrong; `markQuiz` score excludes review answers; `isAnswered` per type; `planProgress` counts non-break activities; settings are clamped and de-duplicated, booleans are not coerced from strings. |
+
+### 8.3 Security checks performed
+
+- **Secret exposure:** the key exists only in the server environment. `/api/health` returns `{configured, provider, model}` and no key; tests assert the key is absent from health, AI and error responses; `render.yaml` uses `sync: false`; `.env` is git-ignored and `.env.example` contains names only.
+- **Input validation:** operation, topic length, note length, question count and enum values are validated server-side before any provider call; request body is capped at 24 000 characters on both targets.
+- **Output handling:** model text is parsed as JSON, schema-checked, length-clamped and rendered with `textContent`; no model text is inserted as HTML, so a malicious model answer cannot inject markup.
+- **Traversal:** `../`, `%2e%2e/`, nested `../` and `..%2f` all fail to read outside the served directory.
+- **Origin:** cross-origin `POST /api/ai` is rejected with 403; CSP blocks third-party scripts and frames, and `object-src`/`base-uri` are `none`.
+- **Dependency risk:** zero runtime npm dependencies on the server, so the supply chain is limited to Node itself.
+
+### 8.4 Not tested
+
+- **A real AI provider.** No credential was available. The stub proves the plumbing; it does not prove model behaviour, refusal quality or latency. Run these once a key exists: one explanation at each level, one quiz with 5/10/20 questions on real notes, one deliberately unsupported quiz request, one provider outage (wrong key), one rate-limit trip, and a 12 000-character notes request for timing.
+- **Render.** No account or credentials. The Node server and `render.yaml` were exercised locally only; see `docs/RENDER_DEPLOYMENT.md`.
+- Screen readers, Safari/Firefox, iOS install, and automated contrast audits.
+- Long-running multi-instance rate limiting (in-memory limits are per instance).

@@ -94,10 +94,76 @@
     body.appendChild(termsWrap);
   }
 
+  function renderQuizResults() {
+    var list = ui.$('#quiz-results');
+    if (!list) return;
+    var quizzes = SM.store.get().quizzes.slice(0, 4);
+    list.innerHTML = '';
+
+    if (!quizzes.length) {
+      var empty = document.createElement('li');
+      var p = document.createElement('p');
+      p.className = 'empty-line';
+      p.style.width = '100%';
+      p.textContent = 'No marked quizzes yet. Generate a quiz from your notes, answer it and your scores appear here.';
+      empty.appendChild(p);
+      list.appendChild(empty);
+      return;
+    }
+
+    quizzes.forEach(function (q) {
+      var li = document.createElement('li');
+      li.className = 'saved-item';
+      var main = document.createElement('div');
+      main.className = 'saved-main';
+      var title = document.createElement('p');
+      title.className = 'saved-title';
+      title.textContent = q.title;
+      var meta = document.createElement('p');
+      meta.className = 'saved-meta';
+      meta.textContent = q.correct + '/' + q.total + ' correct' + (q.review ? ' · ' + q.review + ' to self-check' : '') + ' · ' + ui.timeAgo(q.at);
+      main.appendChild(title);
+      main.appendChild(meta);
+      var score = document.createElement('span');
+      score.className = 'score-pill' + (q.score >= 80 ? ' good' : q.score >= 50 ? '' : ' low');
+      score.textContent = q.score + '%';
+      li.appendChild(main);
+      li.appendChild(score);
+      list.appendChild(li);
+    });
+  }
+
+  function renderPlanProgress() {
+    var host = ui.$('#plan-progress-card');
+    if (!host) return;
+    var plan = SM.store.activePlan();
+    host.innerHTML = '';
+
+    if (!plan) {
+      var empty = document.createElement('p');
+      empty.className = 'empty-line';
+      empty.textContent = 'No saved plan yet. Build one in the planner and press “Save plan” to track it here.';
+      host.appendChild(empty);
+      return;
+    }
+
+    var progress = SM.core.planProgress(plan);
+    var wrap = document.createElement('div');
+    wrap.className = 'plan-progress';
+    wrap.innerHTML =
+      '<p class="saved-title">' + ui.esc(plan.title) + '</p>' +
+      '<div class="progress-track" role="progressbar" aria-label="Plan progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="' + progress.percent + '"><span class="progress-fill" style="width:' + progress.percent + '%"></span></div>' +
+      '<p class="progress-text">' + progress.done + ' of ' + progress.total + ' activities done · ' + progress.percent + '%</p>' +
+      '<p class="saved-meta">Saved ' + ui.esc(ui.formatDate(plan.createdAt)) + ' · ' + plan.days.length + ' days</p>';
+    host.appendChild(wrap);
+  }
+
   function refresh() {
     renderStats();
     renderRecent();
     renderFocus();
+    renderQuizResults();
+    renderPlanProgress();
   }
 
   renderTools();

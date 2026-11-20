@@ -1,0 +1,17 @@
+{
+  "name": "studymate-ict",
+  "version": "2.0.0",
+  "private": true,
+  "description": "StudyMate ICT — an ICT study assistant with a static app, a server-side AI endpoint and in-browser quiz marking.",
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "./build.sh",
+    "start": "node server/node-server.js",
+    "dev": "node --env-file-if-exists=.env server/node-server.js",
+    "test": "node --test tests/"
+  }
+}

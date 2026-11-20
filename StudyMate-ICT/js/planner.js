@@ -30,10 +30,18 @@
 
   var planData = null;
   var lastInput = null;
+  var savedId = null;
+
+  /* Pre-fill topics from the subjects saved in Settings. */
+  (function prefillSubjects() {
+    var subjects = SM.store.getSettings().subjects;
+    if (subjects.length && !topicsEl.value.trim()) topicsEl.value = subjects.join('\n');
+  })();
 
   function invalidateOutput() {
     planData = null;
     lastInput = null;
+    savedId = null;
     emptyEl.hidden = false;
     bodyEl.hidden = true;
     tagEl.hidden = true;
@@ -265,6 +273,24 @@
         len.className = 'sess-len';
         len.textContent = s.minutes + ' min';
 
+        if (s.kind !== 'break' && savedId) {
+          li.classList.add('has-check');
+          var check = document.createElement('input');
+          check.type = 'checkbox';
+          check.className = 'sess-check';
+          check.checked = s.done === true;
+          check.setAttribute('aria-label', 'Mark done: ' + s.label);
+          (function (dayIndex, sessionIndex) {
+            check.addEventListener('change', function () {
+              SM.store.toggleSession(savedId, dayIndex, sessionIndex);
+              s.done = check.checked;
+              updateProgress();
+              ui.toast(check.checked ? 'Activity marked done' : 'Activity marked not done');
+            });
+          })(day.index - 1, day.sessions.indexOf(s));
+          li.appendChild(check);
+        }
+
         li.appendChild(time);
         li.appendChild(name);
         li.appendChild(len);
@@ -300,6 +326,56 @@
       art.appendChild(foot);
       daysWrap.appendChild(art);
     });
+  }
+
+  /** Progress strip under the summary chips (only for a saved plan). */
+  function updateProgress() {
+    var progressEl = ui.$('#plan-progress');
+    if (!progressEl) return;
+    if (!planData || !savedId) {
+      progressEl.hidden = true;
+      return;
+    }
+    var progress = SM.core.planProgress(planData);
+    progressEl.hidden = false;
+    var fill = progressEl.querySelector('.progress-fill');
+    var track = progressEl.querySelector('.progress-track');
+    var text = progressEl.querySelector('.progress-text');
+    if (fill) fill.style.width = progress.percent + '%';
+    if (track) track.setAttribute('aria-valuenow', String(progress.percent));
+    if (text) {
+      text.textContent = progress.done + ' of ' + progress.total + ' activities done · ' + progress.percent + '%' +
+        (progress.percent === 100 ? ' — plan complete, well done.' : '');
+    }
+  }
+
+  /** Bring back the most recently saved plan, with its tick marks intact. */
+  function restoreActivePlan() {
+    var saved = SM.store.activePlan();
+    if (!saved || !saved.days || !saved.days.length) return;
+
+    savedId = saved.id;
+    planData = {
+      days: saved.days,
+      totalMinutes: saved.days.reduce(function (sum, d) { return sum + (Number(d.minutes) || 0); }, 0)
+    };
+    lastInput = {
+      topics: saved.topics && saved.topics.length ? saved.topics : ['Study plan'],
+      minutes: saved.minutes || 60,
+      days: saved.days.length,
+      difficulty: saved.difficulty || 'Standard',
+      exam: ''
+    };
+
+    renderPlan(planData);
+    tagEl.textContent = 'Saved plan · ' + saved.days.length + ' days';
+    tagEl.hidden = false;
+    emptyEl.hidden = true;
+    bodyEl.hidden = false;
+    promptWrap.hidden = true;
+    saveBtn.disabled = true;
+    saveBtn.innerHTML = ui.icon('i-check') + 'Plan saved';
+    updateProgress();
   }
 
   function formatClock(offset) {
@@ -415,6 +491,8 @@
     saveBtn.disabled = false;
     saveBtn.innerHTML = ui.icon('i-saved') + 'Save plan';
 
+    savedId = null;
+    updateProgress();
     promptEl.textContent = SM.prompts.planner({ plan: plan, topics: topics, minutes: minutes, difficulty: difficulty, exam: examEl.value });
     ui.bindCopyButtons(promptWrap);
     ui.bindCopyButtons(bodyEl);
@@ -456,8 +534,18 @@
 
   saveBtn.addEventListener('click', function () {
     if (!planData || !lastInput) return;
-    SM.store.addTopic({
+
+    var saved = SM.store.savePlan({
       title: lastInput.topics.join(', ').slice(0, 110) + ' — study plan',
+      topics: lastInput.topics,
+      minutes: lastInput.minutes,
+      difficulty: lastInput.difficulty,
+      days: planData.days
+    });
+    savedId = saved.id;
+
+    SM.store.addTopic({
+      title: lastInput.topics.join(', ').slice(0, 110),
       tool: 'planner',
       detail: planData.days.length + ' days · ' + lastInput.minutes + ' min/day · ' + lastInput.difficulty,
       prompt: planToText(planData)
@@ -469,10 +557,15 @@
         text: promptEl.textContent
       });
     }
+
+    renderPlan(planData);
+    updateProgress();
     saveBtn.innerHTML = ui.icon('i-check') + 'Plan saved';
     saveBtn.disabled = true;
-    ui.toast('Study plan saved');
+    ui.toast('Plan saved — tick activities as you finish them');
   });
+
+  restoreActivePlan();
 
   ui.$('#plan-print').addEventListener('click', function () {
     if (!planData) {

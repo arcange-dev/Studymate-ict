@@ -199,7 +199,7 @@
     if (window.confirm('Clear the activity history?')) { SM.store.clear('activity'); ui.toast('Activity history cleared'); }
   });
   ui.$('#reset-all').addEventListener('click', function () {
-    if (window.confirm('Delete ALL saved topics, prompts, glossary terms, personal terms and activity? This cannot be undone.')) {
+    if (window.confirm('Delete ALL saved topics, prompts, glossary terms, personal terms, quiz results, study plans and activity? This cannot be undone.')) {
       SM.store.resetAll();
       ui.toast('All local data deleted');
     }

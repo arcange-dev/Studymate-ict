@@ -159,3 +159,52 @@ A server-side AI proxy with a key and rate limits, JSON export/import for backup
 - Keep the copy step visible: it is the honest boundary of the project.
 - If something fails live, say what you expected, show the validation message, and continue; the app is designed to fail with a clear message.
 - End on limitations, not features. It is the part assessors remember as maturity.
+
+---
+
+## 3-minute demonstration script (version 2.0)
+
+Rehearse this against the live URL in prompt mode. Do not claim the AI is live on the public demo — the chip says prompt mode, and the script says so too.
+
+**[0:00–0:25] The problem and the product**
+> “Beginner ICT students meet dense vocabulary before they have the words to decode it. StudyMate ICT is an offline-first study assistant: explanations, practice quizzes, a planner, a glossary and source-grounded learning. It installs like an app and works with the network off.”
+
+**Action:** open `https://studymate-ict-04s0d8.freebuff.site/`. Point at the status chip.
+
+> “That chip is honest: this deployment has no AI key, so it says *Prompt mode*. Nothing here pretends to be a model.”
+
+**[0:25–1:05] Explain ICT (prompt mode)**
+1. **Explain ICT** → topic `RAM` → *Build copy-paste prompt*.
+2. Scroll the nine-section contract.
+3. Say: “Nine sections, a level, a length, and a rule against invented facts. Press Copy and it runs in any assistant the student is allowed to use.”
+
+**[1:05–1:45] Live AI, when a key exists**
+1. Switch to the locally running server (or state plainly that the key is not on the demo).
+2. **Explain ICT** → *Explain with AI*. The chip changes to *AI live* only after the answer arrives.
+3. Show sections 1–3 and open one revision answer.
+4. Say: “The key never reaches the browser. The server validates the request, calls one provider, and rejects any answer that is not the exact JSON shape — so a broken answer is an error, not a half-drawn page.”
+
+**[1:45–2:20] Quiz with real marking**
+1. **Quiz Generator** → paste two sentences of notes → *Generate & practise*.
+2. Answer two questions wrongly on purpose → *Mark my answers*.
+3. Show the score and the review block: your answer, the correct answer, the explanation, the quoted source line.
+4. Say: “Marking happens in this browser, so it is deterministic and free. Short answers that use different words are flagged for self-check instead of being failed silently.”
+
+**[2:20–2:45] Planner, progress and settings**
+1. **Study Planner** → two topics, 45 minutes, 2 days → build → **Save plan**.
+2. Tick one activity; point at “1 of 6 activities done · 17%”.
+3. **Dashboard** → the same progress and the quiz score.
+4. **Settings** → toggle dark theme; mention the JSON backup.
+
+**[2:45–3:00] Close**
+> “Twenty-nine automated tests cover the AI contract, the HTTP surface and the marking logic. Offline was verified with the server stopped. Known limitations — no key on this demo, heuristic short-answer marking, per-instance rate limits — are written down rather than hidden. The source and the full test report are on GitHub.”
+
+### Questions you should be ready for
+
+| Question | Answer |
+|---|---|
+| “Is the AI real?” | Yes, there is a real endpoint and provider adapter; this deployment has no key, so it runs in prompt mode. I verified the path with a stub provider and documented that a real provider is untested. |
+| “Where is the key?” | Server environment only. `/api/health` reports whether it exists, never its value. |
+| “What if the model returns nonsense?” | The schema check rejects it with a 502 and the UI offers Retry. |
+| “Why no accounts or database?” | Nothing in the feature set needs sync; LocalStorage plus export/import keeps cost and personal data at zero. |
+| “What is not finished?” | Real-provider testing and the Render deployment need credentials; both are documented with the exact steps. |

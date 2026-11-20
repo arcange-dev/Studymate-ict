@@ -1,105 +1,79 @@
 # Limitations and Future Work — StudyMate ICT
 
-This document states plainly what the project does not do, so the demonstration and the written report stay honest.
+This document states plainly what the project does not do, so the demonstration and the written report stay honest. It reflects the build dated 20 November 2026, which adds a real AI endpoint, practice quizzes with in-browser marking, study-plan progress tracking and a settings page.
 
 ---
 
 ## 1. Current limitations
 
-### 1.1 No AI model is connected
-This is a deliberate design decision, not an unfinished feature. The application builds prompts and stops there. It cannot produce an explanation, quiz or answer by itself.
+### 1.1 Live AI needs a key that this deployment does not have
+The application now has a genuine AI path: `POST /api/ai` on the server validates the request, calls one OpenAI-compatible provider with a server-side key, and validates the JSON that comes back. It is **not** switched on in the public demo, because no provider key has been supplied.
 
 **Consequences**
-- The learner must copy each prompt into an external AI assistant.
-- Answer quality, refusal compliance and hallucination behaviour are outside the project's control and were not measured.
-- The app can be demonstrated with no internet, no API key and no cost — which is why the choice was made.
+- The public demo runs in **prompt mode**: every tool works, but it builds a prompt instead of contacting a model. The status chip says so.
+- "AI live" is only shown after a real request succeeds; a configured-but-unused key shows "AI ready".
+- The AI path has been verified end to end against a **local stub provider** (a fake HTTP server implementing the same contract), not against a real model. Real-model behaviour — refusal quality, hallucination rate, latency — was therefore not measured. See `TESTING_REPORT.md` §8.
+- Model choice, cost and data-processing terms are the deployment owner's decision.
 
-### 1.2 Prompt quality depends on user input
-A vague topic produces a vague prompt. Very short notes limit the quiz. Grounded mode cannot answer what the notes do not contain — that is the intended behaviour, but it can feel unhelpful to a student who expected an answer.
+### 1.2 AI output can be wrong even when the structure is valid
+The server checks the *shape* of the model's JSON (fields present, four distinct options, valid answer index, exactly five revision questions) and rejects malformed answers with a clear error. It cannot check whether the content is true. Every AI screen carries a reminder to verify against notes, textbook or lecturer.
 
-### 1.3 The planner is a simple scheduler
+### 1.3 Short answers are marked heuristically
+Multiple-choice and true/false answers are marked exactly. Short answers are marked by keyword coverage of the model answer: all keywords present → correct, at least 60% → flagged for self-check, otherwise incorrect. Wording that is correct but uses different vocabulary can be flagged or marked wrong. The interface labels flagged answers instead of silently failing them.
+
+### 1.4 Prompt mode remains the only offline path
+AI requests need a network connection and a configured key. Offline, the app falls back to prompt mode and says so. The offline shell (`sw.js`) caches 23 application files; AI responses are never cached, and `/api/*` is excluded from the service worker so a cached health check can never misreport the deployment's mode.
+
+### 1.5 Rate limits are per-instance and in memory
+`AI_RATE_LIMIT`, `AI_RATE_WINDOW_MS` and `AI_DAILY_CAP` are enforced in the server process. They reset on restart and are counted separately on each instance, so a multi-instance deployment can allow more traffic than the configured cap. The client IP comes from `x-forwarded-for`, which is trustworthy only behind a proxy that sets it (Render does). A shared store (Redis, D1) would be needed for strict global limits.
+
+### 1.6 The planner is a simple scheduler
 - One uniform time budget per day; it cannot vary Monday from Saturday.
 - Fixed block lengths by difficulty (40/30/25 minutes) rather than adapting to the learner.
 - Round-robin topic allocation, not spaced repetition or prerequisite ordering.
-- No tracking of whether a session was actually completed.
+- Progress tracking records which activities were ticked. It does not track time spent, streaks or missed days, and it is not synced anywhere.
 - The displayed clock starts at 09:00 as a sequence indicator, not a real timetable.
+- "Target completion date" is expressed as an examination date that shortens the plan; there is no separate deadline field.
 
-### 1.4 LocalStorage only
-- Per-browser and per-device; nothing syncs.
-- Roughly 5 MB total, and saved prompts can be long.
-- Clearing browser data deletes everything irreversibly.
-- Not a backup; no export or import yet.
+### 1.7 LocalStorage only
+- Per-browser and per-device; nothing syncs, and there is no account.
+- Roughly 5 MB total; saved plans and prompts can be long.
+- Clearing browser data deletes everything irreversibly — hence the JSON export/import in Settings.
 - Private-browsing modes may block it; the app falls back to session-only memory with a warning.
+- Import replaces the current data rather than merging.
 
-### 1.5 Glossary is a curated starter set
+### 1.8 Glossary is a curated starter set
 41 terms covering the most common beginner topics. It is not a complete ICT dictionary, has no pronunciation, no synonyms and no images, and its definitions are original plain-language explanations rather than sourced quotations.
 
-### 1.6 Coverage indicator is a heuristic
+### 1.9 Coverage indicator is a heuristic
 The grounded mode's coverage panel compares stop-word-filtered keywords. It can be wrong in both directions: a synonym may exist in the notes without a shared word ("cache" vs "temporary store"), and a shared word may not mean the notes answer the question. The interface labels it as a heuristic and not an AI judgement.
 
-### 1.7 Accessibility and browser coverage
-- Structurally accessible (landmarks, labels, `aria-*` state, focus rings, Skip link, `role="alert"`), but not audited with real screen readers.
-- Automated testing was Chromium only; Firefox and Safari were not exercised.
-- Clipboard access can be blocked by browser policy; a manual-copy fallback is provided.
+### 1.10 Accessibility and browser coverage
+- Keyboard navigation, focus indicators, skip link, live regions and reduced-motion support were checked in Chromium. Screen-reader behaviour (NVDA, VoiceOver) was not tested.
+- Safari, Firefox and older mobile browsers were not tested.
+- The dark theme was checked visually in Chromium at desktop and mobile widths; contrast was not measured with an automated audit tool.
 
-### 1.8 Content and language
-- Interface and prompts are English only.
-- The prompts assume an AI assistant that follows long instructions reasonably well; small or heavily filtered models may ignore the output contract.
-
-### 1.9 Not an assessment or management system
-No accounts, classes, grades, attendance, submissions, teacher dashboards or analytics. This scope was excluded intentionally to keep the project demonstrable and beginner-readable.
-
-### 1.10 Storage robustness
-Corrupted or partial LocalStorage is normalised to defaults, but quota-exhaustion handling was not simulated. If a write fails, the app keeps working in memory for that session and shows the storage warning.
+### 1.11 Deployment
+- The public demo runs on Freebuff Sites (`sites/worker.js`). Render configuration (`render.yaml`, `server/node-server.js`, `docs/RENDER_DEPLOYMENT.md`) is prepared and tested locally, but no Render account or credentials were available, so **nothing has been deployed to Render**.
+- Render's free plan spins down when idle, so the first request after a pause is slow.
 
 ---
 
-## 2. Future work
+## 2. Deliberate non-goals
 
-Ordered by value against effort.
-
-### 2.1 High value, moderate effort
-
-1. **Bring-your-own-key AI integration through a server proxy.**
-   A small server-side function holds the key, enforces a model allowlist and a per-user daily limit, and returns the model's answer. The frontend never sees a credential. This would be the single biggest improvement and must not be done by putting a key in JavaScript.
-
-2. **Export and import the workspace as JSON.**
-   A download/upload pair gives learners a real backup and moves data between devices.
-
-3. ~~**Installable offline PWA.**~~ **Delivered.** `manifest.webmanifest` and `sw.js` precache the 20 application files, so the app installs from the browser and reloads with the network off. Verified with the origin server stopped — see §7 of [`TESTING_REPORT.md`](TESTING_REPORT.md).
-
-4. **Quiz results and spaced repetition.**
-   Let the learner record answers, store results locally, and schedule weak topics using simple spaced-repetition intervals. This turns the planner from a one-off schedule into an adaptive one.
-
-### 2.2 High value, higher effort
-
-5. **Multi-day availability profiles.** Different minutes for weekdays and weekends, plus blocked days.
-6. **Prerequisite-aware topic ordering.** Let a learner state "RAM before virtual memory" and respect that order in the plan.
-7. **Answer evaluation mode.** Add a prompt that marks a student's written answer against the notes and returns a rubric-based score — a natural extension of the existing evaluation theme.
-8. **Localised prompts.** Swahili (and other) interface strings and prompt templates, with bilingual glossary entries.
-9. **Printable worksheets.** Turn a quiz prompt or plan into a clean printable page with an answer sheet.
-10. **Teacher mode.** Share a prompt set or a note pack as a file, without accounts.
-
-### 2.3 Smaller improvements
-
-11. "Commonly confused with" field in the glossary, plus related-term links.
-12. Saved-prompt search, tags and renaming.
-13. Drag-to-reorder sessions in the planner and manual topic pinning to a day.
-14. A theme preference (light/dark) stored locally.
-15. Import notes from a `.txt` file instead of pasting.
-16. Confidence and completeness checklist shown after copying a prompt.
-17. Automated accessibility test suite (axe) and cross-browser CI.
+- **No accounts.** The brief asked not to collect unnecessary personal information, and a single-learner local app does not need sign-in.
+- **No database.** Nothing in the current feature set requires cloud sync or shared data; adding a database would add cost and attack surface for no user benefit.
+- **No framework or build step for the frontend.** The static app stays readable, auditable and deployable anywhere; `build.sh` only copies files.
+- **No fabricated AI.** Prompt mode is labelled as prompt mode; a stub is only used in tests, never in the app.
 
 ---
 
-## 3. What would make this production-ready
+## 3. Future work, in priority order
 
-For classroom deployment, the project would need at minimum:
-
-- A reviewed AI integration with server-side keys, rate limits and logging of failures (not of student content).
-- A privacy notice and a data-retention policy.
-- Export/backup and storage-quota handling.
-- Screen-reader auditing and cross-browser testing.
-- Curriculum review of glossary definitions and prompt wording by an ICT lecturer.
-
-None of these are required for the capstone demonstration, and none are claimed to exist today.
+1. **Supply a provider key and run the real-model tests** listed in `TESTING_REPORT.md` §8.4, then update the status text and this document.
+2. **Move rate limiting to shared storage** so it holds across instances and restarts.
+3. **Improve short-answer marking** with a normalised embedding or a second, cheaper model call marked as "advisory", never as a silent pass.
+4. **Sync optional**: end-to-end-encrypted export file, or a small D1/IndexedDB-backed sync if accounts are ever added.
+5. **Planner upgrades**: variable daily budgets, spaced repetition, and reminders.
+6. **Accessibility audit** with a screen reader and an automated contrast pass on both themes.
+7. **Streaming AI responses** so long explanations appear progressively instead of after a spinner.

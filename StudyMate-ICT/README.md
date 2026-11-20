@@ -224,3 +224,35 @@ Built with HTML5, CSS3 and vanilla JavaScript. The glossary definitions are orig
 ---
 
 **Reminder:** AI-generated content must always be checked against your class notes, textbook or lecturer before you rely on it.
+
+---
+
+## What changed in version 2.0 (20 November 2026)
+
+The app began as a prompt-only assistant. It now has an optional **live AI path** while keeping the offline one intact.
+
+- **Explain with AI** — a server endpoint validates the request, calls one OpenAI-compatible provider with a server-side key, and checks the returned JSON before rendering nine structured sections. Prompt mode remains for offline use and deployments without a key.
+- **Practice quizzes** — generate questions from your notes, answer them in the app, and get an exact score with review of every wrong answer. Marking happens in the browser, so it is deterministic and works without a second model call.
+- **Study-plan progress** — saved plans keep tick marks, show a progress bar, and restore on your next visit.
+- **Settings** — light/dark/device theme, default level, preferred subjects, reduced motion, larger text and JSON backup export/import.
+- **Tests** — 29 automated tests (`npm test`) plus a documented browser test run.
+
+New documents: [`../docs/AI_PROVIDER.md`](../docs/AI_PROVIDER.md), [`../docs/RENDER_DEPLOYMENT.md`](../docs/RENDER_DEPLOYMENT.md), [`../docs/TROUBLESHOOTING.md`](../docs/TROUBLESHOOTING.md) and [`../docs/CHANGELOG.md`](../docs/CHANGELOG.md).
+
+## Running it locally
+
+```bash
+cd ..                 # repository root
+./build.sh            # regenerate dist/
+node server/node-server.js
+# → http://localhost:3000
+```
+
+No dependencies to install. With live AI:
+
+```bash
+cp .env.example .env         # add AI_API_KEY
+node --env-file=.env server/node-server.js
+```
+
+The app also opens directly from disk (`index.html`) in prompt mode; the service worker is skipped on `file://`.

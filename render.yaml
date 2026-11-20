@@ -1,0 +1,38 @@
+# Render Blueprint for StudyMate ICT.
+#
+# The app is a static site plus one small API route (/api/ai) that keeps the
+# provider key server-side, so it is deployed as a single Web Service — not a
+# Static Site and not two services. The Node server serves dist/ itself.
+#
+# AI_API_KEY is deliberately NOT set here: `sync: false` makes Render prompt
+# for it in the dashboard, so no secret ever lives in the repository.
+services:
+  - type: web
+    name: studymate-ict
+    runtime: node
+    plan: free
+    region: frankfurt
+    branch: main
+    buildCommand: ./build.sh
+    startCommand: node server/node-server.js
+    healthCheckPath: /api/health
+    autoDeployTrigger: commit
+    envVars:
+      - key: AI_API_KEY
+        sync: false
+      - key: AI_BASE_URL
+        value: https://api.openai.com/v1
+      - key: AI_MODEL
+        value: gpt-4o-mini
+      - key: AI_PROVIDER
+        value: OpenAI-compatible
+      - key: AI_RATE_LIMIT
+        value: "20"
+      - key: AI_RATE_WINDOW_MS
+        value: "600000"
+      - key: AI_DAILY_CAP
+        value: "300"
+      - key: AI_TIMEOUT_MS
+        value: "30000"
+      - key: NODE_VERSION
+        value: "22"

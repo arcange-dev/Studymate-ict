@@ -1,7 +1,7 @@
 {
   "name": "StudyMate ICT — AI-assisted ICT study assistant",
   "short_name": "StudyMate",
-  "description": "Offline-first study assistant for beginner ICT students: concept explainers, quiz prompts, study plans, a glossary and source-grounded learning.",
+  "description": "Study assistant for beginner ICT students: AI concept explanations, practice quizzes marked in the browser, study plans, a glossary and source-grounded learning.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

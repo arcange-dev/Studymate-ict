@@ -226,3 +226,71 @@ Counts update immediately whenever you save, delete or generate something.
 ## 12. Remember
 
 StudyMate ICT helps you ask better questions. It cannot make an AI answer correct. Always check generated content against your class notes, textbook or lecturer, and follow your institution's rules on AI assistance.
+
+---
+
+## 13. AI mode: what changes when a key is configured
+
+The app runs in one of two modes, and the chip in the top bar always tells you which:
+
+- **Prompt mode · no API key** — the app never contacts a model. It builds a prompt you copy into an assistant you are allowed to use. Everything works offline.
+- **AI live · model-name** — the deployment has a key, so the AI buttons work. The key stays on the server; your browser never sees it.
+
+When AI is enabled you will also see a short orange note above the AI button saying your topic or notes are sent to the provider. Nothing is sent until you press the button.
+
+### 13.1 Explain a topic with AI
+
+1. Open **Explain ICT**.
+2. Type a topic (for example `RAM`), choose your learner level, prior knowledge and how long you want the explanation.
+3. Press **Explain with AI**. A spinner shows while the tutor is writing.
+4. Read the nine sections: definition, why it matters, step by step, practical example, real-world application, common misconceptions, technical vocabulary, summary, and revision questions.
+5. Revision answers are hidden behind each question — answer it yourself first, then click to check.
+6. Press **Save explanation** to keep it in Saved Learning.
+
+If something goes wrong, the message under the button explains it and **Retry** sends the same request again. A malformed AI answer is rejected rather than shown, so you never have to guess which parts are real.
+
+Still want a prompt? Press **Build copy-paste prompt** — that path is unchanged and works offline.
+
+### 13.2 Practise a quiz and get marked
+
+1. Open **Quiz Generator** and paste your notes (the quiz can only use what you paste).
+2. Choose the number of questions, difficulty and question type.
+3. Press **Generate & practise**.
+4. Answer every question — multiple choice and true/false are clickable, short answers are typed.
+5. Press **Mark my answers**. If any question is blank, the app says how many and does not mark yet.
+6. Read your score. Every question you got wrong is listed with your answer, the correct answer, a one-line explanation and the sentence from your notes that supports it.
+7. Short answers marked **“for self-check”** may still be right — compare your wording with the model answer.
+
+Your score is saved and appears on the dashboard. Use **New quiz** to generate another set from the same notes.
+
+### 13.3 Tick off your study plan
+
+1. Build a plan in **Study Planner** as usual, then press **Save plan**.
+2. Each study, revision and self-assessment activity now has a checkbox.
+3. Tick activities as you finish them. The progress bar and “x of y activities done” update immediately.
+4. Come back later: the planner restores your most recent saved plan with its ticks, and the dashboard shows the same progress.
+
+## 14. Settings, themes and backups
+
+**Settings** has four groups.
+
+- **Appearance** — theme (match your device, light or dark), default explanation level, and preferred study subjects. Subjects pre-fill the planner's topic box on your next visit.
+- **Accessibility** — reduce motion (removes smooth scrolling and transitions) and larger text.
+- **AI privacy** — keep the “notes are sent to the AI provider” notice visible even after you dismiss it.
+- **Your data** — download a JSON backup, import one, or delete everything.
+
+### Backing up
+
+1. Settings → **Download backup (.json)**. The file is named `studymate-ict-backup-YYYY-MM-DD.json`.
+2. Keep it somewhere safe (cloud drive, email to yourself).
+3. To restore, Settings → **Import backup**. Importing **replaces** your current data; it does not merge.
+
+### Theme
+
+Choose **Match my device** to follow your operating system, or force light/dark. The choice applies before the first paint, so there is no flash of the wrong colours, and it persists across reloads.
+
+## 15. If a button is greyed out
+
+- **Explain with AI** / **Generate & practise** — disabled when the deployment has no key (prompt mode), when you are offline, or while a request is already running. The note above the button says which.
+- **Save explanation** — enable after an explanation exists.
+- **Mark my answers** — disappears once you have marked that quiz; use **New quiz** to start again.

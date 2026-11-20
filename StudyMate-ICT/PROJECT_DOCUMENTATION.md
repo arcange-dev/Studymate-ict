@@ -240,3 +240,68 @@ Details and prioritisation: [`LIMITATIONS_AND_FUTURE_WORK.md`](LIMITATIONS_AND_F
 ---
 
 See [`README.md`](README.md) for setup, [`TESTING_REPORT.md`](TESTING_REPORT.md) for verification and [`PRESENTATION_GUIDE.md`](PRESENTATION_GUIDE.md) for the demo script.
+
+---
+
+## 12. Version 2.0 architecture (20 November 2026)
+
+### 12.1 Two deployment targets, one AI core
+
+```
+StudyMate-ICT/         static SPA — 10 views, 16 classic scripts, LocalStorage
+        │  POST /api/ai (same origin, JSON)
+        ▼
+sites/ai-core.js       shared: validation → prompt → provider → schema check → limits
+        ├── server/node-server.js   Node 22, static files + API (Render / local)
+        └── sites/worker.js         static assets + API (Freebuff Sites)
+```
+
+`ai-core.js` has no imports and uses only `fetch`, so the same file runs in Node and in a Worker. Provider calls go to `{AI_BASE_URL}/chat/completions` with a server-side bearer token.
+
+### 12.2 Request lifecycle
+
+1. Browser checks `GET /api/health` (cache-busted) and enables the AI buttons only if a key is configured.
+2. User presses an AI button → `POST /api/ai` with `{op, …fields}`.
+3. Server validates every field and enum; rejects unknown values instead of silently defaulting.
+4. Per-client window limit and per-instance daily cap are applied (`429` + `retry-after`).
+5. A system/user message pair is built server-side — the browser cannot inject its own system prompt.
+6. The provider is called with a 30 s timeout and `response_format: json_object`.
+7. The text is parsed (code fences stripped), schema-checked, length-clamped and normalised.
+8. Only the normalised object reaches the browser; failures map to a fixed error table (502/504/429/500) with plain messages.
+9. The UI renders with `textContent` only — no HTML injection path from model output.
+
+### 12.3 Data model (LocalStorage `studymate.ict.v1`)
+
+| Key | Contents |
+|---|---|
+| `topics` | Saved explanations and plans (title, tool, detail, text) |
+| `prompts` | Saved prompts and library templates |
+| `glossSaved`, `personalTerms` | Glossary bookmarks and user-written terms |
+| `activity`, `counts` | Recent actions and per-tool counters (dashboard stats) |
+| `quizzes` | Last 30 results: score, correct/incorrect/review, total, timestamp |
+| `plans` | Last 10 plans with per-session `done` flags |
+| `settings` | theme, default level, subjects, reduceMotion, largerText, discloseNotes |
+
+Older records normalise forward: every field is type-checked on load, unknown shapes fall back to empty arrays and a fresh settings object.
+
+### 12.4 Security posture
+
+| Risk | Control |
+|---|---|
+| Key exposure | Server env only; `/api/health` returns `{configured, provider, model}`; tests assert the key never appears in a response |
+| Prompt injection from the client | Messages are built server-side from validated fields; notes are inserted inside delimiters with explicit “only source” rules |
+| Model output injection | JSON schema + `textContent` rendering |
+| Abuse / cost | Per-client window limit, per-instance daily cap, 24 000-character body cap, 30 s timeout |
+| Cross-origin abuse | Same-origin only; foreign `Origin` → 403 |
+| Path traversal | `normalize(join(root, path))` prefix check; raw and encoded variants tested |
+| Clickjacking / sniffing | CSP, `X-Frame-Options: DENY`, `nosniff`, `Referrer-Policy`, minimal permissions policy |
+| Supply chain | Zero runtime npm dependencies |
+
+Remaining risks (in-memory limits per instance, model accuracy, no auth) are listed in `LIMITATIONS_AND_FUTURE_WORK.md`.
+
+### 12.5 Testing strategy
+
+- **Unit** (`tests/ai-core.test.js`): validation, schema checks, provider failures, rate limits, key non-disclosure — fetch mocked, no network, no cost.
+- **Integration** (`tests/server.test.js`): real HTTP server on an ephemeral port, temp `dist/`, raw-socket traversal attempts.
+- **Client logic** (`tests/client-core.test.js`): the browser's `core.js` executed in a VM sandbox — the same file the app runs.
+- **Browser** (documented in `TESTING_REPORT.md` §8): Playwright against the local server and the live URL, including a stub provider for the AI path, offline reload, mobile viewport and keyboard focus.
