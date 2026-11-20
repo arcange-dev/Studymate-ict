@@ -10,6 +10,10 @@ An offline-first, AI-assisted study assistant for beginner ICT students — buil
 
 The app installs as a PWA and keeps working with the network off: `sw.js` precaches all 20 application files, and every request the app makes is same-origin.
 
+## Build the deploy bundle
+
+`./build.sh` regenerates `dist/` from `StudyMate-ICT/`, excluding documentation and screenshots that the deployed site does not need. Upload `dist/` with `sites/site.manifest.json` (`assetsDirectory: ../dist`).
+
 ## Licence
 
 [MIT](LICENSE)
