@@ -166,8 +166,9 @@ Added when the app was made installable. Every figure below was measured in the 
 |---|---|
 | Service worker registration | **PASS** — `sw.js` registers on `http(s)` and is deliberately skipped on `file://` |
 | Activation and scope | **PASS** — state `activated`, scope `/` |
-| Precached files | **PASS** — cache `studymate-ict-v1` holds **21 entries**: document, stylesheet, 13 scripts, manifest, favicon, 3 icons |
-| Manifest parsing | **PASS** — `manifest.webmanifest` served as `application/manifest+json`, parsed by the browser: name, `short_name` "StudyMate", `display: standalone`, 4 icons (192, 512, maskable, SVG) |
+| Precached files | **PASS** — cache `studymate-ict-v1` holds **20 files**: `/`, stylesheet, 13 scripts, manifest, favicon, 3 icons |
+| Manifest parsing | **PASS** — `manifest.webmanifest` served as `application/manifest+json`, parsed by the browser: name, `short_name` "StudyMate", `display: standalone`, 3 PNG icons (192, 512, 512 maskable) |
+| Install paths | **PASS** — `start_url` and `scope` are relative (`./`), so the app installs and reopens correctly under any path; the three shortcuts point at the `#/explain`, `#/quiz` and `#/planner` routes |
 | Manifest icons | **PASS** — `icon-192.png` (192×192), `icon-512.png` (512×512), `icon-512-maskable.png` (512×512, full-bleed) all resolve with `image/png` |
 
 ### 7.3 Offline run — origin server stopped
@@ -182,9 +183,29 @@ To prove the cache is doing the work, the local server process was **killed** (p
 | Navigation while offline | **PASS** — glossary view showed **41 terms**, library view showed **8 templates** |
 | Feature work while offline | **PASS** — planner generated a 2-day, 45-minute-per-day plan with both sessions rendered |
 | Console errors | **PASS** — none |
-| Deployed origin, network disabled in the browser | **PASS** — reload and glossary navigation both worked from cache on the public URL |
+| Deployed origin, network disabled in the browser | **PASS** — reload, glossary navigation, all 8 library templates and a 2-day planner run worked from cache on the public URL |
 
-### 7.4 Not tested
+### 7.4 Published deployment
+
+Deployed to the production environment of the static **Freebuff Sites** deployment and published:
+
+**<https://studymate-ict-04s0d8.freebuff.site/>**
+
+`sites/worker.js` serves the built files from the site's asset store and marks HTML `no-cache`, so a redeploy is picked up immediately; offline caching is the service worker's job.
+
+Checks on that origin, in the browser:
+
+| Check | Result |
+|---|---|
+| `/` | **PASS** — 200, `text/html`, `cache-control: no-cache` |
+| `/manifest.webmanifest` | **PASS** — 200, `application/manifest+json`, parsed with 3 icons |
+| `/sw.js`, `/js/app.js`, icons | **PASS** — 200, correct content types |
+| `/index.html` | **PASS** — 307 redirect to `/`, which is why the precache stores `/` only and never a redirected copy |
+| Service worker | **PASS** — `activated`, scope `/`, 20 cached files, zero console errors |
+| Offline run on the live URL | **PASS** — network disabled: reload, glossary (41 terms), library (8 templates) and planner (2 days × 45 min) all worked |
+| Third-party requests on the live URL | **PASS** — the resource timing log contained no URL outside the app's own origin |
+
+### 7.5 Not tested
 
 - The browser **install prompt** itself: headless Chromium exposes no install UI, so installation was verified only through manifest parsing, icon availability and a working service worker. A human should confirm the "Install app" entry appears in Chrome or Edge.
 - iOS Safari and Android Chrome installed-app behaviour (standalone window, splash screen).

@@ -4,7 +4,7 @@
   Strategy:
     • On install, precache the complete application shell (HTML, CSS, JS, icons).
     • Navigations and static assets are served cache-first, then network.
-    • A navigation that is not cached falls back to the cached index.html, so the
+    • A navigation that is not cached falls back to the cached "/", so the
       hash router keeps working offline.
   The app makes no third-party requests, so every cached URL is same-origin.
 */
@@ -12,7 +12,6 @@
 var VERSION = 'studymate-ict-v1';
 var SHELL = [
   './',
-  './index.html',
   './manifest.webmanifest',
   './css/styles.css',
   './assets/favicon.svg',
@@ -75,20 +74,23 @@ self.addEventListener('fetch', function (event) {
   event.respondWith(
     caches.match(request, { ignoreSearch: request.mode === 'navigate' }).then(function (cached) {
       if (cached) {
-        // Refresh the copy in the background so a future load is current.
-        event.waitUntil(
-          fetch(request)
-            .then(function (response) {
-              if (response && response.ok && response.type === 'basic') {
-                return caches.open(VERSION).then(function (cache) {
-                  return cache.put(request, response.clone());
-                });
-              }
-            })
-            .catch(function () {
-              /* offline: keep the cached copy */
-            })
-        );
+        // Refresh the copy in the background so a future load is current. Skipped
+        // while offline, where that fetch could only fail.
+        if (navigator.onLine) {
+          event.waitUntil(
+            fetch(request)
+              .then(function (response) {
+                if (response && response.ok && response.type === 'basic') {
+                  return caches.open(VERSION).then(function (cache) {
+                    return cache.put(request, response.clone());
+                  });
+                }
+              })
+              .catch(function () {
+                /* network dropped mid-flight: keep the cached copy */
+              })
+          );
+        }
         return cached;
       }
 
@@ -104,7 +106,7 @@ self.addEventListener('fetch', function (event) {
         })
         .catch(function () {
           if (request.mode === 'navigate') {
-            return caches.match('./index.html');
+            return caches.match('./');
           }
           return Response.error();
         });

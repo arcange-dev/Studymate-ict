@@ -2,16 +2,12 @@
   "name": "StudyMate ICT — AI-assisted ICT study assistant",
   "short_name": "StudyMate",
   "description": "Offline-first study assistant for beginner ICT students: concept explainers, quiz prompts, study plans, a glossary and source-grounded learning.",
-  "id": "/",
-  "start_url": "./index.html",
+  "start_url": "./",
   "scope": "./",
   "display": "standalone",
-  "display_override": ["standalone", "minimal-ui", "browser"],
-  "orientation": "any",
   "background_color": "#f4f7fb",
   "theme_color": "#0b1c33",
   "lang": "en",
-  "dir": "ltr",
   "categories": ["education", "productivity"],
   "icons": [
     {
@@ -31,29 +27,23 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
-    },
-    {
-      "src": "assets/favicon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
-      "purpose": "any"
     }
   ],
   "shortcuts": [
     {
       "name": "Explain a concept",
       "short_name": "Explain",
-      "url": "./index.html#/explain"
+      "url": "./#/explain"
     },
     {
       "name": "Generate a quiz",
       "short_name": "Quiz",
-      "url": "./index.html#/quiz"
+      "url": "./#/quiz"
     },
     {
       "name": "Plan my study time",
       "short_name": "Planner",
-      "url": "./index.html#/planner"
+      "url": "./#/planner"
     }
   ]
 }
