@@ -1,0 +1,218 @@
+# User Guide — StudyMate ICT
+
+StudyMate ICT runs entirely in your browser. Nothing is installed, nothing is uploaded, and none of your study data leaves your computer.
+
+---
+
+## 1. Getting started
+
+1. Open the project folder and double-click **`index.html`**, or serve the folder and open it in your browser:
+   ```bash
+   cd StudyMate-ICT
+   python3 -m http.server 8000
+   ```
+   then visit <http://localhost:8000>.
+2. The **Dashboard** opens first. It shows your saved items and the six study tools.
+3. Use the sidebar to move between tools. On a phone or tablet, tap the **menu button** (☰) at the top-left; press `Escape` to close it.
+
+**What StudyMate does and does not do:** it writes a prompt for you. It does **not** contact an AI. After generating a prompt you copy it into an AI assistant you are allowed to use.
+
+### Understanding the two panels
+
+Every tool has a form on the left and an output panel on the right (stacked on smaller screens).
+
+- The **form** collects your information.
+- The **output panel** shows the finished prompt, a **Copy** button and a **Save** button.
+- A dark code-style panel is a prompt, not an answer.
+
+---
+
+## 2. ICT Concept Explainer
+
+Use this to get a complete, structured explanation of one topic.
+
+1. Open **Explain ICT**.
+2. Type the topic — e.g. `RAM`, `the CPU`, `virtual memory`, `how a router works`.
+3. Choose your **learner level** (beginner, TVET Level 4, intermediate, advanced).
+4. Choose **prior knowledge** — this stops the prompt from assuming too much.
+5. Choose **explanation length**: short (~150 words per section), medium (~300) or detailed (~500).
+6. Press **Generate prompt**.
+7. Review it, press **Copy prompt**, then paste it into your AI assistant.
+8. Press **Save to Saved Learning** if you want to reuse it.
+
+**What you will get from the AI:** nine sections — definition, why it matters, step-by-step explanation, practical example, real-world application, misconceptions, summary, five practice questions and the answers.
+
+**Tips**
+- One concept per prompt works best. "How RAM differs from ROM" is a better topic than "computers".
+- If a section feels too advanced, regenerate with "Beginner (first ICT course)" and "None — complete beginner".
+- Answer the practice questions before reading section 9.
+
+---
+
+## 3. Quiz Generator
+
+Use this to test yourself on material you have already been given.
+
+1. Open **Quiz Generator**.
+2. Paste your **study notes** into the large box. The word counter shows how much you pasted.
+3. Choose the **number of questions** (5, 10, 15 or 20).
+4. Choose **difficulty**: easy (recall), medium (understanding and application) or hard (analysis and troubleshooting).
+5. Choose the **question type**: multiple choice, true/false, short answer or mixed.
+6. Press **Generate quiz prompt**, then **Copy prompt**.
+7. Ask the AI for the quiz, answer it, then reveal the answer key.
+
+**Why notes are required:** a quiz without a source would be invented. The app blocks generation when the notes box is empty and explains why.
+
+**What the prompt guarantees**
+- Every question must be answerable from your notes.
+- Each question is followed by a "Source:" line quoting your notes.
+- The answer key is a separate section with an explanation per answer.
+- If your notes are too short for the requested number of questions, the AI must say how many they support instead of padding.
+
+**Marking tip:** if an "answer" cannot be found in your notes, treat that question as unreliable and check with your lecturer.
+
+---
+
+## 4. Smart Study Planner
+
+This tool builds the study plan itself — no AI is needed.
+
+1. Open **Study Planner**.
+2. List your **topics**, one per line (commas also work). Up to 12 topics.
+3. Enter the **study time per day** in minutes. Be honest: 45 focused minutes beats 3 imagined hours.
+4. Enter the **number of days** you can study (1–30).
+5. Choose **study difficulty**: light (revision), standard (new learning) or intensive (exam crunch).
+6. Optionally set the **examination date**. If the exam is sooner than the number of days you entered, the plan is shortened to reach it and you are told why.
+7. Press **Build my study plan**.
+
+**Reading the plan**
+- Each day shows its date, minutes used ("60 / 60 min used") and a learning objective.
+- Sessions are timed from 09:00 for display purposes only; use them as a sequence.
+- Breaks are real breaks — no work is scheduled inside them.
+- The last study block on review days becomes a **revision** session.
+- Every day ends with a **practice activity** and **self-assessment questions**.
+
+**The time guarantee:** study minutes + break minutes + self-assessment always equals the minutes you entered, and never exceeds it. You can verify this on each day's header.
+
+**Extra actions**
+- **Copy plan as text** — paste into a document or message.
+- **Print / save PDF** — opens the print dialog; the form and navigation are hidden automatically.
+- **Build an AI enrichment prompt** — asks an AI to add micro-tasks and active-recall activities without changing any minutes.
+- **Save plan** — stores the plan (and the enrichment prompt, if built) in Saved Learning.
+
+---
+
+## 5. ICT Glossary
+
+Works fully offline.
+
+1. Open **ICT Glossary**.
+2. Type in the search box — it searches the term, the acronym expansion, the definition, the example and the category. Use the **category** dropdown to narrow further.
+3. Read the definition and its practical example.
+4. Press **Copy** to copy the definition, or **Save** to keep it in your saved list (the button changes to "Saved").
+5. Press **Clear search** in the empty state if nothing matches.
+
+**Adding your own terms**
+1. Open **Add your own term** at the bottom of the page.
+2. Enter the term, a category, a simple definition and (optionally) an example.
+3. Press **Save term**. Your terms appear first in the list and in *Your personal terms*, where each can be deleted.
+
+**Tip:** write personal definitions in your own words. If you can explain it to a classmate, you know it.
+
+---
+
+## 6. Source-Grounded Learning
+
+Use this when an answer must come only from specific notes.
+
+1. Open **Source-Grounded**.
+2. Paste the exact notes or textbook extract the answer must come from.
+3. Type your question.
+4. Watch the **offline coverage check**. It compares key words from your question with your notes:
+   - "All N key words appear…" — promising, but still verify.
+   - "N of M key words appear…" — parts of the answer may be unsupported.
+   - "None of the important words…" — the notes probably cannot answer; expect a refusal.
+5. Press **Generate grounded prompt**, then **Copy prompt**.
+
+**What the prompt forces the AI to do**
+- Use only your notes, even if it "knows" more.
+- Quote the sentence supporting each point.
+- Label its own reasoning as `Inference (not stated in the notes):`.
+- Correct a false assumption in your question using the notes.
+- Reply with exactly this sentence if the notes are insufficient:
+
+  > "The supplied notes do not provide enough information to answer that reliably."
+
+**What to do with the answer**
+- If you see the refusal sentence, the notes genuinely lack the answer — find a better source.
+- If you see an answer, check each quoted line really exists in your notes.
+- Never submit a "fact" you cannot find in your own material.
+
+**Note:** the coverage check is a simple keyword comparison, not an AI judgement. The prompt is what controls the answer.
+
+---
+
+## 7. Prompt Library
+
+1. Open **Prompt Library**.
+2. Browse the eight templates, or filter with the search box (try "quiz", "planner", "hardware", "error", "summarise").
+3. Each card shows: purpose, required inputs, expected output, example use.
+4. Expand **View full prompt** to read it.
+5. Press **Copy prompt** and replace the `[PLACEHOLDERS]` before use, or **Save** to keep it in Saved Learning.
+
+**Templates included:** ICT concept explainer · hardware comparison · quiz generator · study planner · programming tutor · programming error troubleshooter · notes summariser · ICT glossary creator.
+
+---
+
+## 8. Dashboard
+
+The dashboard gives you an overview:
+
+- **Stat cards:** saved topics, saved prompts, glossary terms (saved + personal) and total prompts generated.
+- **Your study tools:** six cards linking to each tool.
+- **Recently used:** your last actions with relative times.
+- **Study focus:** your latest saved topics with a one-click copy, plus counts of saved and personal terms.
+
+Counts update immediately whenever you save, delete or generate something.
+
+---
+
+## 9. Saved Learning
+
+1. Open **Saved Learning**.
+2. Each section lists your saved **topics**, **prompts**, **glossary terms** and **activity**.
+3. Use the copy icon to copy an item and the bin icon to delete it.
+4. Use the **Clear** links to empty a section (you will be asked to confirm).
+5. **Delete all saved data** removes everything and cannot be undone.
+
+**Where the data lives:** in this browser's LocalStorage. It is not synced, not backed up, and not visible on another device or browser. Clearing browser data deletes it.
+
+---
+
+## 10. Keyboard and accessibility
+
+- `Tab` / `Shift+Tab` move through every control; focus rings are always visible.
+- `Enter` submits the focused form; `Space` activates buttons.
+- On mobile and tablet, `Escape` closes the navigation drawer.
+- Generated prompts are focusable: `Tab` to the dark panel and use `Ctrl/Cmd + C` to copy manually if the clipboard is blocked.
+- The first `Tab` on any page reveals a **Skip to main content** link.
+- Error messages are announced by screen readers (`role="alert"`), as are toasts and result counts.
+
+---
+
+## 11. Troubleshooting
+
+| Problem | What to do |
+|---|---|
+| "Copy failed — select the text and press Ctrl+C" | Your browser blocked clipboard access. The prompt panel is focused: press `Ctrl/Cmd + C`. |
+| "LocalStorage is blocked" | Private browsing or strict file restrictions. The app still works, but saved items last only for the session. Use the served version (section 1) or a normal window. |
+| Nothing appears after pressing a button | Check the inline red message — a required field is missing. |
+| The plan is shorter than the days I entered | Your exam date is sooner than those days; the plan was shortened deliberately. |
+| Search finds nothing in the glossary | Try a shorter word, or add the term as a personal term. |
+| Too many prompts in Saved Learning | Delete individual items, or use **Clear** for a section. |
+
+---
+
+## 12. Remember
+
+StudyMate ICT helps you ask better questions. It cannot make an AI answer correct. Always check generated content against your class notes, textbook or lecturer, and follow your institution's rules on AI assistance.

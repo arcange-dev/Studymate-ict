@@ -1,0 +1,146 @@
+# Testing Report — StudyMate ICT
+
+**Version tested:** 1.0 (final build)
+**Test date:** 19 November 2026
+**Method:** automated browser testing with Playwright (Chromium, headless cloud browser), driving the real interface served over HTTP by `python3 -m http.server 3000`.
+
+> All results below are from the final executed run. Nothing is estimated. Five defects were found during earlier runs, fixed, and re-tested; they are listed in §5.
+
+---
+
+## 1. Test environment
+
+| Item | Detail |
+|---|---|
+| Application | StudyMate ICT 1.0, static files served from the project folder |
+| Browser | Chromium (Playwright), desktop viewport 1440×1000, tablet 820×1180, mobile 375×812 / 390×844 |
+| Server | `python3 -m http.server 3000 --bind 0.0.0.0` |
+| Storage | Browser LocalStorage cleared before the run, then populated through the UI |
+| Clipboard | `clipboard-read` / `clipboard-write` permissions granted to the test origin |
+| Console capture | `page.on('console')` for errors and `page.on('pageerror')` for uncaught exceptions, active for the whole run |
+| Result | **17 of 17 automated checks passed** |
+
+---
+
+## 2. Required test cases (from the project brief)
+
+### TC-01 — Explain RAM for a beginner · **PASS**
+- **Steps:** Open *Explain ICT* → topic `RAM` → level "Beginner (first ICT course)" → length "Short" → Generate prompt.
+- **Expected:** a prompt containing all nine numbered sections, beginner context and the topic.
+- **Actual:** the prompt was generated (2,163 characters) and contained "1. Simple definition" through "9. Answers", the mapped beginner context "a complete beginner on their first ICT course", and the topic.
+- **Notes:** the prompt panel became visible and the copy/save actions were enabled.
+
+### TC-02 — Explain the CPU · **PASS**
+- **Steps:** topic `the CPU` → level "TVET Level 4 learner" → Generate.
+- **Expected:** topic and learner level present in the prompt.
+- **Actual:** both present ("the CPU", "TVET Level 4 learner"). The learner-level mapping produced "a TVET Level 4 learner studying computer systems".
+
+### TC-03 — Generate a quiz from supplied notes · **PASS**
+- **Steps:** Paste five sentences of RAM/ROM/cache notes → 5 questions → Mixed → Generate quiz prompt.
+- **Expected:** notes embedded, question count instruction, notes-only rule, separate answer key.
+- **Actual:** all four present: the note text appears inside the delimited source block, "Write exactly 5 questions", "SOURCE NOTES — THE ONLY PERMITTED SOURCE OF FACTS", and an "Answer key (separate section)" instruction.
+- **Notes:** the word counter showed the pasted note length correctly.
+
+### TC-04 — Attempt quiz generation with empty notes · **PASS**
+- **Steps:** Clear the notes field after a successful generation → Generate.
+- **Expected:** inline validation error, no new prompt, and no stale prompt left on screen.
+- **Actual:** error shown — "Study notes are required. A quiz must be built from a real source, so empty notes are not allowed." The previous prompt was hidden, the empty state returned, and the field received `aria-invalid`.
+- **Notes:** this test initially exposed a real defect (stale prompt stayed visible). Fixed — see §5, D4.
+
+### TC-05 — Generate a one-hour study plan · **PASS**
+- **Steps:** Topics `CPU architecture`, `RAM and ROM`, `Operating systems` → 60 minutes/day → 3 days → Standard → Build my study plan.
+- **Expected:** three days, each scheduling exactly 60 minutes including breaks and self-assessment, with objectives, breaks, revision, practice activity and questions.
+- **Actual:** 3 day cards rendered (411 px tall each). Every day read "60 / 60 min used"; session minutes summed to `[60, 60, 60]`. Each day contained a study block, a 5-minute break, a second study block, a 5-minute self-assessment quiz and 2 self-assessment questions. Revision sessions appeared (day 3 marked "Revision"). Practice activities differed per day.
+- **Notes:** the plan is computed locally, so the "never schedule more time than available" rule is enforced by the algorithm, not by the AI.
+
+### TC-06 — Attempt study planning without topics · **PASS**
+- **Steps:** Clear the topics field → Build my study plan.
+- **Expected:** validation error, no plan shown.
+- **Actual:** error "Add at least one topic to study. Write one topic per line."; the previous plan was removed and the empty state restored.
+
+### TC-07 — Ask a question using source-grounded mode · **PASS**
+- **Steps:** Paste cache-memory notes → question "Why does the CPU need cache memory?" → Generate grounded prompt.
+- **Expected:** notes pinned as the only source, evidence requirement, the exact fallback sentence, and an active coverage indicator.
+- **Actual:** prompt contained the notes, the "only allowed source" rule, the evidence/labelling rules and the exact sentence "The supplied notes do not provide enough information to answer that reliably." Coverage read: "All 2 key words appear in your notes. That is a good sign, but you must still check the answer line by line."
+
+### TC-08 — Ask a question not answered by the supplied notes · **PASS**
+- **Steps:** Keep the cache notes → change the question to "How does quantum entanglement enable quantum computing?" → Generate.
+- **Expected:** the interface warns that the notes probably cannot answer; the refusal rule stays in the prompt.
+- **Actual:** coverage read: "None of the important words from your question appear in the notes. The notes probably cannot answer this — expect the refusal message." The prompt still contained the mandatory refusal sentence.
+- **Notes:** the coverage check is a keyword heuristic and is labelled as such in the interface. It did not itself answer or refuse — the AI would.
+
+### TC-09 — Search for a glossary term · **PASS**
+- **Steps:** Open *ICT Glossary* → search `RAM`.
+- **Expected:** matching term(s) displayed with a result count.
+- **Actual:** "14 of 41 terms" (matches include RAM, ROM, cache, virtual memory), with RAM listed first among the top results. Searching `zzzz` showed the empty state with a clear-search action.
+
+### TC-10 — Copy a generated prompt · **PASS**
+- **Steps:** Generate a ROM explanation prompt → press "Copy prompt".
+- **Expected:** clipboard contains the full generated prompt; visible confirmation.
+- **Actual:** clipboard contained 2,166 characters beginning with "ROLE"; toast read "Prompt copied to clipboard". The button briefly changed to "Copied".
+
+---
+
+## 3. Additional tests
+
+| ID | Test | Expected | Actual | Result |
+|---|---|---|---|---|
+| TC-11 | Navigation across all nine views | Each view opens, `aria-current="page"` set, correct breadcrumb | All nine views opened with correct breadcrumb and nav state | **PASS** |
+| TC-12 | LocalStorage persistence | Saved topic and sidebar badge survive a page reload | Badge showed 1 after reload; "Motherboard" present in Saved Learning | **PASS** |
+| TC-13 | Responsive layout | No horizontal overflow on any view at 1440, 820 and 375 px; hamburger hidden on desktop | 21 view/width combinations: all `ok`; menu button hidden at 1440 px, shown at 820/375 px | **PASS** |
+| TC-14 | Mobile menu and keyboard | Menu opens with `aria-expanded="true"` and scrim; Escape closes it | Opens correctly; Escape closed the drawer | **PASS** |
+| TC-15 | Dashboard empty state | Zero counts, guidance text, six tool cards | `{topics: 0, recent: "No activity yet…", tools: 6}` | **PASS** |
+| TC-16 | Console and page errors | No console errors or uncaught exceptions during the whole run | `pageErrors=[]`, `consoleErrors=[]` | **PASS** |
+| TC-17 | Duplicate element IDs | None | `duplicates=[]` | **PASS** |
+
+Additional behaviours checked manually during development and screenshot review:
+
+- Tablets at 820 px move the sidebar into the drawer and stack the workbench columns.
+- The planner's print action opens the browser print dialog with the form and navigation hidden by the print stylesheet.
+- Personal glossary terms can be added, appear immediately with a "Remove" action, and persist across reloads.
+- Clearing saved data asks for confirmation; cancelling leaves data intact.
+- Blocked LocalStorage shows a persistent warning toast and keeps the app usable for the session.
+
+---
+
+## 4. What was **not** tested
+
+Honest limits of this test pass:
+
+- **Real AI output quality.** The application generates prompts and never calls a model, so response accuracy, hallucination rate and refusal compliance were not measured. These depend on whichever assistant the learner uses.
+- **Other browsers.** Only Chromium was exercised. Firefox and Safari were not run, although the code uses only widely supported APIs with a clipboard fallback.
+- **Screen readers.** Accessibility was checked structurally (landmarks, labels, `aria-*` state, focus order, Escape handling), not with NVDA, JAWS or VoiceOver.
+- **`file://` operation in every browser.** Running from the filesystem is supported by design (classic scripts, no fetch), but only a served origin was automated; some browsers restrict clipboard or LocalStorage on `file://`.
+- **Storage quota exhaustion** (≈5 MB) and corrupted-storage recovery were not simulated, although the storage layer normalises unknown shapes.
+- **Print/PDF output fidelity** across browsers.
+- **Load/performance testing** — the app is a few hundred KB of static files with no network calls.
+
+---
+
+## 5. Defects found and fixed during testing
+
+| ID | Defect | Cause | Fix | Re-tested |
+|---|---|---|---|---|
+| D1 | Study plan cards never appeared on screen | The output container and the "number of days" input shared `id="plan-days"`; plan cards were appended inside the `<input>` | Renamed the container to `plan-days-list` | Yes — 3 cards, 411 px each, 60/60 minutes |
+| D2 | Panels marked `hidden` still occupied space | `.output-body { display: flex }` overrode the `hidden` attribute's default style | Added `[hidden] { display: none !important; }` | Yes — TC-04, TC-06 |
+| D3 | Hamburger menu visible on desktop | `.icon-btn { display: grid }` was declared after `.menu-btn { display: none }` and won on specificity/order | Used `.icon-btn.menu-btn` for both states | Yes — TC-13 |
+| D4 | A failed quiz submission left the previous prompt visible | Validation returned early without clearing the output panel | Added `invalidateOutput()` to the explainer, quiz, planner and grounded modules | Yes — TC-04, TC-06 |
+| D5 | Hero note text split into broken columns | `<strong>` and bare text nodes became separate flex items | Wrapped the sentence in a `<span>` and set `flex: none` on the icon | Yes — visual re-capture |
+| D6 | "Plan my study week" button nearly invisible | `.btn-outline` background stayed white inside the dark hero | Set a transparent background and light text/border inside `.hero` | Yes — visual re-capture |
+
+Minor adjustments made from the same review: objective text no longer lowercases topic names, a second self-assessment question was added per day, and long learner-level select labels were shortened.
+
+---
+
+## 6. Conclusion
+
+All 17 automated checks passed on the final build, with no console or page errors. The six defects found during testing were genuine and are fixed. The application meets every functional requirement in the brief: it produces structured prompts for all four prompt tools, computes a time-bounded study plan locally, searches a 41-term glossary, saves items locally, and reports honestly that no AI is connected.
+
+The main untested risk is the external step — what an AI does with these prompts — which is outside the application's control by design. See [`LIMITATIONS_AND_FUTURE_WORK.md`](LIMITATIONS_AND_FUTURE_WORK.md).
+
+### Reproducing this test run
+
+1. Serve the folder: `python3 -m http.server 3000` inside `StudyMate-ICT/`.
+2. Open <http://localhost:3000>.
+3. Clear site data, then follow TC-01 to TC-17 in order.
+4. For responsive checks, use browser device emulation at 1440, 820 and 375 px and confirm no horizontal scrollbar appears.
