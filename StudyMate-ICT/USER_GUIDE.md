@@ -294,3 +294,43 @@ Choose **Match my device** to follow your operating system, or force light/dark.
 - **Explain with AI** / **Generate & practise** — disabled when the deployment has no key (prompt mode), when you are offline, or while a request is already running. The note above the button says which.
 - **Save explanation** — enable after an explanation exists.
 - **Mark my answers** — disappears once you have marked that quiz; use **New quiz** to start again.
+
+## 16. Adding your own AI key (recommended)
+
+StudyMate works without any key — it builds prompts you can paste into an AI assistant. To get real answers inside the app, add your own key. It is free to add, and it stays on this computer.
+
+### Step by step
+
+1. Open **Home** in the sidebar (or **Settings**).
+2. Choose your provider in the **Provider** list — OpenAI, OpenRouter, Groq, Google Gemini, Mistral, DeepSeek, Together or Z.ai. Choose **Other provider** if your provider is not listed.
+3. Check the **Base URL**. It is the address your provider gives for its OpenAI-compatible API (for example `https://api.openai.com/v1`). It must **not** end in `/chat/completions`; StudyMate adds that part itself.
+4. Check the **Model** name — it must be a model your key is allowed to use.
+5. Paste your **API key** and press **Save & test key**.
+6. If you see “Connected … AI is ready”, you are done: **Start studying** and **Create a study plan** now use the AI. If you see an error, read it — a rejected key, a wrong model name and a base-URL problem each have their own message.
+
+### Where the key is stored
+
+- In **this browser, on this computer**, in LocalStorage. It is never sent to this website's server and never built into the app.
+- Requests go straight from this page to the provider you chose, using your key.
+- **Show/Hide** reveals the key only in the input box; the saved key is never printed back on screen.
+- **Remove saved key** (Home or Settings) deletes it immediately and the app returns to prompt mode.
+- **Settings → Delete all local data** also deletes the key.
+- Backups (.json) never contain the key.
+
+### Good habits
+
+- Do not save a key on a shared, school or public computer.
+- If a device is lost, revoke the key in your provider's dashboard.
+- Some providers block requests made directly from a browser (CORS). If the test fails with “Could not reach your provider from this browser”, use a provider that allows it, or ask the site owner to set a server-side key.
+
+### Which mode am I in?
+
+The chip in the top bar tells you:
+
+| Chip | Meaning |
+|---|---|
+| `Prompt mode · no API key` | No key anywhere: every tool still works and builds a prompt to copy |
+| `AI ready · <model> (your key)` | Your key is saved and tested; the first AI answer will confirm it |
+| `AI live · <model> (your key)` | Your own key is answering requests from this browser |
+| `AI live · <model>` | The deployment has its own server-side key |
+| `Prompt mode · offline` | You are offline (or opening the file from disk) |

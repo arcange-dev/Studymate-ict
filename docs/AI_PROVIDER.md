@@ -98,6 +98,30 @@ Supporting a provider with a *different* protocol means writing one function: re
 - The app stores the generated result locally only if the learner presses Save; prompts and notes are never stored server-side.
 - The server logs no request bodies, no notes and no keys.
 
-## 7. Cost control
+## 7. Learner-supplied key in the browser (no server)
+
+`StudyMate-ICT/js/local-ai.js` implements a second, independent path: the learner pastes their own key, base URL and model on the **Home** page or in **Settings**. It is stored under the LocalStorage key `studymate.ict.localai.v1` and read at call time.
+
+| Aspect | Server key (`/api/ai`) | Learner key (`local-ai.js`) |
+|---|---|---|
+| Where the key lives | Hosting environment | That browser's LocalStorage |
+| Who sees it | The server | Only the device (sent to the provider as `Authorization: Bearer …`) |
+| Request path | Browser → this app → provider | Browser → provider directly |
+| Validation | `sites/ai-core.js` | The same rules, re-implemented and re-applied in `local-ai.js` |
+| Rate limiting | Server-side per client and per day | None — the learner's own provider quota applies |
+| Works on static hosting | No | Yes |
+| Works when the provider blocks CORS | Yes | No |
+
+Both paths produce the identical normalised object, so the UI cannot tell them apart. The status chip distinguishes them: `AI live · <model> (your key)` for the browser path.
+
+Security notes for this mode:
+
+- The key is never rendered back into the DOM; the field shows a placeholder once a key is saved.
+- **Remove saved key** and **Delete all local data** both erase it.
+- It is excluded from JSON backups, so exporting/importing study data never copies a secret.
+- LocalStorage is readable by anything running on the same origin and by anyone with access to the browser profile, so the UI warns against using it on shared computers.
+- The Node server's CSP now allows `connect-src https:` for this path; the Sites Worker sets no CSP, so the browser path works there too.
+
+## 8. Cost control
 
 `AI_DAILY_CAP` (per instance, per UTC day) and `AI_RATE_LIMIT` (per client) are the two brakes. For a classroom demo, `AI_RATE_LIMIT=5` and `AI_DAILY_CAP=50` are reasonable. Because counts are in memory they reset on restart — for hard guarantees use a shared store (see limitations §1.5).

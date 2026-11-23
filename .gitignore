@@ -9,3 +9,4 @@ node_modules/
 
 # Wrangler/miniflare local state — never committed
 .wrangler/
+/freebuff-sites-build/

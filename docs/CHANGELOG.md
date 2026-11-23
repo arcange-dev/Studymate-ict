@@ -2,6 +2,29 @@
 
 All dates are 2026. The project follows a simple `MAJOR.MINOR.PATCH` scheme; the app version is shown in `package.json`.
 
+## 2.1.0 — 23 November 2026
+
+Home-page entry point, and a second AI path that needs no server key.
+
+### Added
+
+- **3D landing page** (`#/home`, now the default view): animated CSS cube of ICT domains with orbiting rings, pointer parallax (skipped for reduced motion and touch), the key-connection card, a three-step "add key → study → plan" explainer, and direct links to the explainer and planner.
+- **Learner-supplied AI key** (`js/local-ai.js`, `js/key-panel.js`): paste a key, base URL and model from any OpenAI-compatible provider (OpenAI, OpenRouter, Groq, Gemini, Mistral, DeepSeek, Together, Z.ai, or a custom base URL) on the Home page or in Settings. Stored in this browser's LocalStorage only, sent only to that provider, never to this app's server. Includes Save & test, Show/Hide, Remove, and a plain-language privacy warning.
+- **Independent validation for the browser path**: request checks, JSON parsing, explanation/quiz schema checks, answer-key derivation and readable errors for 401/404/429/400 and network/CORS failure.
+- **Prompt-mode fallback stays intact**: removing the key (or never adding one) returns the app to prompt mode with no reload.
+
+### Changed
+
+- The status chip now distinguishes the two paths: `AI live · <model> (your key)` versus `AI live · <model>`.
+- **Delete all local data** also deletes the saved key, and JSON backups still exclude it.
+- The Node server's Content-Security-Policy allows `connect-src https:` so the browser can reach the learner's provider; scripts, styles and frames remain same-origin.
+- Service worker bumped to **v4** (26 precached files) to include the new modules.
+- Root `wrangler.jsonc` and a committed `dist/` so the Publish button recognises the project as a Cloudflare Workers site.
+
+### Tests
+
+- 36 Node tests (up from 29): the learner-key path is covered by `tests/local-ai.test.js`.
+
 ## 2.0.0 — 20 November 2026
 
 The release that turned a prompt-only study assistant into an application with a real AI path, without breaking the offline build.

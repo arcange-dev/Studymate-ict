@@ -23,6 +23,30 @@
   var listeners = [];
   var lastCheckAt = 0;
 
+  function localAi() {
+    return window.SM && window.SM.localAi ? window.SM.localAi : null;
+  }
+
+  /** True when the learner has saved their own provider key in this browser. */
+  function localActive() {
+    var local = localAi();
+    return Boolean(local && local.isEnabled());
+  }
+
+  /** The learner's own key outranks the deployment's server key. */
+  function applyLocalState() {
+    var local = localAi();
+    if (!local || !local.isEnabled()) return false;
+    var config = local.get();
+    state.checked = true;
+    state.configured = true;
+    state.mode = 'live';
+    state.provider = 'your own API key';
+    state.model = config.model || null;
+    notify();
+    return true;
+  }
+
   function notify() {
     listeners.forEach(function (fn) {
       try { fn(state); } catch (err) { /* a listener must never break the app */ }
@@ -50,6 +74,7 @@
   /** Ask the server whether this deployment has AI configured. Cached. */
   function check() {
     if (state.checking) return state.checking;
+    if (applyLocalState()) return Promise.resolve(state);
     if (!originIsHttp()) {
       state.checked = true;
       state.mode = 'offline';
@@ -95,7 +120,27 @@
     return 'The AI request failed. Check your connection and try again.';
   }
 
+  /** Use the learner's own key, straight from this browser to their provider. */
+  function localRequest(body) {
+    return localAi().run(body).then(function (payload) {
+      if (!state.verified) {
+        state.verified = true;
+        state.mode = 'live';
+        notify();
+      }
+      return payload.data;
+    }, function (err) {
+      var message = (err && err.message) || 'The request to your provider failed.';
+      var wrapped = new Error(message);
+      wrapped.code = (err && err.code) || 'local-provider';
+      wrapped.retryable = wrapped.code === 'network' || wrapped.code === 'timeout';
+      throw wrapped;
+    });
+  }
+
   function request(body, options) {
+    if (localActive()) return localRequest(body);
+
     var retries = options && options.retries ? options.retries : 1;
     var attempt = 0;
 
@@ -177,15 +222,33 @@
     },
     label: function () {
       if (state.mode === 'live') {
-        return state.verified
-          ? 'AI live · ' + (state.model || state.provider || 'model')
-          : 'AI ready · ' + (state.model || state.provider || 'model');
+        var suffix = state.provider === 'your own API key' ? ' (your key)' : '';
+        return (state.verified ? 'AI live · ' : 'AI ready · ') + (state.model || state.provider || 'model') + suffix;
       }
       if (state.mode === 'prompt') return 'Prompt mode · no API key';
       if (state.mode === 'offline') return 'Prompt mode · offline';
       return 'Checking AI…';
     }
   };
+
+  /* Saving or removing a personal key changes the answer immediately, without
+     a page reload. Removing it falls back to the deployment's own endpoint. */
+  if (localAi()) {
+    localAi().subscribe(function () {
+      if (localActive()) {
+        state.checking = null;
+        applyLocalState();
+        return;
+      }
+      state.verified = false;
+      state.mode = 'unknown';
+      state.configured = false;
+      state.checked = false;
+      state.checking = null;
+      lastCheckAt = 0;
+      check();
+    });
+  }
 
   // Start the health check immediately so the status chip is honest on load.
   check();

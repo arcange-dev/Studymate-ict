@@ -6,6 +6,7 @@
   var ui = SM.ui;
 
   var ROUTES = {
+    home: { title: 'Home', heading: 'StudyMate ICT' },
     dashboard: { title: 'Dashboard', heading: 'StudyMate ICT' },
     explain: { title: 'Explain ICT', heading: 'ICT concept explainer' },
     quiz: { title: 'Quiz Generator', heading: 'Quiz generator' },
@@ -28,7 +29,7 @@
 
   function routeFromHash() {
     var raw = window.location.hash.replace(/^#\/?/, '').split(/[?&]/)[0].trim();
-    return Object.prototype.hasOwnProperty.call(ROUTES, raw) ? raw : 'dashboard';
+    return Object.prototype.hasOwnProperty.call(ROUTES, raw) ? raw : 'home';
   }
 
   function closeMenu() {
@@ -123,17 +124,22 @@
     var aboutText = ui.$('#about-ai-text');
 
     if (chip) {
+      var own = state.provider === 'your own API key';
       chip.dataset.mode = state.mode;
       chip.title = state.mode === 'live'
-        ? 'AI requests go to ' + (state.provider || 'the configured provider') + ' through this app’s server'
+        ? (own
+          ? 'Requests use the key saved in this browser and go straight to your provider'
+          : 'AI requests go to ' + (state.provider || 'the configured provider') + ' through this app’s server')
         : 'No model is contacted in this mode';
     }
     if (text) text.textContent = SM.ai.label();
 
     if (note) {
       note.textContent = state.mode === 'live'
-        ? 'AI is enabled: explanations and quizzes are generated on demand. Your notes are sent to the provider only when you press an AI button.'
-        : 'Without an API key StudyMate ICT never contacts a model — it builds the prompt for you to copy.';
+        ? (state.provider === 'your own API key'
+          ? 'AI is enabled with your own key, stored in this browser. Requests go straight from this page to your provider.'
+          : 'AI is enabled: explanations and quizzes are generated on demand. Your notes are sent to the provider only when you press an AI button.')
+        : 'Without an API key StudyMate ICT never contacts a model — it builds the prompt for you to copy. Add your own key on the Home page to switch AI on.';
     }
     if (pill) {
       pill.textContent = state.mode === 'live'
@@ -150,9 +156,9 @@
 
   if (!window.location.hash) {
     try {
-      window.history.replaceState(null, '', '#/dashboard');
+      window.history.replaceState(null, '', '#/home');
     } catch (err) {
-      window.location.hash = '#/dashboard';
+      window.location.hash = '#/home';
     }
   }
   show(routeFromHash());

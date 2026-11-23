@@ -15,10 +15,10 @@ The public demo has no AI key configured, so it runs in **prompt mode** and says
 | `StudyMate-ICT/` | The application: `index.html`, `css/`, `js/`, `sw.js`, `manifest.webmanifest`, icons, screenshots and the seven project documents |
 | `sites/` | Deployment for the public demo: `worker.js` (static assets + `/api/*`) and `ai-core.js` (the shared AI logic) |
 | `server/` | Zero-dependency Node server for Render and local development: `node-server.js` |
-| `tests/` | 29 automated tests: AI validation, HTTP surface, security, quiz marking, settings |
+| `tests/` | 36 automated tests: AI validation, HTTP surface, security, quiz marking, settings, learner-key mode |
 | `docs/` | Deployment, provider, troubleshooting and changelog documents |
 | `build.sh` | Regenerates `dist/`, the deploy bundle |
-| `dist/` | The committed deploy bundle (24 files) that both hosting configs serve |
+| `dist/` | The committed deploy bundle (27 files) that both hosting configs serve |
 | `wrangler.jsonc` | Root Workers config (`sites/worker.js` + `./dist` assets) — what Freebuff **Publish** detects |
 | `render.yaml` | Render Blueprint (one Web Service) |
 
@@ -48,7 +48,7 @@ OpenAI-compatible provider  ←  AI_API_KEY (server env only)
 ```bash
 git clone <this repo>
 cd <repo>
-./build.sh                  # writes dist/ (24 files)
+./build.sh                  # writes dist/ (27 files)
 node server/node-server.js  # http://localhost:3000
 ```
 
@@ -61,7 +61,16 @@ node --env-file=.env server/node-server.js
 
 The static app also runs offline straight from disk by opening `StudyMate-ICT/index.html` — the service worker is skipped on `file://`.
 
-## AI setup
+## Two ways to switch AI on
+
+StudyMate starts in prompt mode until *some* key exists. Either route works, and the Home page explains both:
+
+1. **Your own key, in this browser — no server needed.** Open **Home** (or **Settings**), pick a provider, and paste its base URL, model and API key. The key is stored in this browser's LocalStorage **on your computer**, sent only to the provider you chose, and never to this app's server. This works on the public demo and on any static hosting.
+2. **A key on the server — for deployments you own.** Set `AI_API_KEY` (plus `AI_BASE_URL` / `AI_MODEL`) on Render or your Node host. The key stays server-side and every request is validated and rate limited by the server.
+
+Some providers block browser requests (CORS). If the key test fails with a network error, that provider needs option 2.
+
+## AI setup (server-side key)
 
 1. Get a key for any OpenAI-compatible provider (OpenAI, OpenRouter, a self-hosted gateway).
 2. Set `AI_API_KEY` in the **server** environment — `.env` locally, Environment → `AI_API_KEY` on Render. Never put it in the frontend.
@@ -76,7 +85,7 @@ The contract, error map and how to add another provider: [`docs/AI_PROVIDER.md`]
 npm test
 ```
 
-29 tests, no dependencies, using Node's built-in runner. They cover request validation and schema enforcement, provider failures, rate limiting, key non-disclosure, HTTP headers, path-traversal protection, the SPA fallback, quiz marking and settings normalisation. Results and the full QA table are in [`StudyMate-ICT/TESTING_REPORT.md`](StudyMate-ICT/TESTING_REPORT.md) §8.
+36 tests, no dependencies, using Node's built-in runner. They cover request validation and schema enforcement, provider failures, rate limiting, key non-disclosure, HTTP headers, path-traversal protection, the SPA fallback, quiz marking, settings normalisation, and the learner-key path (base-URL checks, the provider being called with the learner's own key, rejected keys, and refusal of malformed model output). Results and the full QA table are in [`StudyMate-ICT/TESTING_REPORT.md`](StudyMate-ICT/TESTING_REPORT.md) §8–9.
 
 Manual browser checks (Chromium, Playwright) during this release: all 10 views, prompt mode, live AI against a local stub provider, quiz marking 3/5 = 60% with review, planner 2×45 min with persisted ticks, theme/subjects/plan persistence across reload, offline reload with 23 cached files, 390×844 mobile layout without horizontal overflow, keyboard focus and skip link. **A real AI provider was not tested — no key was available.**
 

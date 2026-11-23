@@ -52,7 +52,10 @@ function securityHeaders(extra) {
       "img-src 'self' data:",
       "style-src 'self' 'unsafe-inline'",
       "script-src 'self' 'unsafe-inline'",
-      "connect-src 'self'",
+      // https: is allowed because a learner may connect their own AI key
+      // straight from this page to their provider (see js/local-ai.js). The
+      // key never goes to this server; this only permits the provider origin.
+      "connect-src 'self' https: http://localhost:* http://127.0.0.1:*",
       "manifest-src 'self'",
       "object-src 'none'",
       "base-uri 'none'",

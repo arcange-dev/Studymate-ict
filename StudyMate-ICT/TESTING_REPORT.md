@@ -262,3 +262,37 @@ Command: `npm test` (Node's built-in runner, no dependencies).
 - **Render.** No account or credentials. The Node server and `render.yaml` were exercised locally only; see `docs/RENDER_DEPLOYMENT.md`.
 - Screen readers, Safari/Firefox, iOS install, and automated contrast audits.
 - Long-running multi-instance rate limiting (in-memory limits are per instance).
+
+## 9. Local-key mode and the 3D landing page (23 November 2026)
+
+Added when a learner asked to connect their own provider key inside the app and to start from a landing page.
+
+### 9.1 Automated
+
+`npm test` → **36 tests, 36 pass, 0 fail** (`tests/local-ai.test.js` adds 7). The new tests cover:
+
+| Test | Expected | Actual | Status |
+|---|---|---|---|
+| Key validation | A blank key, a non-https base URL and a missing model are refused with readable errors | Refused: “Paste your API key first.”, “The base URL must start with https://…”, “Enter the model name…” | Pass |
+| Storage | The key is written to `studymate.ict.localai.v1` and removed by `clear()` | Written and removed; `isEnabled()` returns false afterwards | Pass |
+| Provider call | `run({op:'explain'})` posts to `<base>/chat/completions` with `Authorization: Bearer <learner key>`, `response_format: json_object`, and the topic in the user message | Exactly that URL, header and body | Pass |
+| Rejected key | 401 becomes a clear message, not raw provider output | “Your provider rejected the key…” with code `unauthorized` | Pass |
+| Malformed output | Non-JSON, missing fields, an mcq without four distinct options are refused | All refused with schema errors | Pass |
+| Quiz normalisation | ids renumbered, mcq answer derived from the index, true/false kept boolean, short answers get keywords | As expected | Pass |
+
+### 9.2 Browser (Chromium, Playwright, against the local server)
+
+A stubbed provider endpoint (`**/chat/completions`) was used so the real request path could be exercised without a real key; no claim is made about real model quality here.
+
+| Test | Expected | Actual | Status |
+|---|---|---|---|
+| Landing page | `#/home` is the default view with the 3D cube, 11 nav links, key panel and CTAs | hash `#/home`, 6 cube faces, 11 nav links, 2 key panels, CTA “Add my API key” | Pass |
+| Save & test | Key saved, test request sent with the learner key, status “Connected” | `Connected. stub-model answered successfully — AI is ready.`; request `https://api.example.com/v1/chat/completions`, `Bearer sk-te…`, model `stub-model`, `json_object` | Pass |
+| The key works end to end | Explain with AI renders the validated explanation | 9 sections rendered; chip `AI live · stub-model (your key)`; panel mode `live`; key present in LocalStorage | Pass |
+| Key removal | Removing the key returns to prompt mode | chip `Prompt mode · no API key`, LocalStorage entry gone, prompt output still built | Pass |
+| Mobile layout | No horizontal overflow at 390×844, cube scaled down, floating chips hidden | overflow 0 px, stage 299×280, chips hidden, key fields usable | Pass |
+
+### 9.3 Still not tested
+
+- **A real provider with a real key.** The browser path was proven against a stub; only a live key can confirm provider-specific CORS behaviour, model JSON discipline and real latency.
+- Safari/Firefox and screen readers.

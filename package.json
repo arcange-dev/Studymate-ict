@@ -13,5 +13,8 @@
     "start": "node server/node-server.js",
     "dev": "node --env-file-if-exists=.env server/node-server.js",
     "test": "node --test tests/"
+  },
+  "devDependencies": {
+    "wrangler": "4.148.0"
   }
 }

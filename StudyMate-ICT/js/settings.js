@@ -129,7 +129,9 @@
     });
 
     deleteBtn.addEventListener('click', function () {
-      if (!window.confirm('Delete all saved topics, prompts, quizzes, plans, glossary terms and settings from this browser? This cannot be undone.')) return;
+      if (!window.confirm('Delete all saved topics, prompts, quizzes, plans, glossary terms and settings from this browser, plus any AI key saved here? This cannot be undone.')) return;
+      // The personal AI key is stored separately from study data; clear it too.
+      if (SM.localAi) SM.localAi.clear();
       SM.store.resetAll();
       fillForm();
       apply(current());

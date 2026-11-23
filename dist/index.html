@@ -32,6 +32,7 @@
   <!-- Icon sprite -->
   <svg class="sprite" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
     <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5V21a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1V10.5Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></symbol>
+    <symbol id="i-grid" viewBox="0 0 24 24"><rect x="4" y="4" width="7" height="7" rx="1.6" fill="none" stroke="currentColor" stroke-width="1.7"/><rect x="13" y="4" width="7" height="7" rx="1.6" fill="none" stroke="currentColor" stroke-width="1.7"/><rect x="4" y="13" width="7" height="7" rx="1.6" fill="none" stroke="currentColor" stroke-width="1.7"/><rect x="13" y="13" width="7" height="7" rx="1.6" fill="none" stroke="currentColor" stroke-width="1.7"/></symbol>
     <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 4h6a3 3 0 0 1 3 3v13a2.5 2.5 0 0 0-2.5-2.5H4V4Zm16 0h-6a3 3 0 0 0-3 3v13a2.5 2.5 0 0 1 2.5-2.5H20V4Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></symbol>
     <symbol id="i-quiz" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M9.6 9.2A2.5 2.5 0 0 1 14.5 10c0 1.6-2.5 1.9-2.5 3.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><circle cx="12" cy="17" r="1.1" fill="currentColor"/></symbol>
     <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="16" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M3.5 10h17M8 3v4M16 3v4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></symbol>
@@ -66,7 +67,8 @@
 
       <nav class="nav" aria-label="Study tools">
         <p class="nav-label">Workspace</p>
-        <a class="nav-link" href="#/dashboard" data-route="dashboard"><svg class="icon" aria-hidden="true"><use href="#i-home"/></svg><span>Dashboard</span></a>
+        <a class="nav-link" href="#/home" data-route="home"><svg class="icon" aria-hidden="true"><use href="#i-home"/></svg><span>Home</span></a>
+        <a class="nav-link" href="#/dashboard" data-route="dashboard"><svg class="icon" aria-hidden="true"><use href="#i-grid"/></svg><span>Dashboard</span></a>
         <a class="nav-link" href="#/explain" data-route="explain"><svg class="icon" aria-hidden="true"><use href="#i-book"/></svg><span>Explain ICT</span></a>
         <a class="nav-link" href="#/quiz" data-route="quiz"><svg class="icon" aria-hidden="true"><use href="#i-quiz"/></svg><span>Quiz Generator</span></a>
         <a class="nav-link" href="#/planner" data-route="planner"><svg class="icon" aria-hidden="true"><use href="#i-calendar"/></svg><span>Study Planner</span></a>
@@ -103,6 +105,74 @@
       </header>
 
       <main id="main" tabindex="-1">
+
+        <!-- ============ HOME / 3D LANDING ============ -->
+        <section class="view" id="view-home" data-view="home" aria-labelledby="home-h1" hidden>
+          <div class="landing">
+            <div class="landing-copy">
+              <p class="eyebrow">AI-assisted ICT study companion</p>
+              <h1 id="home-h1">Add your own AI key, then <span>learn ICT</span> your way</h1>
+              <p class="lede">
+                StudyMate ICT explains topics, builds quizzes from your notes and turns your week into a study plan.
+                Use a key from <strong>any AI provider in the world</strong> that speaks the OpenAI API — you enter its base URL and model.
+                The key is stored only in this browser, on this computer.
+              </p>
+              <div class="landing-cta">
+                <button type="button" class="btn btn-primary" data-focus-key>
+                  <svg class="icon" aria-hidden="true"><use href="#i-spark"/></svg>Add my API key
+                </button>
+                <a class="btn btn-outline" href="#/explain">Start studying</a>
+                <a class="btn btn-ghost" href="#/planner">Create a study plan</a>
+              </div>
+              <p class="hero-note"><svg class="icon" aria-hidden="true"><use href="#i-info"/></svg><span>No key yet? Every tool still works in prompt mode — StudyMate prepares the prompt for you to paste into any AI chat.</span></p>
+              <ul class="landing-points">
+                <li>Your key never leaves this device except to your provider</li>
+                <li>Any OpenAI-compatible provider, or your own gateway</li>
+                <li>Explanations, quizzes, plans and a 41-term glossary</li>
+              </ul>
+            </div>
+
+            <div class="stage" id="landing-stage" aria-hidden="true">
+              <div class="stage-glow"></div>
+              <div class="stage-orbit orbit-a"></div>
+              <div class="stage-orbit orbit-b"></div>
+              <div class="cube">
+                <div class="cube-face face-front"><span>Hardware</span></div>
+                <div class="cube-face face-back"><span>Networking</span></div>
+                <div class="cube-face face-right"><span>Programming</span></div>
+                <div class="cube-face face-left"><span>Databases</span></div>
+                <div class="cube-face face-top"><span>Security</span></div>
+                <div class="cube-face face-bottom"><span>AI</span></div>
+              </div>
+              <span class="float-chip chip-one">Explain a topic</span>
+              <span class="float-chip chip-two">Quiz from my notes</span>
+              <span class="float-chip chip-three">My study plan</span>
+            </div>
+          </div>
+
+          <section class="card key-card" aria-labelledby="home-key-h">
+            <h2 class="sr-only" id="home-key-h">Connect your own AI key</h2>
+            <div data-key-panel="compact"></div>
+          </section>
+
+          <div class="landing-steps">
+            <article class="step-card">
+              <span class="step-num" aria-hidden="true">1</span>
+              <h2>Add your key</h2>
+              <p>Paste a key from any OpenAI-compatible provider, with its base URL and model. It is saved in this browser only — never on a server.</p>
+            </article>
+            <article class="step-card">
+              <span class="step-num" aria-hidden="true">2</span>
+              <h2>Start studying</h2>
+              <p>Ask for an ICT topic at your level and get a structured lesson with examples, vocabulary and revision questions.</p>
+            </article>
+            <article class="step-card">
+              <span class="step-num" aria-hidden="true">3</span>
+              <h2>Create a study plan</h2>
+              <p>Enter your topics, days and minutes, and get a day-by-day plan with breaks, revision and tickable sessions.</p>
+            </article>
+          </div>
+        </section>
 
         <!-- ============ DASHBOARD ============ -->
         <section class="view" id="view-dashboard" data-view="dashboard" aria-labelledby="dash-h1" hidden>
@@ -697,6 +767,11 @@
             <p class="settings-message" id="settings-message" role="status" hidden></p>
           </form>
 
+          <section class="card settings-card" aria-labelledby="settings-key-h">
+            <h2 class="sr-only" id="settings-key-h">Your own AI key</h2>
+            <div data-key-panel="settings"></div>
+          </section>
+
           <section class="card settings-card" aria-labelledby="data-h">
             <h2 class="settings-h2" id="data-h">Your data</h2>
             <p class="muted">Saved topics, prompts, quizzes, plans and terms live in this browser's LocalStorage. Export a backup before clearing browser data or switching devices.</p>
@@ -776,6 +851,7 @@
   <script src="js/core.js"></script>
   <script src="js/storage.js"></script>
   <script src="js/ui.js"></script>
+  <script src="js/local-ai.js"></script>
   <script src="js/ai.js"></script>
   <script src="js/prompts.js"></script>
   <script src="js/glossary-data.js"></script>
@@ -789,6 +865,8 @@
   <script src="js/saved.js"></script>
   <script src="js/settings.js"></script>
   <script src="js/app.js"></script>
+  <script src="js/key-panel.js"></script>
+  <script src="js/landing.js"></script>
   <script>
     // Offline install support. A service worker needs a secure origin, so this is
     // skipped when the app is opened straight from disk with file://.
