@@ -1,0 +1,18 @@
+{
+  // StudyMate ICT ships as a Cloudflare Workers project: one Worker serves the
+  // static app shell and the two /api routes, so the AI key stays server-side.
+  // This file is what the Publish button looks for; sites/site.manifest.json is
+  // the equivalent manifest used by the Sites deploy tooling.
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "studymate-ict",
+  "main": "sites/worker.js",
+  "compatibility_date": "2026-11-01",
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "not_found_handling": "single-page-application"
+  },
+  "observability": {
+    "enabled": true
+  }
+}

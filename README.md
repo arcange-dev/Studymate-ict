@@ -18,6 +18,8 @@ The public demo has no AI key configured, so it runs in **prompt mode** and says
 | `tests/` | 29 automated tests: AI validation, HTTP surface, security, quiz marking, settings |
 | `docs/` | Deployment, provider, troubleshooting and changelog documents |
 | `build.sh` | Regenerates `dist/`, the deploy bundle |
+| `dist/` | The committed deploy bundle (24 files) that both hosting configs serve |
+| `wrangler.jsonc` | Root Workers config (`sites/worker.js` + `./dist` assets) — what Freebuff **Publish** detects |
 | `render.yaml` | Render Blueprint (one Web Service) |
 
 ## Stack
@@ -81,7 +83,7 @@ Manual browser checks (Chromium, Playwright) during this release: all 10 views, 
 ## Deploy
 
 - **Render** (prepared, not deployed here — no account was available): one Web Service, build `./build.sh`, start `node server/node-server.js`, health check `/api/health`. Step-by-step: [`docs/RENDER_DEPLOYMENT.md`](docs/RENDER_DEPLOYMENT.md).
-- **Freebuff Sites** (the live demo): `sites/site.manifest.json` + `sites/worker.js`, assets from `dist/`.
+- **Freebuff Sites** (the live demo): a Cloudflare Workers project — `wrangler.jsonc` at the root, `sites/worker.js` as `main`, assets from `dist/`, `/api/*` handled by the Worker. `sites/site.manifest.json` describes the same deployment for the Sites tools.
 
 ## Documentation
 

@@ -2,8 +2,11 @@
 # Regenerate the deploy bundle in dist/ from StudyMate-ICT/.
 #
 # The bundle is the app shell only: documentation and screenshots are excluded,
-# because the deployed site does not need them. dist/ is git-ignored build
-# output and is uploaded with sites/site.manifest.json (assetsDirectory: ../dist).
+# because the deployed site does not need them. dist/ is committed (not ignored)
+# so hosting can serve it with no build step, and it is what
+# sites/site.manifest.json (assetsDirectory: ../dist) and the root
+# wrangler.jsonc (assets.directory: ./dist) both point at. Re-run this and
+# commit dist/ whenever StudyMate-ICT/ changes.
 set -eu
 
 cd "$(dirname "$0")"

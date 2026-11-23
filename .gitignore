@@ -1,7 +1,11 @@
-dist/
+# dist/ is committed on purpose: it is the deploy bundle that hosting serves
+# with no build step (wrangler.jsonc assets.directory and the Sites manifest).
 node_modules/
 .DS_Store
 .env
 .env.*
 !.env.example
 *.log
+
+# Wrangler/miniflare local state — never committed
+.wrangler/

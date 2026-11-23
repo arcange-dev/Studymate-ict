@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="StudyMate ICT — an offline-first AI-assisted study assistant for beginner ICT students: concept explainers, quiz prompts, study plans, a glossary and source-grounded learning." />
+  <meta name="theme-color" content="#0b1c33" />
+  <title>StudyMate ICT — AI-assisted ICT study assistant</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="assets/icons/icon-192.png" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <meta name="color-scheme" content="light dark" />
+  <script>
+    // Apply the saved theme before first paint so there is no flash of the wrong theme.
+    (function () {
+      try {
+        var raw = window.localStorage.getItem('studymate.ict.v1');
+        var saved = raw ? JSON.parse(raw) : null;
+        var theme = (saved && saved.settings && saved.settings.theme) || 'system';
+        var dark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        document.documentElement.dataset.theme = theme === 'system' ? (dark ? 'dark' : 'light') : theme;
+      } catch (err) {
+        document.documentElement.dataset.theme = 'light';
+      }
+    })();
+  </script>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <!-- Icon sprite -->
+  <svg class="sprite" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5V21a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1V10.5Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></symbol>
+    <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 4h6a3 3 0 0 1 3 3v13a2.5 2.5 0 0 0-2.5-2.5H4V4Zm16 0h-6a3 3 0 0 0-3 3v13a2.5 2.5 0 0 1 2.5-2.5H20V4Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></symbol>
+    <symbol id="i-quiz" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M9.6 9.2A2.5 2.5 0 0 1 14.5 10c0 1.6-2.5 1.9-2.5 3.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><circle cx="12" cy="17" r="1.1" fill="currentColor"/></symbol>
+    <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="16" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M3.5 10h17M8 3v4M16 3v4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></symbol>
+    <symbol id="i-glossary" viewBox="0 0 24 24"><path d="M5 4h9a4 4 0 0 1 4 4v13H8a3 3 0 0 1-3-3V4Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M9 9h6M9 13h4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 4.2-3 7.7-7 9-4-1.3-7-4.8-7-9V6l7-3Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="m8.8 12 2.2 2.2 4.2-4.4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-library" viewBox="0 0 24 24"><path d="M4 4h4v16H4V4Zm6 0h4v16h-4V4Zm6 2 3.6 1-3.3 14-3.6-1L16 6Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></symbol>
+    <symbol id="i-saved" viewBox="0 0 24 24"><path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4.2L5 21V4a1 1 0 0 1 1-1Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M12 11v5.5" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/><circle cx="12" cy="7.9" r="1.15" fill="currentColor"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8.5" y="8.5" width="12" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M15.5 5.5v-1a1 1 0 0 0-1-1h-9a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h1" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></symbol>
+    <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9L12 3Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M18.5 15.5l.8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8.8-2.2Z" fill="currentColor"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M9 7V5h6v2M6.5 7l.8 13h9.4l.8-13" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></symbol>
+    <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M12 2.8v2.4M12 18.8v2.4M21.2 12h-2.4M5.2 12H2.8M18.5 5.5l-1.7 1.7M7.2 16.8l-1.7 1.7M18.5 18.5l-1.7-1.7M7.2 7.2 5.5 5.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 4.5 21 20H3L12 4.5Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M12 10v4.2" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/><circle cx="12" cy="17.2" r="1.05" fill="currentColor"/></symbol>
+    <symbol id="i-print" viewBox="0 0 24 24"><path d="M7 8V3h10v5M7 18H5a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><rect x="7" y="14" width="10" height="7" rx="1" fill="none" stroke="currentColor" stroke-width="1.7"/></symbol>
+  </svg>
+
+  <div class="app-shell">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar" aria-label="Main navigation">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 32 32" width="28" height="28"><rect width="32" height="32" rx="9" fill="url(#bg)"/><defs><linearGradient id="bg" x1="0" y1="0" x2="32" y2="32"><stop stop-color="#14b8a6"/><stop offset="1" stop-color="#2563eb"/></linearGradient></defs><path d="M9 21.5V10.5l7 6 7-6v11" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        <span class="brand-text">
+          <strong>StudyMate</strong>
+          <small>ICT learning assistant</small>
+        </span>
+      </div>
+
+      <nav class="nav" aria-label="Study tools">
+        <p class="nav-label">Workspace</p>
+        <a class="nav-link" href="#/dashboard" data-route="dashboard"><svg class="icon" aria-hidden="true"><use href="#i-home"/></svg><span>Dashboard</span></a>
+        <a class="nav-link" href="#/explain" data-route="explain"><svg class="icon" aria-hidden="true"><use href="#i-book"/></svg><span>Explain ICT</span></a>
+        <a class="nav-link" href="#/quiz" data-route="quiz"><svg class="icon" aria-hidden="true"><use href="#i-quiz"/></svg><span>Quiz Generator</span></a>
+        <a class="nav-link" href="#/planner" data-route="planner"><svg class="icon" aria-hidden="true"><use href="#i-calendar"/></svg><span>Study Planner</span></a>
+        <a class="nav-link" href="#/glossary" data-route="glossary"><svg class="icon" aria-hidden="true"><use href="#i-glossary"/></svg><span>ICT Glossary</span></a>
+        <a class="nav-link" href="#/source" data-route="source"><svg class="icon" aria-hidden="true"><use href="#i-shield"/></svg><span>Source-Grounded</span></a>
+        <a class="nav-link" href="#/library" data-route="library"><svg class="icon" aria-hidden="true"><use href="#i-library"/></svg><span>Prompt Library</span></a>
+        <p class="nav-label">Your work</p>
+        <a class="nav-link" href="#/saved" data-route="saved"><svg class="icon" aria-hidden="true"><use href="#i-saved"/></svg><span>Saved Learning</span><span class="nav-badge" id="nav-saved-count" hidden>0</span></a>
+        <a class="nav-link" href="#/settings" data-route="settings"><svg class="icon" aria-hidden="true"><use href="#i-gear"/></svg><span>Settings</span></a>
+        <a class="nav-link" href="#/about" data-route="about"><svg class="icon" aria-hidden="true"><use href="#i-info"/></svg><span>About the Project</span></a>
+      </nav>
+
+      <div class="sidebar-foot">
+        <p class="offline-pill"><span class="dot" aria-hidden="true"></span> Works offline</p>
+        <p class="tiny">No account, no tracking. Saved items stay in this browser only.</p>
+      </div>
+    </aside>
+    <div class="scrim" id="scrim" hidden></div>
+
+    <!-- Main -->
+    <div class="main-wrap">
+      <header class="topbar">
+        <button class="icon-btn menu-btn" id="menu-btn" aria-label="Open navigation menu" aria-expanded="false" aria-controls="sidebar">
+          <svg class="icon" aria-hidden="true"><use href="#i-menu"/></svg>
+        </button>
+        <div class="topbar-title">
+          <span class="crumb" id="page-crumb">Dashboard</span>
+          <span class="status-chip" id="ai-status" data-mode="unknown" title="AI connection status"><span class="dot" aria-hidden="true"></span><span id="ai-status-text">Checking AI…</span></span>
+        </div>
+        <div class="topbar-actions">
+          <a class="btn btn-ghost btn-sm" href="#/library">Prompt library</a>
+          <a class="btn btn-primary btn-sm" href="#/explain"><svg class="icon" aria-hidden="true"><use href="#i-spark"/></svg>New explanation</a>
+        </div>
+      </header>
+
+      <main id="main" tabindex="-1">
+
+        <!-- ============ DASHBOARD ============ -->
+        <section class="view" id="view-dashboard" data-view="dashboard" aria-labelledby="dash-h1" hidden>
+          <div class="hero">
+            <div class="hero-copy">
+              <p class="eyebrow">AI-assisted learning · TVET Level 4</p>
+              <h1 id="dash-h1">Study smarter with <span>StudyMate ICT</span></h1>
+              <p class="lede">Build clear explanations, quizzes and study plans for computer systems and ICT topics — using carefully engineered prompts you can run in any AI assistant, or work through entirely offline.</p>
+              <div class="hero-actions">
+                <a class="btn btn-primary" href="#/explain"><svg class="icon" aria-hidden="true"><use href="#i-book"/></svg>Explain an ICT topic</a>
+                <a class="btn btn-outline" href="#/planner">Plan my study week</a>
+              </div>
+              <p class="hero-note"><svg class="icon" aria-hidden="true"><use href="#i-info"/></svg><span id="hero-ai-note">Without an API key StudyMate ICT never contacts a model — it builds the prompt for you to copy.</span></p>
+            </div>
+            <div class="hero-panel" aria-hidden="true">
+              <div class="hp-row"><span class="hp-dot"></span>Topic → structured prompt</div>
+              <div class="hp-code">
+                <span class="k">1. Definition</span>
+                <span class="k">2. Why it matters</span>
+                <span class="k">3. Step-by-step</span>
+                <span class="k">4. Practical example</span>
+                <span class="k">5. Real-world use</span>
+                <span class="k">6. Misconceptions</span>
+                <span class="k">7. Summary</span>
+                <span class="k">8. Practice questions</span>
+                <span class="k">9. Answers</span>
+              </div>
+              <div class="hp-foot">9-part explanation contract</div>
+            </div>
+          </div>
+
+          <div class="stat-grid" id="stat-grid">
+            <article class="stat-card"><span class="stat-label">Saved topics</span><strong class="stat-value" id="stat-topics">0</strong><span class="stat-sub">from explainers &amp; plans</span></article>
+            <article class="stat-card"><span class="stat-label">Saved prompts</span><strong class="stat-value" id="stat-prompts">0</strong><span class="stat-sub">ready to reuse</span></article>
+            <article class="stat-card"><span class="stat-label">Glossary terms</span><strong class="stat-value" id="stat-terms">0</strong><span class="stat-sub">saved to your list</span></article>
+            <article class="stat-card"><span class="stat-label">Prompts generated</span><strong class="stat-value" id="stat-activity">0</strong><span class="stat-sub">all activity</span></article>
+          </div>
+
+          <div class="section-head">
+            <h2>Your study tools</h2>
+            <p>Six focused tools. Each one builds a prompt, not an answer.</p>
+          </div>
+          <div class="tool-grid" id="tool-grid"></div>
+
+          <div class="split">
+            <section class="card" aria-labelledby="recent-h">
+              <div class="card-head">
+                <h2 id="recent-h">Recently used</h2>
+                <a class="link" href="#/saved">View all activity</a>
+              </div>
+              <ul class="activity-list" id="recent-list"></ul>
+            </section>
+            <section class="card" aria-labelledby="focus-h">
+              <div class="card-head">
+                <h2 id="focus-h">Study focus</h2>
+                <a class="link" href="#/saved">Manage saved</a>
+              </div>
+              <div id="focus-body"></div>
+            </section>
+          </div>
+
+          <div class="split even">
+            <section class="card" aria-labelledby="quiz-results-h">
+              <div class="card-head">
+                <h2 id="quiz-results-h">Recent quiz results</h2>
+                <a class="link" href="#/quiz">Practise</a>
+              </div>
+              <ul class="saved-list" id="quiz-results"></ul>
+            </section>
+            <section class="card" aria-labelledby="plan-progress-h">
+              <div class="card-head">
+                <h2 id="plan-progress-h">Study-plan progress</h2>
+                <a class="link" href="#/planner">Open planner</a>
+              </div>
+              <div id="plan-progress-card"></div>
+            </section>
+          </div>
+        </section>
+
+        <!-- ============ EXPLAIN ============ -->
+        <section class="view" id="view-explain" data-view="explain" aria-labelledby="explain-h1" hidden>
+          <div class="page-head">
+            <p class="eyebrow">Feature 01</p>
+            <h1 id="explain-h1">ICT concept explainer</h1>
+            <p class="lede">Describe a topic and the learner, and StudyMate builds a nine-part teaching prompt — definition, importance, step-by-step walkthrough, example, misconceptions, summary, practice questions and answers.</p>
+          </div>
+
+          <div class="workbench">
+            <form class="card form-card" id="explain-form" novalidate>
+              <div class="field">
+                <label for="explain-topic">ICT topic <span class="req" aria-hidden="true">*</span></label>
+                <input type="text" id="explain-topic" name="topic" placeholder="e.g. RAM, the CPU, virtual memory, subnetting" autocomplete="off" aria-describedby="explain-topic-hint explain-error" required />
+                <p class="hint" id="explain-topic-hint">One concept works best. Be specific: “how RAM differs from ROM” beats “computers”.</p>
+              </div>
+              <div class="field-row">
+                <div class="field">
+                  <label for="explain-level">Learner level</label>
+                  <select id="explain-level" name="level">
+                    <option>Beginner (first ICT course)</option>
+                    <option>TVET Level 4 learner</option>
+                    <option>Intermediate (some hardware knowledge)</option>
+                    <option>Advanced / exam revision</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="explain-prior">Prior knowledge</label>
+                  <select id="explain-prior" name="prior">
+                    <option>None — complete beginner</option>
+                    <option>Basic computer parts</option>
+                    <option>Comfortable with ICT terms</option>
+                  </select>
+                </div>
+              </div>
+              <div class="field">
+                <label for="explain-length">Preferred explanation length</label>
+                <select id="explain-length" name="length">
+                  <option value="short">Short — about 150 words per section</option>
+                  <option value="medium" selected>Medium — about 300 words per section</option>
+                  <option value="long">Detailed — about 500 words per section</option>
+                </select>
+              </div>
+              <div class="ai-panel" id="explain-ai-panel" data-mode="unknown">
+                <p class="ai-panel-line"><svg class="icon" aria-hidden="true"><use href="#i-spark"/></svg><span id="explain-ai-note">Checking whether this deployment has AI enabled…</span></p>
+                <p class="ai-disclosure" id="explain-disclosure" hidden><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg>Your topic and levels are sent to the configured AI provider to generate the explanation. Do not type personal or confidential information.</p>
+              </div>
+              <p class="error-msg" id="explain-error" role="alert" hidden></p>
+              <div class="form-actions">
+                <button type="button" class="btn btn-primary" id="explain-ai"><svg class="icon" aria-hidden="true"><use href="#i-spark"/></svg>Explain with AI</button>
+                <button type="submit" class="btn btn-outline">Build copy-paste prompt</button>
+                <button type="reset" class="btn btn-ghost">Clear</button>
+              </div>
+              <p class="form-note"><svg class="icon" aria-hidden="true"><use href="#i-shield"/></svg>Saved items stay in this browser. Without an API key the app never contacts a model.</p>
+            </form>
+
+            <section class="card output-card" aria-labelledby="explain-out-h">
+              <div class="card-head">
+                <h2 id="explain-out-h">Explanation</h2>
+                <span class="tag" id="explain-out-tag" hidden></span>
+              </div>
+              <div class="output-empty" id="explain-empty">
+                <svg class="icon icon-lg" aria-hidden="true"><use href="#i-book"/></svg>
+                <p><strong>No explanation yet.</strong> Enter a topic and press “Explain with AI”, or build a prompt to run in another assistant.</p>
+              </div>
+              <div class="loading" id="explain-loading" hidden role="status">
+                <span class="spinner" aria-hidden="true"></span>
+                <span>Asking the AI tutor for a structured explanation…</span>
+              </div>
+              <div class="output-body" id="explain-ai-result" hidden aria-live="polite">
+                <div id="explain-ai-sections"></div>
+                <div class="output-actions">
+                  <button type="button" class="btn btn-outline btn-sm" id="explain-retry"><svg class="icon" aria-hidden="true"><use href="#i-spark"/></svg>Retry</button>
+                  <button type="button" class="btn btn-outline btn-sm" id="explain-ai-save"><svg class="icon" aria-hidden="true"><use href="#i-saved"/></svg>Save explanation</button>
+                </div>
+                <p class="ai-foot">Generated by an AI model. Check every claim against your notes, textbook or lecturer before relying on it.</p>
+              </div>
+              <div class="output-body" id="explain-body" hidden>
+                <details class="hint-box" open>
+                  <summary>Copy-paste prompt</summary>
+                  <pre class="prompt-box" id="explain-output" tabindex="0" aria-label="Generated explanation prompt"></pre>
+                  <div class="output-actions">
+                    <button type="button" class="btn btn-primary btn-sm" data-copy="explain-output"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg>Copy prompt</button>
+                    <button type="button" class="btn btn-outline btn-sm" id="explain-save"><svg class="icon" aria-hidden="true"><use href="#i-saved"/></svg>Save prompt</button>
+                  </div>
+                  <ol class="steps">
+                    <li>Copy the prompt.</li>
+                    <li>Paste it into an AI assistant you are allowed to use.</li>
+                    <li>Check every claim against your notes, textbook or lecturer.</li>
+                  </ol>
+                </details>
+              </div>
+            </section>
+          </div>
+        </section>
+
+        <!-- ============ QUIZ ============ -->
+        <section class="view" id="view-quiz" data-view="quiz" aria-labelledby="quiz-h1" hidden>
+          <div class="page-head">
+            <p class="eyebrow">Feature 02</p>
+            <h1 id="quiz-h1">Quiz generator</h1>
+            <p class="lede">Paste your own study notes and get a quiz-building prompt that is locked to those notes — with an answer key and explanations, and a strict rule against inventing facts.</p>
+          </div>
+
+          <div class="workbench">
+            <form class="card form-card" id="quiz-form" novalidate>
+              <div class="field">
+                <label for="quiz-notes">Study notes <span class="req" aria-hidden="true">*</span></label>
+                <textarea id="quiz-notes" name="notes" rows="8" placeholder="Paste the notes or textbook section your quiz must be based on…" aria-describedby="quiz-notes-hint quiz-error" required></textarea>
+                <div class="hint-row">
+                  <p class="hint" id="quiz-notes-hint">The prompt will instruct the AI to use only these notes.</p>
+                  <p class="counter" id="quiz-count" aria-live="polite">0 words</p>
+                </div>
+              </div>
+              <div class="field-row three">
+                <div class="field">
+                  <label for="quiz-num">Questions</label>
+                  <select id="quiz-num" name="num">
+                    <option>5</option>
+                    <option selected>10</option>
+                    <option>15</option>
+                    <option>20</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="quiz-diff">Difficulty</label>
+                  <select id="quiz-diff" name="difficulty">
+                    <option>Easy — recall and recognition</option>
+                    <option selected>Medium — understanding and application</option>
+                    <option>Hard — analysis and troubleshooting</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="quiz-type">Question type</label>
+                  <select id="quiz-type" name="type">
+                    <option>Multiple choice (4 options)</option>
+                    <option>True or false</option>
+                    <option>Short answer</option>
+                    <option selected>Mixed</option>
+                  </select>
+                </div>
+              </div>
+              <div class="ai-panel" id="quiz-ai-panel" data-mode="unknown">
+                <p class="ai-panel-line"><svg class="icon" aria-hidden="true"><use href="#i-spark"/></svg><span id="quiz-ai-note">Checking whether this deployment has AI enabled…</span></p>
+                <p class="ai-disclosure" id="quiz-disclosure" hidden><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg>Your pasted notes are sent to the configured AI provider so it can write the questions. Do not paste personal, confidential or copyrighted material you are not allowed to share.</p>
+              </div>
+              <p class="error-msg" id="quiz-error" role="alert" hidden></p>
+              <div class="form-actions">
+                <button type="button" class="btn btn-primary" id="quiz-generate"><svg class="icon" aria-hidden="true"><use href="#i-spark"/></svg>Generate &amp; practise</button>
+                <button type="submit" class="btn btn-outline">Build copy-paste prompt</button>
+                <button type="reset" class="btn btn-ghost">Clear</button>
+              </div>
+            </form>
+
+            <section class="card output-card" aria-labelledby="quiz-out-h">
+              <div class="card-head">
+                <h2 id="quiz-out-h">Practice quiz</h2>
+                <span class="tag" id="quiz-out-tag" hidden></span>
+              </div>
+              <div class="output-empty" id="quiz-empty">
+                <svg class="icon icon-lg" aria-hidden="true"><use href="#i-quiz"/></svg>
+                <p><strong>No quiz yet.</strong> Paste your notes and choose a format. Empty notes are blocked on purpose — a quiz needs a source.</p>
+              </div>
+              <div class="loading" id="quiz-loading" hidden role="status">
+                <span class="spinner" aria-hidden="true"></span>
+                <span>Writing questions from your notes…</span>
+              </div>
+              <div class="output-body" id="quiz-runner" hidden aria-live="polite">
+                <div id="quiz-questions" class="quiz-questions"></div>
+                <div class="output-actions">
+                  <button type="button" class="btn btn-primary btn-sm" id="quiz-submit">Mark my answers</button>
+                  <button type="button" class="btn btn-outline btn-sm" id="quiz-retry"><svg class="icon" aria-hidden="true"><use href="#i-spark"/></svg>New quiz</button>
+                </div>
+                <p class="error-msg" id="quiz-mark-error" role="alert" hidden></p>
+                <div id="quiz-result" hidden></div>
+              </div>
+              <div class="output-body" id="quiz-body" hidden>
+                <details class="hint-box" open>
+                  <summary>Copy-paste prompt</summary>
+                  <pre class="prompt-box" id="quiz-output" tabindex="0" aria-label="Generated quiz prompt"></pre>
+                  <div class="output-actions">
+                    <button type="button" class="btn btn-primary btn-sm" data-copy="quiz-output"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg>Copy prompt</button>
+                    <button type="button" class="btn btn-outline btn-sm" id="quiz-save"><svg class="icon" aria-hidden="true"><use href="#i-saved"/></svg>Save prompt</button>
+                  </div>
+                  <p class="muted">Prompt mode gives you an answer key to check yourself. It never invents questions for you.</p>
+                </details>
+              </div>
+            </section>
+          </div>
+        </section>
+
+        <!-- ============ PLANNER ============ -->
+        <section class="view" id="view-planner" data-view="planner" aria-labelledby="planner-h1" hidden>
+          <div class="page-head">
+            <p class="eyebrow">Feature 03</p>
+            <h1 id="planner-h1">Smart study planner</h1>
+            <p class="lede">Turn your topics and the time you actually have into a realistic day-by-day plan. StudyMate builds the schedule itself — and never books more minutes than you said you have.</p>
+          </div>
+
+          <div class="workbench">
+            <form class="card form-card" id="planner-form" novalidate>
+              <div class="field">
+                <label for="plan-topics">Topics to study <span class="req" aria-hidden="true">*</span></label>
+                <textarea id="plan-topics" name="topics" rows="4" placeholder="One per line, e.g.&#10;CPU architecture&#10;RAM and ROM&#10;Operating systems" aria-describedby="plan-topics-hint plan-error" required></textarea>
+                <p class="hint" id="plan-topics-hint">One topic per line (or separate with commas).</p>
+              </div>
+              <div class="field-row three">
+                <div class="field">
+                  <label for="plan-minutes">Study time per day (minutes) <span class="req" aria-hidden="true">*</span></label>
+                  <input type="number" id="plan-minutes" name="minutes" value="60" min="15" max="480" step="5" inputmode="numeric" required />
+                </div>
+                <div class="field">
+                  <label for="plan-days">Number of days <span class="req" aria-hidden="true">*</span></label>
+                  <input type="number" id="plan-days" name="days" value="5" min="1" max="30" step="1" inputmode="numeric" required />
+                </div>
+                <div class="field">
+                  <label for="plan-difficulty">Study difficulty</label>
+                  <select id="plan-difficulty" name="difficulty">
+                    <option>Light — revision, low effort</option>
+                    <option selected>Standard — steady new learning</option>
+                    <option>Intensive — exam crunch</option>
+                  </select>
+                </div>
+              </div>
+              <div class="field">
+                <label for="plan-exam">Examination date <span class="optional">(optional)</span></label>
+                <input type="date" id="plan-exam" name="exam" />
+                <p class="hint">If the exam is sooner than your number of days, the plan is shortened to reach it.</p>
+              </div>
+              <p class="error-msg" id="plan-error" role="alert" hidden></p>
+              <div class="form-actions">
+                <button type="submit" class="btn btn-primary"><svg class="icon" aria-hidden="true"><use href="#i-calendar"/></svg>Build my study plan</button>
+                <button type="button" class="btn btn-ghost" id="plan-print"><svg class="icon" aria-hidden="true"><use href="#i-print"/></svg>Print / save PDF</button>
+              </div>
+            </form>
+
+            <section class="card output-card" aria-labelledby="plan-out-h">
+              <div class="card-head">
+                <h2 id="plan-out-h">Your plan</h2>
+                <span class="tag" id="plan-out-tag" hidden></span>
+              </div>
+              <div class="output-empty" id="plan-empty">
+                <svg class="icon icon-lg" aria-hidden="true"><use href="#i-calendar"/></svg>
+                <p><strong>No plan yet.</strong> Add the topics you need to cover and the minutes you can genuinely study each day.</p>
+              </div>
+              <div class="output-body" id="plan-body" hidden>
+                <div id="plan-summary" class="plan-summary"></div>
+                <div class="plan-progress" id="plan-progress" hidden>
+                  <div class="progress-track" role="progressbar" aria-labelledby="plan-progress-text" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span class="progress-fill"></span></div>
+                  <p class="progress-text" id="plan-progress-text">No activities ticked yet.</p>
+                </div>
+                <div id="plan-days-list" class="plan-days"></div>
+                <div class="output-actions">
+                  <button type="button" class="btn btn-primary btn-sm" id="plan-copy"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg>Copy plan as text</button>
+                  <button type="button" class="btn btn-outline btn-sm" id="plan-prompt-toggle">Build an AI enrichment prompt</button>
+                  <button type="button" class="btn btn-outline btn-sm" id="plan-save"><svg class="icon" aria-hidden="true"><use href="#i-saved"/></svg>Save plan</button>
+                </div>
+                <div id="plan-prompt-wrap" hidden>
+                  <h3 class="mini-h">Prompt for extra practice material</h3>
+                  <pre class="prompt-box" id="plan-output" tabindex="0" aria-label="Study plan enrichment prompt"></pre>
+                  <button type="button" class="btn btn-primary btn-sm" data-copy="plan-output"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg>Copy prompt</button>
+                </div>
+              </div>
+            </section>
+          </div>
+        </section>
+
+        <!-- ============ GLOSSARY ============ -->
+        <section class="view" id="view-glossary" data-view="glossary" aria-labelledby="glossary-h1" hidden>
+          <div class="page-head">
+            <p class="eyebrow">Feature 04</p>
+            <h1 id="glossary-h1">ICT glossary</h1>
+            <p class="lede">Plain-language definitions of the terms beginner ICT students meet first — each with a practical example you can repeat in an exam.</p>
+          </div>
+
+          <div class="gloss-toolbar">
+            <div class="search-wrap">
+              <label class="sr-only" for="gloss-search">Search glossary</label>
+              <input type="search" id="gloss-search" placeholder="Search a term, acronym or word in a definition…" autocomplete="off" />
+            </div>
+            <div class="field compact">
+              <label class="sr-only" for="gloss-cat">Filter by category</label>
+              <select id="gloss-cat">
+                <option value="all">All categories</option>
+              </select>
+            </div>
+            <p class="result-count" id="gloss-count" aria-live="polite"></p>
+          </div>
+
+          <div class="gloss-grid" id="gloss-grid"></div>
+          <div class="empty-state" id="gloss-empty" hidden>
+            <svg class="icon icon-lg" aria-hidden="true"><use href="#i-glossary"/></svg>
+            <h2>No matching term</h2>
+            <p id="gloss-empty-msg">Try a shorter word, or add the term to your personal list below.</p>
+            <button class="btn btn-outline btn-sm" id="gloss-clear">Clear search</button>
+          </div>
+
+          <details class="card add-term" id="add-term-wrap">
+            <summary><svg class="icon" aria-hidden="true"><use href="#i-spark"/></svg>Add your own term</summary>
+            <form id="term-form" class="term-form" novalidate>
+              <div class="field-row">
+                <div class="field">
+                  <label for="term-name">Term <span class="req" aria-hidden="true">*</span></label>
+                  <input type="text" id="term-name" placeholder="e.g. Cache memory" required />
+                </div>
+                <div class="field">
+                  <label for="term-cat">Category</label>
+                  <select id="term-cat">
+                    <option>Personal</option>
+                    <option>Hardware</option>
+                    <option>Software</option>
+                    <option>Networking</option>
+                    <option>Programming</option>
+                  </select>
+                </div>
+              </div>
+              <div class="field">
+                <label for="term-def">Simple definition <span class="req" aria-hidden="true">*</span></label>
+                <textarea id="term-def" rows="2" placeholder="Explain it as you would to a classmate." required></textarea>
+              </div>
+              <div class="field">
+                <label for="term-example">Practical example <span class="optional">(optional)</span></label>
+                <input type="text" id="term-example" placeholder="e.g. The CPU checks cache before going to RAM." />
+              </div>
+              <p class="error-msg" id="term-error" role="alert" hidden></p>
+              <div class="form-actions">
+                <button type="submit" class="btn btn-primary btn-sm">Save term</button>
+              </div>
+            </form>
+          </details>
+
+          <section class="card" id="personal-terms-card" hidden aria-labelledby="personal-h">
+            <div class="card-head">
+              <h2 id="personal-h">Your personal terms</h2>
+              <span class="tag" id="personal-count"></span>
+            </div>
+            <ul class="saved-list" id="personal-terms"></ul>
+          </section>
+        </section>
+
+        <!-- ============ SOURCE ============ -->
+        <section class="view" id="view-source" data-view="source" aria-labelledby="source-h1" hidden>
+          <div class="page-head">
+            <p class="eyebrow">Feature 05</p>
+            <h1 id="source-h1">Source-grounded learning</h1>
+            <p class="lede">Ask a question that must be answered only from your notes. StudyMate writes a prompt that forces the AI to admit when the notes do not cover something — instead of guessing.</p>
+          </div>
+
+          <div class="workbench">
+            <form class="card form-card" id="source-form" novalidate>
+              <div class="field">
+                <label for="source-notes">Your notes (the only allowed source) <span class="req" aria-hidden="true">*</span></label>
+                <textarea id="source-notes" name="notes" rows="8" placeholder="Paste the exact notes or textbook extract the answer must come from…" aria-describedby="source-error" required></textarea>
+              </div>
+              <div class="field">
+                <label for="source-question">Your question <span class="req" aria-hidden="true">*</span></label>
+                <input type="text" id="source-question" name="question" placeholder="e.g. Why does the CPU need cache memory?" aria-describedby="source-error" required />
+              </div>
+              <div class="coverage" id="coverage" hidden aria-live="polite">
+                <p class="coverage-title"><svg class="icon" aria-hidden="true"><use href="#i-shield"/></svg>Offline coverage check</p>
+                <p id="coverage-text"></p>
+                <p class="tiny">A simple keyword comparison, not an AI judgement. The prompt itself is what controls the answer.</p>
+              </div>
+              <p class="error-msg" id="source-error" role="alert" hidden></p>
+              <div class="form-actions">
+                <button type="submit" class="btn btn-primary"><svg class="icon" aria-hidden="true"><use href="#i-shield"/></svg>Generate grounded prompt</button>
+                <button type="reset" class="btn btn-ghost">Clear</button>
+              </div>
+              <p class="fallback-note">Required fallback in every answer:<br /><code>“The supplied notes do not provide enough information to answer that reliably.”</code></p>
+            </form>
+
+            <section class="card output-card" aria-labelledby="source-out-h">
+              <div class="card-head">
+                <h2 id="source-out-h">Your grounded prompt</h2>
+                <span class="tag" id="source-out-tag" hidden></span>
+              </div>
+              <div class="output-empty" id="source-empty">
+                <svg class="icon icon-lg" aria-hidden="true"><use href="#i-shield"/></svg>
+                <p><strong>Nothing to ground yet.</strong> Add your notes and a question. Answers that the notes cannot support must be refused — that is the point of this mode.</p>
+              </div>
+              <div class="output-body" id="source-body" hidden>
+                <pre class="prompt-box" id="source-output" tabindex="0" aria-label="Generated source-grounded prompt"></pre>
+                <div class="output-actions">
+                  <button type="button" class="btn btn-primary btn-sm" data-copy="source-output"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg>Copy prompt</button>
+                  <button type="button" class="btn btn-outline btn-sm" id="source-save"><svg class="icon" aria-hidden="true"><use href="#i-saved"/></svg>Save prompt</button>
+                </div>
+                <div class="callout">
+                  <strong>When you get an answer:</strong>
+                  <ul>
+                    <li>Ask the AI to quote the sentence from your notes that supports each point.</li>
+                    <li>If it prints the fallback message, the notes genuinely lack the answer — go and find a better source.</li>
+                    <li>Never submit a quoted “fact” you cannot find in your own material.</li>
+                  </ul>
+                </div>
+              </div>
+            </section>
+          </div>
+        </section>
+
+        <!-- ============ LIBRARY ============ -->
+        <section class="view" id="view-library" data-view="library" aria-labelledby="library-h1" hidden>
+          <div class="page-head">
+            <p class="eyebrow">Feature 06</p>
+            <h1 id="library-h1">Prompt library</h1>
+            <p class="lede">Eight reusable, fully written prompt templates for ICT study. Each one lists its purpose, required inputs, expected output, an example and a responsible-use reminder.</p>
+          </div>
+          <div class="lib-toolbar">
+            <label class="sr-only" for="lib-filter">Filter templates</label>
+            <input type="search" id="lib-filter" placeholder="Filter templates…" autocomplete="off" />
+            <p class="result-count" id="lib-count" aria-live="polite"></p>
+          </div>
+          <div class="lib-grid" id="lib-grid"></div>
+          <div class="empty-state" id="lib-empty" hidden>
+            <h2>No template matches</h2>
+            <p>Try “quiz”, “planner”, “hardware”, “error” or “summarise”.</p>
+          </div>
+        </section>
+
+        <!-- ============ SAVED ============ -->
+        <section class="view" id="view-saved" data-view="saved" aria-labelledby="saved-h1" hidden>
+          <div class="page-head">
+            <p class="eyebrow">Your workspace</p>
+            <h1 id="saved-h1">Saved learning</h1>
+            <p class="lede">Everything you saved lives in this browser's LocalStorage. Clearing browser data or using another device will not bring it back.</p>
+          </div>
+
+          <div class="split even">
+            <section class="card" aria-labelledby="st-h">
+              <div class="card-head">
+                <h2 id="st-h">Saved topics</h2>
+                <button class="link-btn" id="clear-topics">Clear</button>
+              </div>
+              <ul class="saved-list" id="saved-topics"></ul>
+            </section>
+            <section class="card" aria-labelledby="sp-h">
+              <div class="card-head">
+                <h2 id="sp-h">Saved prompts</h2>
+                <button class="link-btn" id="clear-prompts">Clear</button>
+              </div>
+              <ul class="saved-list" id="saved-prompts"></ul>
+            </section>
+          </div>
+          <div class="split even">
+            <section class="card" aria-labelledby="sg-h">
+              <div class="card-head">
+                <h2 id="sg-h">Saved glossary terms</h2>
+                <button class="link-btn" id="clear-gloss">Clear</button>
+              </div>
+              <ul class="saved-list" id="saved-gloss"></ul>
+            </section>
+            <section class="card" aria-labelledby="sa-h">
+              <div class="card-head">
+                <h2 id="sa-h">Study activity</h2>
+                <button class="link-btn" id="clear-activity">Clear</button>
+              </div>
+              <ul class="activity-list" id="saved-activity"></ul>
+            </section>
+          </div>
+          <div class="danger-zone">
+            <div>
+              <h2>Reset local data</h2>
+              <p class="muted">Removes saved topics, prompts, terms, personal definitions and activity history from this browser.</p>
+            </div>
+            <button class="btn btn-danger" id="reset-all">Delete all saved data</button>
+          </div>
+        </section>
+
+        <!-- ============ SETTINGS ============ -->
+        <section class="view" id="view-settings" data-view="settings" aria-labelledby="settings-h1" hidden>
+          <div class="page-head">
+            <p class="eyebrow">Your preferences</p>
+            <h1 id="settings-h1">Settings</h1>
+            <p class="lede">Appearance, default learning level and your saved data. Everything here is stored in this browser only.</p>
+          </div>
+
+          <form class="card settings-card" id="settings-form">
+            <h2 class="settings-h2">Appearance</h2>
+            <div class="field-row">
+              <div class="field">
+                <label for="set-theme">Theme</label>
+                <select id="set-theme">
+                  <option value="system">Match my device</option>
+                  <option value="light">Light</option>
+                  <option value="dark">Dark</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="set-level">Default explanation level</label>
+                <select id="set-level">
+                  <option value="beginner">Beginner</option>
+                  <option value="intermediate">Intermediate</option>
+                  <option value="advanced">Advanced / exam revision</option>
+                </select>
+              </div>
+            </div>
+            <div class="field">
+              <label for="set-subjects">Preferred study subjects <span class="optional">(comma separated)</span></label>
+              <input type="text" id="set-subjects" placeholder="e.g. Hardware, Networking, Databases" />
+              <p class="hint">Used to pre-fill the study planner on your next visit.</p>
+            </div>
+
+            <h2 class="settings-h2">Accessibility</h2>
+            <label class="switch"><input type="checkbox" id="set-motion" /> <span>Reduce motion — turn off smooth scrolling and hover movement</span></label>
+            <label class="switch"><input type="checkbox" id="set-text" /> <span>Larger text throughout the app</span></label>
+
+            <h2 class="settings-h2">AI privacy</h2>
+            <label class="switch"><input type="checkbox" id="set-disclose" /> <span>Always show the “notes are sent to the AI provider” disclosure, even after I dismiss it</span></label>
+            <p class="hint">The disclosure is shown automatically before your notes are sent. StudyMate ICT never sends anything to a model unless you press an AI button.</p>
+
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">Save settings</button>
+              <button type="reset" class="btn btn-ghost">Undo changes</button>
+            </div>
+            <p class="settings-message" id="settings-message" role="status" hidden></p>
+          </form>
+
+          <section class="card settings-card" aria-labelledby="data-h">
+            <h2 class="settings-h2" id="data-h">Your data</h2>
+            <p class="muted">Saved topics, prompts, quizzes, plans and terms live in this browser's LocalStorage. Export a backup before clearing browser data or switching devices.</p>
+            <div class="settings-actions">
+              <button type="button" class="btn btn-outline" id="data-export">Download backup (.json)</button>
+              <label class="btn btn-outline file-btn" for="data-import">Import backup
+                <input type="file" id="data-import" accept="application/json,.json" />
+              </label>
+              <button type="button" class="btn btn-danger" id="data-delete">Delete all local data</button>
+            </div>
+            <p class="tiny">Importing replaces the current local data with the contents of the file.</p>
+          </section>
+        </section>
+
+        <!-- ============ ABOUT ============ -->
+        <section class="view" id="view-about" data-view="about" aria-labelledby="about-h1" hidden>
+          <div class="page-head">
+            <p class="eyebrow">Capstone project</p>
+            <h1 id="about-h1">About StudyMate ICT</h1>
+            <p class="lede">An AI-assisted ICT learning and study assistant built as a final capstone for the AI and Prompt Engineering internship at Ishvexa Hub.</p>
+          </div>
+
+          <div class="about-grid">
+            <section class="card prose" aria-labelledby="ab-purpose">
+              <h2 id="ab-purpose">Purpose</h2>
+              <p>Beginner ICT students often meet dense technical language before they have the vocabulary to decode it. StudyMate ICT closes that gap with structured, level-aware prompts that turn a topic into a teaching sequence — and with an offline glossary and planner that work without any AI at all.</p>
+              <h2>What it demonstrates</h2>
+              <ul>
+                <li><strong>Prompt engineering:</strong> explicit roles, inputs, constraints, output contracts and refusal rules.</li>
+                <li><strong>Source-grounded answers:</strong> notes as the only permitted evidence, with a fixed refusal sentence.</li>
+                <li><strong>Handling incomplete information:</strong> validation, empty states and honest fallbacks.</li>
+                <li><strong>Responsible AI:</strong> no fabricated sources, no fake AI responses, no hidden API keys.</li>
+              </ul>
+              <h2>Technology</h2>
+              <p>HTML5, modern CSS3 and vanilla JavaScript. No framework, no build step, no database, no account. Saved items use LocalStorage only.</p>
+            </section>
+            <aside class="card prose" aria-labelledby="ab-ai">
+              <h2 id="ab-ai">AI status</h2>
+              <p class="pill-note" id="about-ai-pill">Checking…</p>
+              <p id="about-ai-text">StudyMate runs in one of two honest modes. With no server API key it stays in <strong>prompt mode</strong>: every tool works, but it builds a prompt for you to copy instead of contacting a model. When the deployment has a key, the AI buttons call a server-side endpoint that proxies one OpenAI-compatible provider — the key never reaches the browser.</p>
+              <p class="tiny">The app only reports “AI live” after a real request succeeds. Otherwise the status chip says prompt mode.</p>
+              <h2>Responsible use</h2>
+              <ul>
+                <li>Check AI output against class notes, textbooks or your lecturer.</li>
+                <li>Do not paste private or confidential information into external AI tools.</li>
+                <li>Use generated quizzes to test yourself — not to replace studying.</li>
+                <li>Follow your institution's rules on AI assistance.</li>
+              </ul>
+            </aside>
+          </div>
+
+          <section class="card prose" aria-labelledby="ab-limit">
+            <h2 id="ab-limit">Honest limitations</h2>
+            <ul class="limits">
+              <li>Live AI depends on the deployment having an API key; without one the app runs in prompt mode.</li>
+              <li>AI output is generated automatically and can still be wrong — the app validates structure, not truth.</li>
+              <li>Prompt quality depends on the notes and topic you supply.</li>
+              <li>The planner is a simple minutes-and-blocks scheduler, not an optimiser.</li>
+              <li>LocalStorage holds roughly 5 MB and is per-browser; it is not a backup.</li>
+              <li>The glossary is a curated starter set, not a complete ICT dictionary.</li>
+            </ul>
+            <p class="muted">Full detail: <code>LIMITATIONS_AND_FUTURE_WORK.md</code> in the project folder.</p>
+          </section>
+        </section>
+
+      </main>
+
+      <footer class="site-foot">
+        <p><strong>StudyMate ICT</strong> · Capstone project, Ishvexa Hub AI &amp; Prompt Engineering internship · Built with HTML, CSS and vanilla JavaScript.</p>
+        <p class="tiny">AI-generated content must be checked against your own study material. This app stores data only in your browser.</p>
+      </footer>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+  <script src="js/core.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/ai.js"></script>
+  <script src="js/prompts.js"></script>
+  <script src="js/glossary-data.js"></script>
+  <script src="js/explainer.js"></script>
+  <script src="js/quiz.js"></script>
+  <script src="js/planner.js"></script>
+  <script src="js/glossary.js"></script>
+  <script src="js/source.js"></script>
+  <script src="js/library.js"></script>
+  <script src="js/dashboard.js"></script>
+  <script src="js/saved.js"></script>
+  <script src="js/settings.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    // Offline install support. A service worker needs a secure origin, so this is
+    // skipped when the app is opened straight from disk with file://.
+    if ('serviceWorker' in navigator && /^https?:$/.test(window.location.protocol)) {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('sw.js').catch(function () {
+          /* registration is an enhancement only — the app still runs offline from disk */
+        });
+      });
+    }
+  </script>
+</body>
+</html>
