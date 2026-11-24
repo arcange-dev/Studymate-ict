@@ -2,7 +2,9 @@
 
 An ICT study assistant for beginner and intermediate students: AI-generated concept explanations, practice quizzes marked in the browser, a study planner that tracks what you actually finish, a 41-term glossary, source-grounded learning and a prompt library — installable as a PWA and fully usable offline.
 
-**Live demo:** <https://studymate-ict-04s0d8.freebuff.site/>
+**Live demo (production):** <https://studymate-ict-04s0d8.freebuff.site/> · **Preview:** <https://studymate-ict-04s0d8-preview.freebuff.site/>
+
+Both addresses now serve the same 2.2.0 build from the same `dist/` bundle, so `#/dashboard` and `#/home` look and behave identically on each. Until the 24 November 2026 deployment the production address still served the pre-2.2.0 version from 20 November, which is why `#/dashboard` there used to show the old layout while the preview showed the redesign. If you visited either address before that deployment, reload once (or clear the site's cached service worker) to pick up the new shell.
 
 The public demo has no AI key configured, so it runs in **prompt mode** and says so in the status chip. Every tool works; the AI buttons are disabled until a key is added. See [AI setup](#ai-setup).
 
