@@ -18,7 +18,7 @@ The public demo has no AI key configured, so it runs in **prompt mode** and says
 | `StudyMate-ICT/js/ai-contract.js` | The AI contract shared by both paths: prompts, request validation, JSON parsing, response schemas |
 | `sites/` | Deployment for the public demo: `worker.js` (static assets + `/api/*`) and `ai-core.js` (config, provider call, rate limiting — it imports the shared contract) |
 | `server/` | Zero-dependency Node server for Render and local development: `node-server.js` |
-| `tests/` | 36 automated tests: AI validation, HTTP surface, security, quiz marking, settings, learner-key mode |
+| `tests/` | 51 automated tests: AI validation, HTTP surface, security, quiz marking, settings, learner-key mode |
 | `docs/` | Deployment, provider, troubleshooting and changelog documents |
 | `build.sh` | Regenerates `dist/`, the deploy bundle |
 | `dist/` | The committed deploy bundle (28 files) that both hosting configs serve |
@@ -94,10 +94,12 @@ The static app also runs offline straight from disk by opening `StudyMate-ICT/in
 
 StudyMate starts in prompt mode until *some* key exists. Either route works, and the Home page explains both:
 
-1. **Your own key, in this browser — no server needed.** Open **Home** (or **Settings**), pick a provider, and paste its base URL, model and API key. The key is stored in this browser's LocalStorage **on your computer**, sent only to the provider you chose, and never to this app's server. This works on the public demo and on any static hosting.
+1. **Your own key, in this browser — no server needed.** Open **Home** (or **Settings**) and use the **Add an AI provider** panel. It ships with a searchable catalogue of **47 provider presets** — OpenAI, Anthropic Claude, Google Gemini, OpenRouter, Groq, Mistral, DeepSeek, Together, Fireworks, Perplexity, xAI, Cohere, Cerebras, SambaNova, DeepInfra, Novita, Nebius AI Studio, NVIDIA NIM, Hugging Face, Qwen (DashScope), Kimi, GLM, Yi, MiniMax, Hunyuan, Doubao, Sarvam, Azure OpenAI, Cloudflare, GitHub Models, local Ollama / LM Studio / llama.cpp / vLLM and more — plus an *Other provider* option for any custom gateway. Choosing a provider fills in its base URL and model for you.
+   The panel then **tests the URL automatically** as you type it: it reports reachability, latency, how many models the key can use, and whether the provider refuses browser (CORS) requests. **Fetch models** lists everything the key is allowed to use; **Test connection** sends one tiny request to prove the key and model work together, before you save anything. Three protocols are supported natively — OpenAI-compatible, Anthropic Messages and native Gemini — so those providers work without a proxy.
+   The key is stored in this browser's LocalStorage **on your computer**, sent only to the provider you chose, and never to this app's server. This works on the public demo and on any static hosting.
 2. **A key on the server — for deployments you own.** Set `AI_API_KEY` (plus `AI_BASE_URL` / `AI_MODEL`) on Render or your Node host. The key stays server-side and every request is validated and rate limited by the server.
 
-Some providers block browser requests (CORS). If the key test fails with a network error, that provider needs option 2.
+Some providers block browser requests (CORS). The URL test says so explicitly; those providers need option 2.
 
 ## AI setup (server-side key)
 
@@ -114,7 +116,7 @@ The contract, error map and how to add another provider: [`docs/AI_PROVIDER.md`]
 npm test
 ```
 
-36 tests, no dependencies, using Node's built-in runner. They cover request validation and schema enforcement, provider failures, rate limiting, key non-disclosure, HTTP headers, path-traversal protection, the SPA fallback, quiz marking, settings normalisation, and the learner-key path (base-URL checks, the provider being called with the learner's own key, rejected keys, and refusal of malformed model output). Results and the full QA table are in [`StudyMate-ICT/TESTING_REPORT.md`](StudyMate-ICT/TESTING_REPORT.md) §8–9.
+51 tests, no dependencies, using Node's built-in runner. They cover request validation and schema enforcement, provider failures, rate limiting, key non-disclosure, HTTP headers, path-traversal protection, the SPA fallback, quiz marking, settings normalisation, the learner-key path (base-URL checks, the provider being called with the learner's own key, rejected keys, and refusal of malformed model output), the provider catalogue (unique ids, valid HTTPS bases, grouping, URL normalisation and detection, search) and the three request protocols (OpenAI, Anthropic Messages, Gemini), including the automatic URL probe and its CORS/timeout/refused-key reporting. Results and the full QA table are in [`StudyMate-ICT/TESTING_REPORT.md`](StudyMate-ICT/TESTING_REPORT.md) §8–9.
 
 Manual browser checks during the 2.2.0 redesign (Chromium, Playwright): the dashboard-first route and no-login entry; all 11 views rendering with one `h1` each; horizontal overflow measured at 320, 375, 390, 430, 768, 1024, 1280, 1440 and 1920 px (zero everywhere); sidebar collapse, tooltips and persistence; mobile drawer open/close/`Escape`/route change; search ranking, grouping and `Enter` deep link; saved search and category filter; quiz generation against a stubbed OpenAI-compatible endpoint, full marking at 100% and the dashboard metrics updating; planner build (3 days, 9 activities), save, tick and persistence across reload; theme persistence; offline reload from the service worker; and an accessibility sweep (duplicate IDs, unlabelled fields, unnamed buttons, missing `alt`, heading order). **A real third-party AI provider was not tested — only a stubbed endpoint — and no screen reader, Safari or Firefox pass was run.** The full matrix is in [`StudyMate-ICT/TESTING_REPORT.md`](StudyMate-ICT/TESTING_REPORT.md).
 

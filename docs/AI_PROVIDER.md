@@ -100,7 +100,23 @@ Supporting a provider with a *different* protocol means writing one function: re
 
 ## 7. Learner-supplied key in the browser (no server)
 
-`StudyMate-ICT/js/local-ai.js` implements a second, independent path: the learner pastes their own key, base URL and model on the **Home** page or in **Settings**. It is stored under the LocalStorage key `studymate.ict.localai.v1` and read at call time.
+`StudyMate-ICT/js/local-ai.js` implements a second, independent path: the learner adds their own provider on the **Home** page or in **Settings**, using the **Add an AI provider** panel (`js/key-panel.js`). It is stored under the LocalStorage key `studymate.ict.localai.v1` and read at call time.
+
+### The provider catalogue (`js/providers.js`)
+
+One module describes every provider once — base URL, default model, protocol, CORS behaviour, notes and docs link — and both the panel and `local-ai.js` read it. It currently holds 47 entries across five groups (global, Asia, cloud platforms, local, custom).
+
+| Protocol | Endpoint | Auth | Response text |
+|---|---|---|---|
+| `openai` | `POST {base}/chat/completions` | `Authorization: Bearer <key>` | `choices[0].message.content` |
+| `anthropic` | `POST {base}/messages` | `x-api-key` + `anthropic-version` + `anthropic-dangerous-direct-browser-access` | `content[].text` where `type: "text"` |
+| `gemini` | `POST {base}/models/{model}:generateContent` | `x-goog-api-key` | `candidates[0].content.parts[].text` |
+
+Adding a provider that speaks any of these three protocols is data, not code: append one entry to the catalogue. A fourth protocol needs one branch in `requestHeaders`, `requestBody`, `extractText` and `modelNamesFrom`.
+
+### Automatic URL testing
+
+`local.probe({ provider, baseUrl, apiKey })` calls `GET {base}/models` (debounced as the learner types, 12 s timeout) and resolves with reachability, latency, the model list, or a precise failure kind (`invalid-url`, `unauthorized`, `http`, `cors`, `timeout`). A 401 still proves the URL is live, so the panel can say so instead of "failed". `local.testConnection(values)` then sends one tiny completion with the typed-in values — the panel's **Test connection** button — so a key can be verified before it replaces a working one.
 
 Both paths use the same contract. Prompts, request validation, JSON parsing and the explanation/quiz schemas live once in `StudyMate-ICT/js/ai-contract.js`. It is a classic script (so the app still runs from `file://`) that publishes itself as `SMAiContract`; `sites/ai-core.js` imports it for that side effect and re-exports what the server needs. `local-ai.js` only adds key storage and the direct provider call.
 
@@ -115,6 +131,8 @@ Both paths use the same contract. Prompts, request validation, JSON parsing and 
 | Works when the provider blocks CORS | Yes | No |
 
 Both paths produce the identical normalised object, so the UI cannot tell them apart. The status chip distinguishes them: `AI live · <model> (your key)` for the browser path.
+
+Browser-side protocol support means the *server* path stays OpenAI-compatible only: `sites/ai-core.js` sends `POST {AI_BASE_URL}/chat/completions`. To use Claude or Gemini with a server key, point `AI_BASE_URL` at an OpenAI-compatible gateway (OpenRouter, a proxy) or add the same adapter to `ai-core.js`.
 
 Security notes for this mode:
 

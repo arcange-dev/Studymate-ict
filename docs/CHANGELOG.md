@@ -2,6 +2,24 @@
 
 All dates are 2026. The project follows a simple `MAJOR.MINOR.PATCH` scheme; the app version is shown in `package.json`.
 
+## 2.3.0 — 24 November 2026
+
+The **Add an AI provider** panel: every provider, tested automatically.
+
+### Added
+
+- **A dedicated provider panel** on Home and in Settings (`js/key-panel.js` rewritten): searchable catalogue, provider picker grouped by region, model field with autocomplete, base-URL field with an inline test, **Test connection** and **Fetch models** buttons, protocol badge, per-provider notes and a documentation link.
+- **A 47-entry provider catalogue** (`js/providers.js`): OpenAI, Anthropic, Google Gemini, OpenRouter (paid and free), Groq, Mistral, DeepSeek, Together, Fireworks, Perplexity, xAI, Cohere, Cerebras, SambaNova, DeepInfra, Novita, Hyperbolic, Nebius, NVIDIA NIM, AI21, Writer, Hugging Face, Scaleway, OVHcloud, GitHub Models, Moonshot (Kimi), Z.ai (GLM), Alibaba Qwen, SiliconFlow, 01.AI (Yi), Baichuan, StepFun, MiniMax, Tencent Hunyuan, ByteDance Doubao, Upstage, Sarvam, Azure OpenAI, Cloudflare Workers AI, Ollama, LM Studio, llama.cpp, vLLM, Jan, text-generation-webui and a custom gateway. Each entry knows its base URL, default model, protocol, CORS behaviour and docs URL.
+- **Automatic URL testing.** As soon as a base URL is typed or a provider is chosen, the panel probes `{base}/models` (debounced, 12 s timeout) and reports reachability, latency and available models; a refused key still proves the URL is live, and a CORS or timeout failure is explained in plain language instead of surfacing a raw `TypeError`.
+- **Native protocol adapters** in `js/local-ai.js`: OpenAI Chat Completions, Anthropic Messages (`x-api-key`, `anthropic-version`, browser-access header) and Gemini `generateContent` (`x-goog-api-key`, `responseMimeType`). Model lists are parsed per protocol, and the shared `js/ai-contract.js` still validates every answer.
+- **Test before saving.** `testConnection()` accepts unsaved values and reports the model, protocol and round-trip time, so a key can be checked without overwriting a working one.
+- Pasted base URLs are normalised (`/chat/completions`, `/messages`, `/models`, trailing slashes) and recognised as their provider.
+
+### Tests
+
+- 51 Node tests pass (`npm test`), up from 36: new `tests/providers.test.js` (catalogue integrity, grouping, normalisation, detection, search) and new protocol tests for OpenAI, Anthropic and Gemini, the URL probe, refused keys and CORS failures. Two real bugs were found by them and fixed: a stored default protocol overriding Claude/Gemini, and `models/` prefixes being double-encoded in Gemini URLs.
+- Version bumped to 2.3.0.
+
 ## 2.2.1 — 24 November 2026
 
 ### Fixed

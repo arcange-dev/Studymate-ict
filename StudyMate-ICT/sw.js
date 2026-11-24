@@ -24,6 +24,7 @@ var SHELL = [
   './js/storage.js',
   './js/ui.js',
   './js/ai-contract.js',
+  './js/providers.js',
   './js/local-ai.js',
   './js/ai.js',
   './js/prompts.js',

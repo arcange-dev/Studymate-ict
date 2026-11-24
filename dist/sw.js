@@ -11,7 +11,7 @@
   The app makes no third-party requests, so every cached URL is same-origin.
 */
 
-var VERSION = 'studymate-ict-ddc07c5e5f';
+var VERSION = 'studymate-ict-bea2f2afee';
 var SHELL = [
   './',
   './manifest.webmanifest',
@@ -24,6 +24,7 @@ var SHELL = [
   './js/storage.js',
   './js/ui.js',
   './js/ai-contract.js',
+  './js/providers.js',
   './js/local-ai.js',
   './js/ai.js',
   './js/prompts.js',
