@@ -1022,7 +1022,17 @@
     // skipped when the app is opened straight from disk with file://.
     if ('serviceWorker' in navigator && /^https?:$/.test(window.location.protocol)) {
       window.addEventListener('load', function () {
-        navigator.serviceWorker.register('sw.js').catch(function () {
+        var hadController = Boolean(navigator.serviceWorker.controller);
+        var reloading = false;
+        navigator.serviceWorker.addEventListener('controllerchange', function () {
+          // A newer worker took over after a deployment: reload once so the page
+          // runs the shell it is cached with instead of mixing an old document
+          // with new assets. Skipped on a first install, where nothing is stale.
+          if (!hadController || reloading) return;
+          reloading = true;
+          window.location.reload();
+        });
+        navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' }).catch(function () {
           /* registration is an enhancement only — the app still runs offline from disk */
         });
       });

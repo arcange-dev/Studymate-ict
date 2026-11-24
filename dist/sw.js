@@ -2,15 +2,16 @@
   --------------------------------------
   Strategy:
     • On install, precache the complete application shell (HTML, CSS, JS, icons).
-    • Navigations and static assets are served cache-first, then network.
-    • A navigation that is not cached falls back to the cached "/", so the
-      hash router keeps working offline.
+    • Navigations are network-first so a new deployment replaces the cached
+      shell on the next load, not the load after it. Offline falls back to the
+      cached "/".
+    • Static assets are cache-first, refreshed in the background.
     • API routes are never cached or intercepted: AI answers must be live, and
       a cached health check would lie about whether a key is configured.
   The app makes no third-party requests, so every cached URL is same-origin.
 */
 
-var VERSION = 'studymate-ict-5604ec9757';
+var VERSION = 'studymate-ict-ddc07c5e5f';
 var SHELL = [
   './',
   './manifest.webmanifest',
@@ -89,8 +90,35 @@ self.addEventListener('fetch', function (event) {
   if (url.origin !== self.location.origin) return;
   if (url.pathname.indexOf('/api/') === 0) return;
 
+  // A page load must reflect the deployed build immediately. Cache-first here
+  // meant a returning browser could keep the previous shell (and its old
+  // sidebar/dashboard markup) for one extra reload after every deployment.
+  if (request.mode === 'navigate') {
+    event.respondWith(
+      fetch(request)
+        .then(function (response) {
+          if (response && response.ok && response.type === 'basic') {
+            var copy = response.clone();
+            event.waitUntil(
+              caches.open(VERSION).then(function (cache) {
+                return cache.put('./', copy);
+              })
+            );
+          }
+          return response;
+        })
+        .catch(function () {
+          // Offline: serve the shell we precached, so the hash router still works.
+          return caches.match('./').then(function (cached) {
+            return cached || caches.match(request, { ignoreSearch: true });
+          });
+        })
+    );
+    return;
+  }
+
   event.respondWith(
-    caches.match(request, { ignoreSearch: request.mode === 'navigate' }).then(function (cached) {
+    caches.match(request).then(function (cached) {
       if (cached) {
         // Refresh the copy in the background so a future load is current. Skipped
         // while offline, where that fetch could only fail.

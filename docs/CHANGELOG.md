@@ -2,6 +2,13 @@
 
 All dates are 2026. The project follows a simple `MAJOR.MINOR.PATCH` scheme; the app version is shown in `package.json`.
 
+## 2.2.1 — 24 November 2026
+
+### Fixed
+
+- **A deployment no longer hides behind the previous shell.** Navigations were served cache-first, so a browser that had visited an older build kept the old document (and its old sidebar and dashboard markup) until a second reload — which is why the production and preview addresses could look different even when they served identical files. Page loads are now network-first with the precached shell as the offline fallback; static assets stay cache-first with a background refresh.
+- The service worker registration asks for `updateViaCache: 'none'` and reloads the page once when a newer worker takes control, but not on a first install.
+
 ## 2.2.0 — 24 November 2026
 
 The dashboard-first redesign: one design system across every screen.
