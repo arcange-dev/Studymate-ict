@@ -112,6 +112,7 @@
 
   function defaultSettings() {
     return {
+      name: '',
       theme: 'system',
       level: 'beginner',
       subjects: [],
@@ -125,6 +126,8 @@
   function normaliseSettings(value) {
     var base = defaultSettings();
     if (!value || typeof value !== 'object') return base;
+    // An optional local display name. Never an identity, never sent anywhere.
+    base.name = String(value.name == null ? '' : value.name).replace(/\s+/g, ' ').trim().slice(0, 40);
     if (THEMES.indexOf(value.theme) !== -1) base.theme = value.theme;
     if (LEVELS.indexOf(value.level) !== -1) base.level = value.level;
     if (Array.isArray(value.subjects)) {

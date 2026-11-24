@@ -50,40 +50,52 @@
     <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M12 2.8v2.4M12 18.8v2.4M21.2 12h-2.4M5.2 12H2.8M18.5 5.5l-1.7 1.7M7.2 16.8l-1.7 1.7M18.5 18.5l-1.7-1.7M7.2 7.2 5.5 5.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></symbol>
     <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 4.5 21 20H3L12 4.5Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M12 10v4.2" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/><circle cx="12" cy="17.2" r="1.05" fill="currentColor"/></symbol>
     <symbol id="i-print" viewBox="0 0 24 24"><path d="M7 8V3h10v5M7 18H5a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><rect x="7" y="14" width="10" height="7" rx="1" fill="none" stroke="currentColor" stroke-width="1.7"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="m15.4 15.4 4.1 4.1" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M12 2.6v2.2M12 19.2v2.2M21.4 12h-2.2M4.8 12H2.6M18.6 5.4l-1.6 1.6M7 17l-1.6 1.6M18.6 18.6 17 17M7 7 5.4 5.4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.4A8.4 8.4 0 0 1 9.6 4a8.5 8.5 0 1 0 10.4 10.4Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></symbol>
+    <symbol id="i-chevrons" viewBox="0 0 24 24"><path d="m14.5 7-5 5 5 5M20 7l-5 5 5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M4 12h15M13.5 6.5 20 12l-6.5 5.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-trend" viewBox="0 0 24 24"><path d="M3.5 16.5 9 11l3.5 3.5L20 7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 7h5v5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="12" cy="12" r="4.5" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="12" cy="12" r="1.2" fill="currentColor"/></symbol>
   </svg>
 
   <div class="app-shell">
     <!-- Sidebar -->
     <aside class="sidebar" id="sidebar" aria-label="Main navigation">
-      <div class="brand">
-        <span class="brand-mark" aria-hidden="true">
-          <svg viewBox="0 0 32 32" width="28" height="28"><rect width="32" height="32" rx="9" fill="url(#bg)"/><defs><linearGradient id="bg" x1="0" y1="0" x2="32" y2="32"><stop stop-color="#14b8a6"/><stop offset="1" stop-color="#2563eb"/></linearGradient></defs><path d="M9 21.5V10.5l7 6 7-6v11" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </span>
-        <span class="brand-text">
-          <strong>StudyMate</strong>
-          <small>ICT learning assistant</small>
-        </span>
+      <div class="sidebar-head">
+        <a class="brand" href="#/dashboard" aria-label="StudyMate ICT — dashboard">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 32 32" width="30" height="30"><rect width="32" height="32" rx="9" fill="url(#bg)"/><defs><linearGradient id="bg" x1="0" y1="0" x2="32" y2="32"><stop stop-color="#2dd4bf"/><stop offset="1" stop-color="#4f46e5"/></linearGradient></defs><path d="M9 21.5V10.5l7 6 7-6v11" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+          <span class="brand-text">
+            <strong>StudyMate <em>ICT</em></strong>
+            <small>Your ICT learning workspace</small>
+          </span>
+        </a>
+        <button type="button" class="icon-btn sidebar-collapse" id="sidebar-collapse" aria-label="Collapse sidebar" aria-pressed="false" title="Collapse sidebar">
+          <svg class="icon" aria-hidden="true"><use href="#i-chevrons"/></svg>
+        </button>
       </div>
 
       <nav class="nav" aria-label="Study tools">
-        <p class="nav-label">Workspace</p>
-        <a class="nav-link" href="#/home" data-route="home"><svg class="icon" aria-hidden="true"><use href="#i-home"/></svg><span>Home</span></a>
-        <a class="nav-link" href="#/dashboard" data-route="dashboard"><svg class="icon" aria-hidden="true"><use href="#i-grid"/></svg><span>Dashboard</span></a>
-        <a class="nav-link" href="#/explain" data-route="explain"><svg class="icon" aria-hidden="true"><use href="#i-book"/></svg><span>Explain ICT</span></a>
-        <a class="nav-link" href="#/quiz" data-route="quiz"><svg class="icon" aria-hidden="true"><use href="#i-quiz"/></svg><span>Quiz Generator</span></a>
-        <a class="nav-link" href="#/planner" data-route="planner"><svg class="icon" aria-hidden="true"><use href="#i-calendar"/></svg><span>Study Planner</span></a>
-        <a class="nav-link" href="#/glossary" data-route="glossary"><svg class="icon" aria-hidden="true"><use href="#i-glossary"/></svg><span>ICT Glossary</span></a>
-        <a class="nav-link" href="#/source" data-route="source"><svg class="icon" aria-hidden="true"><use href="#i-shield"/></svg><span>Source-Grounded</span></a>
-        <a class="nav-link" href="#/library" data-route="library"><svg class="icon" aria-hidden="true"><use href="#i-library"/></svg><span>Prompt Library</span></a>
-        <p class="nav-label">Your work</p>
-        <a class="nav-link" href="#/saved" data-route="saved"><svg class="icon" aria-hidden="true"><use href="#i-saved"/></svg><span>Saved Learning</span><span class="nav-badge" id="nav-saved-count" hidden>0</span></a>
-        <a class="nav-link" href="#/settings" data-route="settings"><svg class="icon" aria-hidden="true"><use href="#i-gear"/></svg><span>Settings</span></a>
-        <a class="nav-link" href="#/about" data-route="about"><svg class="icon" aria-hidden="true"><use href="#i-info"/></svg><span>About the Project</span></a>
+        <p class="nav-label"><span>Workspace</span></p>
+        <a class="nav-link" href="#/dashboard" data-route="dashboard" data-tip="Dashboard"><svg class="icon" aria-hidden="true"><use href="#i-grid"/></svg><span class="nav-text">Dashboard</span></a>
+        <a class="nav-link" href="#/explain" data-route="explain" data-tip="ICT Concept Explainer"><svg class="icon" aria-hidden="true"><use href="#i-book"/></svg><span class="nav-text">ICT Concept Explainer</span></a>
+        <a class="nav-link" href="#/quiz" data-route="quiz" data-tip="Quiz Generator"><svg class="icon" aria-hidden="true"><use href="#i-quiz"/></svg><span class="nav-text">Quiz Generator</span></a>
+        <a class="nav-link" href="#/planner" data-route="planner" data-tip="Study Planner"><svg class="icon" aria-hidden="true"><use href="#i-calendar"/></svg><span class="nav-text">Study Planner</span></a>
+        <a class="nav-link" href="#/source" data-route="source" data-tip="Source-Grounded Learning"><svg class="icon" aria-hidden="true"><use href="#i-shield"/></svg><span class="nav-text">Source-Grounded Learning</span></a>
+        <a class="nav-link" href="#/glossary" data-route="glossary" data-tip="ICT Glossary"><svg class="icon" aria-hidden="true"><use href="#i-glossary"/></svg><span class="nav-text">ICT Glossary</span></a>
+        <a class="nav-link" href="#/library" data-route="library" data-tip="Prompt Library"><svg class="icon" aria-hidden="true"><use href="#i-library"/></svg><span class="nav-text">Prompt Library</span></a>
+
+        <p class="nav-label"><span>Your learning</span></p>
+        <a class="nav-link" href="#/saved" data-route="saved" data-tip="Saved Learning"><svg class="icon" aria-hidden="true"><use href="#i-saved"/></svg><span class="nav-text">Saved Learning</span><span class="nav-badge" id="nav-saved-count" hidden>0</span></a>
+        <a class="nav-link" href="#/settings" data-route="settings" data-tip="Settings"><svg class="icon" aria-hidden="true"><use href="#i-gear"/></svg><span class="nav-text">Settings</span></a>
+        <a class="nav-link" href="#/about" data-route="about" data-tip="About StudyMate"><svg class="icon" aria-hidden="true"><use href="#i-info"/></svg><span class="nav-text">About StudyMate</span></a>
       </nav>
 
       <div class="sidebar-foot">
-        <p class="offline-pill"><span class="dot" aria-hidden="true"></span> Works offline</p>
-        <p class="tiny">No account, no tracking. Saved items stay in this browser only.</p>
+        <p class="offline-pill"><span class="dot" aria-hidden="true"></span><span class="nav-text">Works offline</span></p>
+        <p class="tiny sidebar-note">No account needed. Everything you save stays in this browser.</p>
       </div>
     </aside>
     <div class="scrim" id="scrim" hidden></div>
@@ -95,12 +107,26 @@
           <svg class="icon" aria-hidden="true"><use href="#i-menu"/></svg>
         </button>
         <div class="topbar-title">
-          <span class="crumb" id="page-crumb">Dashboard</span>
-          <span class="status-chip" id="ai-status" data-mode="unknown" title="AI connection status"><span class="dot" aria-hidden="true"></span><span id="ai-status-text">Checking AI…</span></span>
+          <nav class="breadcrumbs" aria-label="Breadcrumb">
+            <ol>
+              <li><a href="#/dashboard" id="crumb-parent">Workspace</a></li>
+              <li><span id="page-crumb">Dashboard</span></li>
+            </ol>
+          </nav>
+          <span class="topbar-hint" id="page-hint">Overview of your learning</span>
         </div>
         <div class="topbar-actions">
-          <a class="btn btn-ghost btn-sm" href="#/library">Prompt library</a>
-          <a class="btn btn-primary btn-sm" href="#/explain"><svg class="icon" aria-hidden="true"><use href="#i-spark"/></svg>New explanation</a>
+          <button type="button" class="search-trigger" id="search-open" aria-haspopup="dialog" aria-controls="search-overlay" aria-keyshortcuts="/ Control+K Meta+K">
+            <svg class="icon" aria-hidden="true"><use href="#i-search"/></svg>
+            <span class="search-label">Search</span>
+            <kbd>/</kbd>
+          </button>
+          <span class="status-chip" id="ai-status" data-mode="unknown" title="AI connection status"><span class="dot" aria-hidden="true"></span><span id="ai-status-text">Checking AI…</span></span>
+          <button type="button" class="icon-btn theme-btn" id="theme-toggle" aria-label="Switch to dark theme" title="Switch theme">
+            <svg class="icon theme-icon-sun" aria-hidden="true"><use href="#i-sun"/></svg>
+            <svg class="icon theme-icon-moon" aria-hidden="true"><use href="#i-moon"/></svg>
+          </button>
+          <a class="btn btn-primary btn-sm topbar-cta" href="#/explain"><svg class="icon" aria-hidden="true"><use href="#i-spark"/></svg><span>New explanation</span></a>
         </div>
       </header>
 
@@ -150,8 +176,7 @@
             </div>
           </div>
 
-          <section class="card key-card" aria-labelledby="home-key-h">
-            <h2 class="sr-only" id="home-key-h">Connect your own AI key</h2>
+          <section class="card key-card">
             <div data-key-panel="compact"></div>
           </section>
 
@@ -175,81 +200,164 @@
         </section>
 
         <!-- ============ DASHBOARD ============ -->
-        <section class="view" id="view-dashboard" data-view="dashboard" aria-labelledby="dash-h1" hidden>
-          <div class="hero">
-            <div class="hero-copy">
-              <p class="eyebrow">AI-assisted learning · TVET Level 4</p>
-              <h1 id="dash-h1">Study smarter with <span>StudyMate ICT</span></h1>
-              <p class="lede">Build clear explanations, quizzes and study plans for computer systems and ICT topics — using carefully engineered prompts you can run in any AI assistant, or work through entirely offline.</p>
-              <div class="hero-actions">
-                <a class="btn btn-primary" href="#/explain"><svg class="icon" aria-hidden="true"><use href="#i-book"/></svg>Explain an ICT topic</a>
-                <a class="btn btn-outline" href="#/planner">Plan my study week</a>
+        <section class="view dashboard-view" id="view-dashboard" data-view="dashboard" aria-labelledby="dash-h1" hidden>
+          <div class="welcome">
+            <div class="welcome-copy">
+              <p class="eyebrow" id="dash-eyebrow">Your learning workspace</p>
+              <h1 id="dash-h1">Your ICT learning journey starts here.</h1>
+              <p class="lede">Understand concepts, practise your knowledge and make consistent progress with StudyMate ICT. No account needed — everything you save stays in this browser.</p>
+              <div class="welcome-actions">
+                <a class="btn btn-primary" href="#/explain"><svg class="icon" aria-hidden="true"><use href="#i-book"/></svg>Start learning</a>
+                <a class="btn btn-outline" href="#/quiz"><svg class="icon" aria-hidden="true"><use href="#i-quiz"/></svg>Create a quiz</a>
               </div>
-              <p class="hero-note"><svg class="icon" aria-hidden="true"><use href="#i-info"/></svg><span id="hero-ai-note">Without an API key StudyMate ICT never contacts a model — it builds the prompt for you to copy.</span></p>
+              <p class="welcome-note" id="hero-ai-note"><svg class="icon" aria-hidden="true"><use href="#i-info"/></svg><span>Without an API key StudyMate ICT never contacts a model — it builds the prompt for you to copy.</span></p>
             </div>
-            <div class="hero-panel" aria-hidden="true">
-              <div class="hp-row"><span class="hp-dot"></span>Topic → structured prompt</div>
-              <div class="hp-code">
-                <span class="k">1. Definition</span>
-                <span class="k">2. Why it matters</span>
-                <span class="k">3. Step-by-step</span>
-                <span class="k">4. Practical example</span>
-                <span class="k">5. Real-world use</span>
-                <span class="k">6. Misconceptions</span>
-                <span class="k">7. Summary</span>
-                <span class="k">8. Practice questions</span>
-                <span class="k">9. Answers</span>
-              </div>
-              <div class="hp-foot">9-part explanation contract</div>
+            <div class="welcome-art" aria-hidden="true">
+              <svg viewBox="0 0 400 280" role="presentation" focusable="false">
+                <defs>
+                  <linearGradient id="wa-panel" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0" stop-color="#4f46e5" stop-opacity=".16"/>
+                    <stop offset="1" stop-color="#14b8a6" stop-opacity=".14"/>
+                  </linearGradient>
+                  <linearGradient id="wa-bar" x1="0" y1="1" x2="0" y2="0">
+                    <stop offset="0" stop-color="#0f9d8f"/>
+                    <stop offset="1" stop-color="#4f46e5"/>
+                  </linearGradient>
+                </defs>
+                <rect x="26" y="30" width="348" height="220" rx="20" fill="url(#wa-panel)" stroke="#c7d2fe" stroke-opacity=".7"/>
+                <rect x="26" y="30" width="348" height="38" rx="20" fill="#ffffff" fill-opacity=".55"/>
+                <circle cx="46" cy="49" r="4" fill="#4f46e5" fill-opacity=".55"/>
+                <circle cx="60" cy="49" r="4" fill="#14b8a6" fill-opacity=".55"/>
+                <circle cx="74" cy="49" r="4" fill="#94a3b8" fill-opacity=".55"/>
+                <rect x="48" y="86" width="128" height="9" rx="4.5" fill="#1e293b" fill-opacity=".75"/>
+                <rect x="48" y="104" width="188" height="7" rx="3.5" fill="#64748b" fill-opacity=".45"/>
+                <rect x="48" y="118" width="150" height="7" rx="3.5" fill="#64748b" fill-opacity=".32"/>
+                <g>
+                  <rect x="48" y="160" width="34" height="52" rx="8" fill="url(#wa-bar)" fill-opacity=".45"/>
+                  <rect x="90" y="144" width="34" height="68" rx="8" fill="url(#wa-bar)" fill-opacity=".65"/>
+                  <rect x="132" y="170" width="34" height="42" rx="8" fill="url(#wa-bar)" fill-opacity=".5"/>
+                  <rect x="174" y="132" width="34" height="80" rx="8" fill="url(#wa-bar)" fill-opacity=".85"/>
+                </g>
+                <g stroke="#0f9d8f" stroke-width="2" fill="none" stroke-linecap="round">
+                  <path d="M232 196c16-30 34-44 52-58" stroke-opacity=".5"/>
+                  <path d="M232 196c26-8 48-14 70-18" stroke-opacity=".3"/>
+                </g>
+                <circle cx="284" cy="138" r="6" fill="#ffffff" stroke="#0f9d8f" stroke-width="2"/>
+                <circle cx="302" cy="178" r="5" fill="#ffffff" stroke="#4f46e5" stroke-width="2"/>
+                <rect x="246" y="86" width="108" height="34" rx="10" fill="#ffffff" stroke="#dbe3f4"/>
+                <rect x="258" y="96" width="56" height="6" rx="3" fill="#334155" fill-opacity=".55"/>
+                <rect x="258" y="107" width="80" height="5" rx="2.5" fill="#94a3b8" fill-opacity=".55"/>
+                <g>
+                  <rect x="246" y="204" width="108" height="46" rx="10" fill="#ffffff" stroke="#dbe3f4"/>
+                  <circle cx="266" cy="227" r="11" fill="#14b8a6" fill-opacity=".18"/>
+                  <path d="m261.5 227 3.2 3.2 6-6.4" fill="none" stroke="#0f9d8f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <rect x="284" y="218" width="54" height="6" rx="3" fill="#334155" fill-opacity=".5"/>
+                  <rect x="284" y="230" width="38" height="5" rx="2.5" fill="#94a3b8" fill-opacity=".5"/>
+                </g>
+                <circle cx="54" cy="252" r="16" fill="#4f46e5" fill-opacity=".1"/>
+                <circle cx="358" cy="66" r="22" fill="#14b8a6" fill-opacity=".1"/>
+              </svg>
             </div>
           </div>
 
-          <div class="stat-grid" id="stat-grid">
-            <article class="stat-card"><span class="stat-label">Saved topics</span><strong class="stat-value" id="stat-topics">0</strong><span class="stat-sub">from explainers &amp; plans</span></article>
-            <article class="stat-card"><span class="stat-label">Saved prompts</span><strong class="stat-value" id="stat-prompts">0</strong><span class="stat-sub">ready to reuse</span></article>
-            <article class="stat-card"><span class="stat-label">Glossary terms</span><strong class="stat-value" id="stat-terms">0</strong><span class="stat-sub">saved to your list</span></article>
-            <article class="stat-card"><span class="stat-label">Prompts generated</span><strong class="stat-value" id="stat-activity">0</strong><span class="stat-sub">all activity</span></article>
+          <div class="stat-grid" id="stat-grid" aria-label="Your learning at a glance">
+            <article class="stat-card">
+              <div class="stat-top"><span class="stat-label">Saved topics</span><span class="stat-ico"><svg class="icon" aria-hidden="true"><use href="#i-saved"/></svg></span></div>
+              <strong class="stat-value" id="stat-topics">0</strong>
+              <span class="stat-sub" id="stat-topics-sub">From explainers and plans</span>
+            </article>
+            <article class="stat-card">
+              <div class="stat-top"><span class="stat-label">Saved prompts</span><span class="stat-ico"><svg class="icon" aria-hidden="true"><use href="#i-library"/></svg></span></div>
+              <strong class="stat-value" id="stat-prompts">0</strong>
+              <span class="stat-sub">Ready to copy and reuse</span>
+            </article>
+            <article class="stat-card">
+              <div class="stat-top"><span class="stat-label">Quizzes marked</span><span class="stat-ico"><svg class="icon" aria-hidden="true"><use href="#i-quiz"/></svg></span></div>
+              <strong class="stat-value" id="stat-quizzes">0</strong>
+              <span class="stat-sub" id="stat-quizzes-sub">No quiz marked yet</span>
+            </article>
+            <article class="stat-card">
+              <div class="stat-top"><span class="stat-label">Average score</span><span class="stat-ico"><svg class="icon" aria-hidden="true"><use href="#i-trend"/></svg></span></div>
+              <strong class="stat-value" id="stat-score">—</strong>
+              <span class="stat-sub" id="stat-score-sub">Shown after your first quiz</span>
+            </article>
+            <article class="stat-card">
+              <div class="stat-top"><span class="stat-label">Plan progress</span><span class="stat-ico"><svg class="icon" aria-hidden="true"><use href="#i-target"/></svg></span></div>
+              <strong class="stat-value" id="stat-plan">—</strong>
+              <span class="stat-sub" id="stat-plan-sub">No active plan</span>
+            </article>
+            <article class="stat-card">
+              <div class="stat-top"><span class="stat-label">Glossary terms</span><span class="stat-ico"><svg class="icon" aria-hidden="true"><use href="#i-glossary"/></svg></span></div>
+              <strong class="stat-value" id="stat-terms">0</strong>
+              <span class="stat-sub" id="stat-terms-sub">Saved to your list</span>
+            </article>
           </div>
 
-          <div class="section-head">
-            <h2>Your study tools</h2>
-            <p>Six focused tools. Each one builds a prompt, not an answer.</p>
-          </div>
-          <div class="tool-grid" id="tool-grid"></div>
-
-          <div class="split">
-            <section class="card" aria-labelledby="recent-h">
+          <div class="dash-grid">
+            <section class="card continue-card" aria-labelledby="continue-h">
               <div class="card-head">
-                <h2 id="recent-h">Recently used</h2>
-                <a class="link" href="#/saved">View all activity</a>
+                <div>
+                  <h2 id="continue-h">Continue learning</h2>
+                  <p class="card-sub">Pick up where you left off.</p>
+                </div>
+                <a class="link" href="#/saved">All saved learning</a>
               </div>
-              <ul class="activity-list" id="recent-list"></ul>
+              <div id="continue-body"></div>
             </section>
-            <section class="card" aria-labelledby="focus-h">
+            <section class="card" aria-labelledby="plan-h">
               <div class="card-head">
-                <h2 id="focus-h">Study focus</h2>
-                <a class="link" href="#/saved">Manage saved</a>
-              </div>
-              <div id="focus-body"></div>
-            </section>
-          </div>
-
-          <div class="split even">
-            <section class="card" aria-labelledby="quiz-results-h">
-              <div class="card-head">
-                <h2 id="quiz-results-h">Recent quiz results</h2>
-                <a class="link" href="#/quiz">Practise</a>
-              </div>
-              <ul class="saved-list" id="quiz-results"></ul>
-            </section>
-            <section class="card" aria-labelledby="plan-progress-h">
-              <div class="card-head">
-                <h2 id="plan-progress-h">Study-plan progress</h2>
+                <div>
+                  <h2 id="plan-h">Study plan progress</h2>
+                  <p class="card-sub">Your most recent saved plan.</p>
+                </div>
                 <a class="link" href="#/planner">Open planner</a>
               </div>
               <div id="plan-progress-card"></div>
             </section>
           </div>
+
+          <div class="section-head">
+            <div>
+              <h2>Learning tools</h2>
+              <p>Six focused tools — start with a topic, your notes or your week.</p>
+            </div>
+            <a class="link" href="#/glossary">Browse the glossary</a>
+          </div>
+          <div class="tool-grid" id="tool-grid"></div>
+
+          <div class="dash-grid">
+            <section class="card" aria-labelledby="quiz-results-h">
+              <div class="card-head">
+                <div>
+                  <h2 id="quiz-results-h">Quiz results</h2>
+                  <p class="card-sub">Scores from quizzes you marked.</p>
+                </div>
+                <a class="link" href="#/quiz">Practise</a>
+              </div>
+              <div class="score-chart" id="quiz-chart" hidden></div>
+              <ul class="saved-list" id="quiz-results"></ul>
+            </section>
+            <section class="card" aria-labelledby="recent-h">
+              <div class="card-head">
+                <div>
+                  <h2 id="recent-h">Recent activity</h2>
+                  <p class="card-sub">Every tool you use is logged here.</p>
+                </div>
+              </div>
+              <ul class="activity-list" id="recent-list"></ul>
+            </section>
+          </div>
+
+          <section class="card focus-card" aria-labelledby="focus-h">
+            <div class="card-head">
+              <div>
+                <h2 id="focus-h">Study focus</h2>
+                <p class="card-sub">Topics you saved for revision.</p>
+              </div>
+              <a class="link" href="#/saved">Manage saved</a>
+            </div>
+            <div id="focus-body"></div>
+          </section>
         </section>
 
         <!-- ============ EXPLAIN ============ -->
@@ -540,6 +648,7 @@
             <p class="result-count" id="gloss-count" aria-live="polite"></p>
           </div>
 
+          <h2 class="sr-only">All ICT terms</h2>
           <div class="gloss-grid" id="gloss-grid"></div>
           <div class="empty-state" id="gloss-empty" hidden>
             <svg class="icon icon-lg" aria-hidden="true"><use href="#i-glossary"/></svg>
@@ -677,15 +786,34 @@
             <p class="lede">Everything you saved lives in this browser's LocalStorage. Clearing browser data or using another device will not bring it back.</p>
           </div>
 
+          <div class="saved-toolbar" role="search">
+            <div class="search-wrap">
+              <label class="sr-only" for="saved-search">Search saved learning</label>
+              <input type="search" id="saved-search" placeholder="Search saved topics, prompts, terms and activity…" autocomplete="off" />
+            </div>
+            <div class="field compact">
+              <label class="sr-only" for="saved-filter">Filter by category</label>
+              <select id="saved-filter">
+                <option value="all">All saved items</option>
+                <option value="topics">Topics</option>
+                <option value="prompts">Prompts</option>
+                <option value="glossary">Glossary terms</option>
+                <option value="activity">Activity</option>
+              </select>
+            </div>
+            <p class="result-count" id="saved-count" aria-live="polite"></p>
+            <button type="button" class="link-btn" id="saved-clear" hidden>Clear filters</button>
+          </div>
+
           <div class="split even">
-            <section class="card" aria-labelledby="st-h">
+            <section class="card" id="saved-topics-card" aria-labelledby="st-h">
               <div class="card-head">
                 <h2 id="st-h">Saved topics</h2>
                 <button class="link-btn" id="clear-topics">Clear</button>
               </div>
               <ul class="saved-list" id="saved-topics"></ul>
             </section>
-            <section class="card" aria-labelledby="sp-h">
+            <section class="card" id="saved-prompts-card" aria-labelledby="sp-h">
               <div class="card-head">
                 <h2 id="sp-h">Saved prompts</h2>
                 <button class="link-btn" id="clear-prompts">Clear</button>
@@ -694,14 +822,14 @@
             </section>
           </div>
           <div class="split even">
-            <section class="card" aria-labelledby="sg-h">
+            <section class="card" id="saved-gloss-card" aria-labelledby="sg-h">
               <div class="card-head">
                 <h2 id="sg-h">Saved glossary terms</h2>
                 <button class="link-btn" id="clear-gloss">Clear</button>
               </div>
               <ul class="saved-list" id="saved-gloss"></ul>
             </section>
-            <section class="card" aria-labelledby="sa-h">
+            <section class="card" id="saved-activity-card" aria-labelledby="sa-h">
               <div class="card-head">
                 <h2 id="sa-h">Study activity</h2>
                 <button class="link-btn" id="clear-activity">Clear</button>
@@ -727,6 +855,13 @@
           </div>
 
           <form class="card settings-card" id="settings-form">
+            <h2 class="settings-h2">Your name</h2>
+            <div class="field">
+              <label for="set-name">Display name <span class="optional">(optional)</span></label>
+              <input type="text" id="set-name" maxlength="40" placeholder="e.g. Amina" autocomplete="nickname" />
+              <p class="hint">Only used for the greeting on your dashboard. It is stored in this browser, never sent anywhere, and is not a login.</p>
+            </div>
+
             <h2 class="settings-h2">Appearance</h2>
             <div class="field-row">
               <div class="field">
@@ -848,9 +983,24 @@
 
   <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
 
+  <!-- Global search -->
+  <div class="search-overlay" id="search-overlay" hidden>
+    <div class="search-panel" role="dialog" aria-modal="true" aria-labelledby="search-title">
+      <div class="search-bar">
+        <svg class="icon" aria-hidden="true"><use href="#i-search"/></svg>
+        <label class="sr-only" for="search-input" id="search-title">Search tools, glossary terms and saved learning</label>
+        <input id="search-input" type="text" inputmode="search" placeholder="Search tools, glossary terms and saved learning…" autocomplete="off" role="combobox" aria-expanded="true" aria-controls="search-results" aria-autocomplete="list" />
+        <button type="button" class="icon-btn" id="search-close" aria-label="Close search"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+      </div>
+      <ul class="search-results" id="search-results" role="listbox" aria-label="Search results"></ul>
+      <p class="search-foot"><kbd>↑</kbd><kbd>↓</kbd> to move · <kbd>Enter</kbd> to open · <kbd>Esc</kbd> to close</p>
+    </div>
+  </div>
+
   <script src="js/core.js"></script>
   <script src="js/storage.js"></script>
   <script src="js/ui.js"></script>
+  <script src="js/ai-contract.js"></script>
   <script src="js/local-ai.js"></script>
   <script src="js/ai.js"></script>
   <script src="js/prompts.js"></script>

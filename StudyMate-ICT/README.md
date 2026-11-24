@@ -4,7 +4,7 @@
 
 StudyMate ICT helps learners understand computer-systems concepts, build quizzes from their own notes, plan realistic revision schedules, and learn from source-grounded prompts. It is a capstone project for the **AI and Prompt Engineering internship at Ishvexa Hub**.
 
-> **Important:** StudyMate ICT does **not** call an AI service and contains no API key. It is a *prompt engineering* application: it builds carefully structured prompts that you copy into an AI assistant of your choice. Everything except that copy step works fully offline.
+> **Important:** StudyMate ICT needs no account, no login and no key. Out of the box it is a *prompt engineering* application: it builds carefully structured prompts that you copy into an AI assistant of your choice, and every tool works fully offline. If you want live answers, you can add **your own** OpenAI-compatible key in Settings (kept in this browser only) or a key on a server you own.
 
 **Live demo:** <https://studymate-ict-04s0d8.freebuff.site/> — installable from the browser, and it keeps working with the network switched off after the first visit.
 
@@ -52,11 +52,12 @@ StudyMate ICT solves that by owning the prompt layer:
 | 4 | **ICT Glossary** | 41 curated terms with plain definitions and practical examples, searchable and filterable. Copy definitions, save them, and add your own terms. |
 | 5 | **Source-Grounded Learning** | Builds a strict prompt that answers only from supplied notes, quotes evidence, corrects false assumptions, and must reply with an exact refusal sentence when the notes are insufficient. Includes a transparent keyword coverage check. |
 | 6 | **Prompt Library** | Eight complete templates (explainer, hardware comparison, quiz, planner, programming tutor, error troubleshooter, notes summariser, glossary creator) with purpose, inputs, expected output, example and responsible-use note. |
-| 7 | **Learning Dashboard** | Tool overview, saved-item counts, recently used tools, study focus and an activity summary. |
+| 7 | **Learning Dashboard** | The first screen: welcome panel, six real metrics (saved topics, saved prompts, quizzes marked, average score, plan progress, glossary terms), continue learning, plan progress, tool cards, quiz-score chart, recent activity and study focus. Empty states instead of invented numbers. |
 | 8 | **Saved Learning** | View, copy and delete saved topics, saved prompts, saved glossary terms and activity history. |
 | 9 | **About the Project** | Purpose, technologies, AI status and honest limitations. |
+| 10 | **Workspace shell and search** | Collapsible sidebar with grouped navigation and a saved-items badge, topbar with breadcrumbs, theme toggle and real AI status, a mobile drawer, and global search (`/` or `Ctrl/Cmd + K`) across pages, glossary, saved items and the active plan. |
 
-Plus: offline operation, LocalStorage persistence, responsive desktop/tablet/mobile layouts, keyboard navigation, visible focus states, empty states, inline validation and print/PDF export of study plans.
+Plus: no login or registration, offline operation, LocalStorage persistence, responsive layouts from 320px to 1920px, keyboard navigation, visible focus states, empty states, inline validation, a dark theme and print/PDF export of study plans.
 
 ## Screenshots
 

@@ -53,6 +53,14 @@
     });
   }
 
+  /** Only a real, validated model response may switch the chip to "AI live". */
+  function markVerified() {
+    if (state.verified) return;
+    state.verified = true;
+    state.mode = 'live';
+    notify();
+  }
+
   function originIsHttp() {
     return /^https?:$/.test(window.location.protocol);
   }
@@ -123,11 +131,7 @@
   /** Use the learner's own key, straight from this browser to their provider. */
   function localRequest(body) {
     return localAi().run(body).then(function (payload) {
-      if (!state.verified) {
-        state.verified = true;
-        state.mode = 'live';
-        notify();
-      }
+      markVerified();
       return payload.data;
     }, function (err) {
       var message = (err && err.message) || 'The request to your provider failed.';
@@ -181,12 +185,7 @@
     }
 
     return run().then(function (payload) {
-      // A real, validated model response: only now may the UI say "live".
-      if (!state.verified) {
-        state.verified = true;
-        state.mode = 'live';
-        notify();
-      }
+      markVerified();
       return payload.data;
     });
   }

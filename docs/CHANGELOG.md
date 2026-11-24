@@ -2,6 +2,42 @@
 
 All dates are 2026. The project follows a simple `MAJOR.MINOR.PATCH` scheme; the app version is shown in `package.json`.
 
+## 2.2.0 — 24 November 2026
+
+The dashboard-first redesign: one design system across every screen.
+
+### Added
+
+- **Workspace shell.** Sidebar with *Workspace* and *Your learning* groups, active states, a live saved-items badge, collapsible icon mode (state remembered, labels kept for screen readers, CSS tooltips) and an off-canvas drawer below 900px. Topbar with breadcrumbs that follow the route, a page hint, global search, the AI-status chip, theme toggle, primary action and a mobile menu button.
+- **Real-data dashboard.** Six metrics (saved topics, saved prompts, quizzes marked, average score, plan progress, glossary terms), continue-learning rows, plan progress, tool cards, per-quiz score bars, recent activity and study focus — all derived from LocalStorage, with zero states instead of placeholder numbers. Optional display name (stored locally, used only for the greeting).
+- **Global search** (`/` or `Ctrl/Cmd + K`): pages, all 41 glossary terms, saved topics and prompts, personal terms and the active plan; ranked and grouped results, arrow-key navigation, `Enter` to open, deep links that pre-fill the glossary or saved search box.
+- **Saved Learning filters:** search across sections plus a category filter, live match count and a reset action.
+
+### Changed
+
+The default route is now `#/dashboard`; `#/home` still exists for the landing and key-setup page, and every existing route, saved link, form ID and LocalStorage key is unchanged.
+
+- `css/styles.css` is a single design system built on tokens (colour, spacing, radius, shadow, type), with a token-level dark theme, system font stack, inline SVG sprite icons and no external assets. Legacy class names used by the JavaScript were preserved.
+- All views were rebuilt on that system: explainer, quiz, planner, source-grounded learning, glossary, prompt library, saved learning, settings and about, including form layouts, empty states, callouts, tables of results and print styles.
+- Accessibility: skip link, landmarks, one `h1` per view, labelled fields, visible focus rings, `aria-live` status text, `prefers-reduced-motion` and AA contrast for secondary text.
+- The service worker's cache name is now stamped by `build.sh` from a hash of the built shell, so updates cannot be hidden behind a stale cache. `dist/` is still regenerated and committed.
+- Version bumped to 2.2.0.
+
+### Tests
+
+- 36 Node tests pass (`npm test`) and `./build.sh` produces the same 28-file bundle.
+- Browser QA (Chromium): 11 routes at 320, 375, 390, 430, 768, 1024, 1280, 1440 and 1920 px with no horizontal overflow; sidebar collapse/persistence; mobile drawer; search ranking and keyboard flow; saved search/filter; quiz generation against a stubbed OpenAI-compatible provider (5/5 marked, score and dashboard stats updated); plan build/save/tick persistence across reload; theme persistence; offline reload from the service worker. Details in `StudyMate-ICT/TESTING_REPORT.md`.
+
+## 2.1.1 — 24 November 2026
+
+One copy of the AI contract, used by both AI paths.
+
+### Changed
+
+- **Prompts and validation are no longer duplicated.** `js/ai-contract.js` now owns the explain/quiz prompts, request validation, JSON parsing and the explanation/quiz schema checks. The browser path (`js/local-ai.js`) and the server core (`sites/ai-core.js`) both use it, so their rules and wording cannot drift. It stays a classic script, so the app still works from `file://`.
+- `js/local-ai.js` keeps only key storage, provider presets and the direct provider call; the key is still never rendered back into the page (only a "saved on this device" placeholder is shown).
+- Service worker bumped to **v5** (26 precached files); `dist/` is now 28 files.
+
 ## 2.1.0 — 23 November 2026
 
 Home-page entry point, and a second AI path that needs no server key.

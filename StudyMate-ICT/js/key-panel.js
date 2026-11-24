@@ -180,15 +180,15 @@
     bind(mount);
   });
 
-  // Keep every mounted copy consistent when the key changes anywhere.
+  // Keep every mounted copy consistent when the key changes anywhere. A form
+  // the learner is typing in is left alone apart from its Remove button.
   local.subscribe(function () {
     mounts.forEach(function (mount) {
-      var secret = mount.querySelector('[data-key="secret"]');
-      if (secret && document.activeElement !== secret) sync(mount);
-      else if (secret) {
-        var remove = mount.querySelector('[data-key="remove"]');
-        if (remove) remove.hidden = !local.hasKey();
+      if (mount.contains(document.activeElement)) {
+        mount.querySelector('[data-key="remove"]').hidden = !local.hasKey();
+        return;
       }
+      sync(mount);
     });
   });
 

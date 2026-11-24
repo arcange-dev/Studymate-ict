@@ -102,12 +102,14 @@ Supporting a provider with a *different* protocol means writing one function: re
 
 `StudyMate-ICT/js/local-ai.js` implements a second, independent path: the learner pastes their own key, base URL and model on the **Home** page or in **Settings**. It is stored under the LocalStorage key `studymate.ict.localai.v1` and read at call time.
 
+Both paths use the same contract. Prompts, request validation, JSON parsing and the explanation/quiz schemas live once in `StudyMate-ICT/js/ai-contract.js`. It is a classic script (so the app still runs from `file://`) that publishes itself as `SMAiContract`; `sites/ai-core.js` imports it for that side effect and re-exports what the server needs. `local-ai.js` only adds key storage and the direct provider call.
+
 | Aspect | Server key (`/api/ai`) | Learner key (`local-ai.js`) |
 |---|---|---|
 | Where the key lives | Hosting environment | That browser's LocalStorage |
 | Who sees it | The server | Only the device (sent to the provider as `Authorization: Bearer …`) |
 | Request path | Browser → this app → provider | Browser → provider directly |
-| Validation | `sites/ai-core.js` | The same rules, re-implemented and re-applied in `local-ai.js` |
+| Validation | `js/ai-contract.js` via `sites/ai-core.js` | The same shared `js/ai-contract.js` |
 | Rate limiting | Server-side per client and per day | None — the learner's own provider quota applies |
 | Works on static hosting | No | Yes |
 | Works when the provider blocks CORS | Yes | No |

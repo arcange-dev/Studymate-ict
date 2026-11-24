@@ -44,6 +44,7 @@
 
   var form = ui.$('#settings-form');
   if (form) {
+    var nameEl = ui.$('#set-name');
     var themeEl = ui.$('#set-theme');
     var levelEl = ui.$('#set-level');
     var subjectsEl = ui.$('#set-subjects');
@@ -57,6 +58,7 @@
 
     function fillForm() {
       var s = current();
+      nameEl.value = s.name || '';
       themeEl.value = s.theme;
       levelEl.value = s.level;
       subjectsEl.value = s.subjects.join(', ');
@@ -67,6 +69,7 @@
 
     function saveForm() {
       var settings = update({
+        name: nameEl.value,
         theme: themeEl.value,
         level: levelEl.value,
         subjects: subjectsEl.value.split(',').map(function (s) { return s.trim(); }).filter(Boolean),

@@ -1,4 +1,4 @@
-/* StudyMate ICT — Saved Learning page: view, copy and delete local items. */
+/* StudyMate ICT — Saved Learning: search, filter, copy and delete local items. */
 (function () {
   'use strict';
 
@@ -11,12 +11,33 @@
   var promptsList = ui.$('#saved-prompts');
   var glossList = ui.$('#saved-gloss');
   var activityList = ui.$('#saved-activity');
+  var searchEl = ui.$('#saved-search');
+  var filterEl = ui.$('#saved-filter');
+  var countEl = ui.$('#saved-count');
+  var clearBtn = ui.$('#saved-clear');
+
+  var cards = {
+    topics: ui.$('#saved-topics-card'),
+    prompts: ui.$('#saved-prompts-card'),
+    glossary: ui.$('#saved-gloss-card'),
+    activity: ui.$('#saved-activity-card')
+  };
+
+  function query() { return (searchEl.value || '').trim().toLowerCase(); }
+  function filter() { return filterEl.value; }
+  function isFiltered() { return Boolean(query()) || filter() !== 'all'; }
+  function sectionVisible(name) { return filter() === 'all' || filter() === name; }
+
+  function match(parts) {
+    var q = query();
+    if (!q) return true;
+    return parts.join(' ').toLowerCase().indexOf(q) !== -1;
+  }
 
   function emptyLine(text) {
     var li = document.createElement('li');
     var p = document.createElement('p');
     p.className = 'empty-line';
-    p.style.width = '100%';
     p.textContent = text;
     li.appendChild(p);
     return li;
@@ -53,7 +74,14 @@
       topicsList.appendChild(emptyLine('No saved topics yet. Generate an explanation or a study plan and press Save.'));
       return;
     }
-    data.topics.forEach(function (t) {
+    var items = data.topics.filter(function (t) {
+      return match([t.title, t.detail, ui.toolMeta(t.tool).name]);
+    });
+    if (!items.length) {
+      topicsList.appendChild(emptyLine('No saved topics match your search.'));
+      return;
+    }
+    items.forEach(function (t) {
       var li = document.createElement('li');
       li.className = 'saved-item';
       var main = document.createElement('div');
@@ -89,7 +117,14 @@
       promptsList.appendChild(emptyLine('No saved prompts. Use Save on any generated prompt, or save a library template.'));
       return;
     }
-    data.prompts.forEach(function (p) {
+    var items = data.prompts.filter(function (p) {
+      return match([p.title, p.text, ui.toolMeta(p.tool).name]);
+    });
+    if (!items.length) {
+      promptsList.appendChild(emptyLine('No saved prompts match your search.'));
+      return;
+    }
+    items.forEach(function (p) {
       var li = document.createElement('li');
       li.className = 'saved-item';
       var main = document.createElement('div');
@@ -118,19 +153,28 @@
     });
   }
 
-  function renderGloss() {
-    var data = SM.store.get();
+  function savedGlossTerms() {
     var byId = {};
     SM.glossaryData.forEach(function (t) { byId[t.id] = t; });
+    return SM.store.get().glossSaved.map(function (id) { return byId[id]; }).filter(Boolean);
+  }
+
+  function renderGloss() {
+    var data = SM.store.get();
     glossList.innerHTML = '';
 
     if (!data.glossSaved.length) {
       glossList.appendChild(emptyLine('No glossary terms saved. Press Save on any term in the ICT Glossary.'));
       return;
     }
-    data.glossSaved.forEach(function (id) {
-      var t = byId[id];
-      if (!t) return;
+    var items = savedGlossTerms().filter(function (t) {
+      return match([t.term, t.full, t.def, t.cat]);
+    });
+    if (!items.length) {
+      glossList.appendChild(emptyLine('No saved glossary terms match your search.'));
+      return;
+    }
+    items.forEach(function (t) {
       var li = document.createElement('li');
       li.className = 'saved-item';
       var main = document.createElement('div');
@@ -164,7 +208,14 @@
       activityList.appendChild(emptyLine('Nothing here yet. Your tool usage will appear in this list.'));
       return;
     }
-    data.activity.slice(0, 20).forEach(function (item) {
+    var items = data.activity.filter(function (item) {
+      return match([item.label, ui.toolMeta(item.tool).name]);
+    });
+    if (!items.length) {
+      activityList.appendChild(emptyLine('No activity matches your search.'));
+      return;
+    }
+    items.slice(0, 20).forEach(function (item) {
       var meta = ui.toolMeta(item.tool);
       var li = document.createElement('li');
       li.innerHTML =
@@ -175,12 +226,42 @@
     });
   }
 
+  function renderCounts() {
+    var data = SM.store.get();
+    var total = data.topics.length + data.prompts.length + data.glossSaved.length + data.activity.length;
+    var shown = 0;
+    if (sectionVisible('topics')) shown += data.topics.filter(function (t) { return match([t.title, t.detail]); }).length;
+    if (sectionVisible('prompts')) shown += data.prompts.filter(function (p) { return match([p.title, p.text]); }).length;
+    if (sectionVisible('glossary')) {
+      shown += savedGlossTerms().filter(function (t) { return match([t.term, t.full, t.def]); }).length;
+    }
+    if (sectionVisible('activity')) shown += data.activity.filter(function (item) { return match([item.label]); }).length;
+
+    countEl.textContent = isFiltered()
+      ? shown + ' of ' + total + ' saved items'
+      : total + ' saved items';
+    clearBtn.hidden = !isFiltered();
+  }
+
   function renderAll() {
+    Object.keys(cards).forEach(function (name) {
+      if (cards[name]) cards[name].hidden = !sectionVisible(name);
+    });
     renderTopics();
     renderPrompts();
     renderGloss();
     renderActivity();
+    renderCounts();
   }
+
+  searchEl.addEventListener('input', renderAll);
+  filterEl.addEventListener('change', renderAll);
+  clearBtn.addEventListener('click', function () {
+    searchEl.value = '';
+    filterEl.value = 'all';
+    renderAll();
+    searchEl.focus();
+  });
 
   ui.$('#clear-topics').addEventListener('click', function () {
     if (!SM.store.get().topics.length) { ui.toast('There are no saved topics to clear', 'error'); return; }

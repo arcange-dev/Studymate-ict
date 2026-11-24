@@ -176,12 +176,15 @@ Use this when an answer must come only from specific notes.
 
 ## 8. Dashboard
 
-The dashboard gives you an overview:
+The dashboard is the first screen and gives you an overview:
 
-- **Stat cards:** saved topics, saved prompts, glossary terms (saved + personal) and total prompts generated.
+- **Welcome panel:** a greeting (your optional display name from Settings), *Start learning* and *Create a quiz*, and a note telling you which AI mode you are in.
+- **Six metrics:** saved topics, saved prompts, quizzes marked, average score, plan progress and glossary terms. Each one is calculated from what you have actually saved in this browser; empty metrics say so instead of showing invented numbers.
+- **Continue learning:** your most recent saved items, each with a *Resume*, *Open* or *Practise* action.
+- **Study plan progress:** the latest saved plan with a progress bar, days and start date.
 - **Your study tools:** six cards linking to each tool.
-- **Recently used:** your last actions with relative times.
-- **Study focus:** your latest saved topics with a one-click copy, plus counts of saved and personal terms.
+- **Quiz results:** best score and a bar per marked quiz (hidden until you mark one), then the quiz list.
+- **Recent activity and study focus:** your last actions with relative times, and your latest topics with one-click copy.
 
 Counts update immediately whenever you save, delete or generate something.
 
@@ -191,9 +194,10 @@ Counts update immediately whenever you save, delete or generate something.
 
 1. Open **Saved Learning**.
 2. Each section lists your saved **topics**, **prompts**, **glossary terms** and **activity**.
-3. Use the copy icon to copy an item and the bin icon to delete it.
-4. Use the **Clear** links to empty a section (you will be asked to confirm).
-5. **Delete all saved data** removes everything and cannot be undone.
+3. Use the search box to filter every section at once, and the category menu to show only topics, prompts, glossary terms or activity. The count next to the toolbar tells you how many items match, and **Clear search** resets both.
+4. Use the copy icon to copy an item and the bin icon to delete it.
+5. Use the **Clear** links to empty a section (you will be asked to confirm).
+6. **Delete all saved data** removes everything and cannot be undone.
 
 **Where the data lives:** in this browser's LocalStorage. It is not synced, not backed up, and not visible on another device or browser. Clearing browser data deletes it.
 
@@ -202,6 +206,8 @@ Counts update immediately whenever you save, delete or generate something.
 ## 10. Keyboard and accessibility
 
 - `Tab` / `Shift+Tab` move through every control; focus rings are always visible.
+- Press `/` or `Ctrl/Cmd + K` anywhere to open global search. Type to filter pages, glossary terms, saved items and your plan; use `↑` / `↓` to choose a result, `Enter` to open it and `Escape` to close.
+- The sidebar's collapse button shrinks it to icons; each icon keeps a tooltip and a screen-reader label, and your choice is remembered on this device.
 - `Enter` submits the focused form; `Space` activates buttons.
 - On mobile and tablet, `Escape` closes the navigation drawer.
 - Generated prompts are focusable: `Tab` to the dark panel and use `Ctrl/Cmd + C` to copy manually if the clipboard is blocked.

@@ -8,6 +8,7 @@ import { readFileSync } from 'node:fs';
 import { runInNewContext } from 'node:vm';
 
 const source = readFileSync(new URL('../StudyMate-ICT/js/local-ai.js', import.meta.url), 'utf8');
+const contractSource = readFileSync(new URL('../StudyMate-ICT/js/ai-contract.js', import.meta.url), 'utf8');
 
 function makeStorage(initial) {
   const map = new Map(Object.entries(initial || {}));
@@ -40,8 +41,9 @@ function load(options = {}) {
     fetch: fetchImpl,
     console
   };
+  runInNewContext(contractSource, sandbox);
   runInNewContext(source, sandbox);
-  return { localAi: sandbox.window.SM.localAi, storage, calls };
+  return { localAi: sandbox.window.SM.localAi, contract: sandbox.window.SMAiContract, storage, calls };
 }
 
 const explanation = {
@@ -124,16 +126,16 @@ test('a rejected key produces a clear message and not a raw provider body', asyn
 });
 
 test('malformed and incomplete model output is refused before it reaches the screen', () => {
-  const { localAi } = load();
-  assert.throws(() => localAi.parseModelJson('not json at all'), /did not return JSON/i);
-  assert.throws(() => localAi.validateExplanation({ definition: 'x' }), /list|field/i);
-  assert.throws(() => localAi.validateQuiz({ questions: [{ type: 'mcq', prompt: 'Pick one', options: ['a', 'b', 'c'], answerIndex: 0 }] }, 3), /wrong length|four distinct options/i);
-  assert.throws(() => localAi.validateQuiz({ questions: [{ type: 'mcq', prompt: 'Pick one', options: ['a', 'a', 'b', 'c'], answerIndex: 0 }] }, 3), /four distinct options/i);
+  const { contract } = load();
+  assert.throws(() => contract.parseModelJson('not json at all'), /did not return JSON/i);
+  assert.throws(() => contract.validateExplanation({ definition: 'x' }), /list|field/i);
+  assert.throws(() => contract.validateQuiz({ questions: [{ type: 'mcq', prompt: 'Pick one', options: ['a', 'b', 'c'], answerIndex: 0 }] }, 3), /wrong length|four distinct options/i);
+  assert.throws(() => contract.validateQuiz({ questions: [{ type: 'mcq', prompt: 'Pick one', options: ['a', 'a', 'b', 'c'], answerIndex: 0 }] }, 3), /four distinct options/i);
 });
 
 test('a valid quiz is normalised with ids, answers and short-answer keywords', () => {
-  const { localAi } = load();
-  const checked = localAi.validateQuiz(quiz, 3);
+  const { contract } = load();
+  const checked = contract.validateQuiz(quiz, 3);
   assert.equal(checked.questions.length, 3);
   assert.deepEqual(checked.questions.map((q) => q.id), [1, 2, 3]);
   assert.equal(checked.questions[0].answer, 'RAM');
@@ -143,8 +145,8 @@ test('a valid quiz is normalised with ids, answers and short-answer keywords', (
 });
 
 test('fenced JSON from a chatty model is still parsed', () => {
-  const { localAi } = load();
-  const parsed = localAi.parseModelJson('```json\n{"ok":true}\n```');
+  const { contract } = load();
+  const parsed = contract.parseModelJson('```json\n{"ok":true}\n```');
   // The object comes from the VM realm, so compare its serialised form.
   assert.equal(JSON.stringify(parsed), JSON.stringify({ ok: true }));
 });
