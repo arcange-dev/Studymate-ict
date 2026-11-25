@@ -61,6 +61,8 @@ Plus: no login or registration, offline operation, LocalStorage persistence, res
 
 ## Screenshots
 
+Captured from the 2.3.1 build on 25 November 2026; the data shown is demo data saved in the browser.
+
 | ICT Concept Explainer | Smart Study Planner |
 |---|---|
 | ![Explainer](assets/screenshots/02-ict-explainer.png) | ![Planner](assets/screenshots/03-study-planner.png) |

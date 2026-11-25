@@ -62,7 +62,7 @@ The app opens on a **workspace dashboard**, not a marketing page. There is no lo
 
 ## Screenshots
 
-All captured from this build; the data shown is demo data saved in the browser.
+All captured from the 2.3.1 live build on 25 November 2026 (including the Home button); the data shown is demo data saved in the browser.
 
 | Dashboard | Mobile dashboard |
 |---|---|
