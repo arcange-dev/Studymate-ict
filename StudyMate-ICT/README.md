@@ -62,7 +62,7 @@ Plus: no login or registration, offline operation, LocalStorage persistence, res
 
 ## Screenshots
 
-The nine app screenshots were captured on 25 November 2026 from the 2.3.1 build, which already included the Home button; the two API Reference screenshots were captured the same day from the live 2.4.0 build. 2.4.0 only added that page, so the older images do not show its sidebar entry. The data shown is demo data saved in the browser.
+All eleven screenshots were captured from the live 2.4.0 build on 25 November 2026 (including the Home button and the API Reference page that 2.4.0 added), so the API Reference sidebar entry appears in every desktop image. The data shown is demo data saved in the browser.
 
 | ICT Concept Explainer | Smart Study Planner |
 |---|---|
