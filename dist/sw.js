@@ -11,11 +11,13 @@
   The app makes no third-party requests, so every cached URL is same-origin.
 */
 
-var VERSION = 'studymate-ict-97a5af92af';
+var VERSION = 'studymate-ict-28ddf9472a';
 var SHELL = [
   './',
   './manifest.webmanifest',
   './css/styles.css',
+  './assets/fonts/playfair-display-latin.woff2',
+  './assets/fonts/playfair-display-latin-ext.woff2',
   './assets/favicon.svg',
   './assets/icons/icon-192.png',
   './assets/icons/icon-512.png',
