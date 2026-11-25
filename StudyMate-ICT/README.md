@@ -62,7 +62,7 @@ Plus: no login or registration, offline operation, LocalStorage persistence, res
 
 ## Screenshots
 
-Captured on 25 November 2026 from the live build; the data shown is demo data saved in the browser. These views are unchanged in 2.4.0, which added the API Reference page.
+Captured on 25 November 2026 from the live 2.4.0 build; the data shown is demo data saved in the browser. The API Reference page is new in 2.4.0; the other views are unchanged.
 
 | ICT Concept Explainer | Smart Study Planner |
 |---|---|
@@ -79,6 +79,10 @@ Captured on 25 November 2026 from the live build; the data shown is demo data sa
 | Dashboard (mobile) | Saved Learning |
 |---|---|
 | ![Dashboard mobile](assets/screenshots/09-dashboard-mobile.png) | ![Saved learning](assets/screenshots/08-saved-learning.png) |
+
+| API Reference | API Reference (mobile) |
+|---|---|
+| ![API Reference](assets/screenshots/10-api-reference-desktop.png) | ![API Reference mobile](assets/screenshots/11-api-reference-mobile.png) |
 
 ## Technology stack
 

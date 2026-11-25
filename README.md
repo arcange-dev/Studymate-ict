@@ -62,7 +62,7 @@ The app opens on a **workspace dashboard**, not a marketing page. There is no lo
 
 ## Screenshots
 
-All captured from the live build on 25 November 2026 (including the Home button); the data shown is demo data saved in the browser. These views are unchanged in 2.4.0, which added the API Reference page.
+All captured from the live 2.4.0 build on 25 November 2026 (including the Home button and the API Reference page that 2.4.0 added); the data shown is demo data saved in the browser.
 
 | Dashboard | Mobile dashboard |
 |---|---|
@@ -71,6 +71,10 @@ All captured from the live build on 25 November 2026 (including the Home button)
 | Study planner | Source-grounded learning |
 |---|---|
 | ![Study planner](StudyMate-ICT/assets/screenshots/03-study-planner.png) | ![Source-grounded learning](StudyMate-ICT/assets/screenshots/05-source-grounded.png) |
+
+| API Reference | API Reference on a phone |
+|---|---|
+| ![API Reference](StudyMate-ICT/assets/screenshots/10-api-reference-desktop.png) | ![API Reference on a phone](StudyMate-ICT/assets/screenshots/11-api-reference-mobile.png) |
 
 ## Quick start
 
