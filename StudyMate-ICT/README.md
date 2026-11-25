@@ -226,7 +226,7 @@ Released under the MIT License — the licence text is the top-level `LICENSE` f
 
 ## Author and acknowledgements
 
-Built as the final capstone project for the **AI and Prompt Engineering internship at Ishvexa Hub**.
+Built by **Mukamyi Izere Arcange** as the final capstone project for the **AI and Prompt Engineering internship at Ishvexa Hub**.
 
 Built with HTML5, CSS3 and vanilla JavaScript. The glossary definitions are original plain-language explanations written for this project; no textbook text is reproduced. No external assets, fonts, libraries or images are required at runtime.
 

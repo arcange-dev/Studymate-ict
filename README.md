@@ -146,6 +146,6 @@ Manual browser checks during the 2.2.0 redesign (Chromium, Playwright): the dash
 
 ## Attribution
 
-StudyMate ICT was developed with AI-assisted support using Freebuff. The project owner provided the project direction and requirements, reviewed the generated implementation, and carried out the documented testing and evaluation.
+StudyMate ICT was built by **Mukamyi Izere Arcange**, with AI-assisted support using Freebuff. The project owner provided the project direction and requirements, reviewed the generated implementation, and carried out the documented testing and evaluation.
 
 The test results in this repository were produced by the AI build agent in the development environment on 20 November 2026, and are reported exactly as they occurred; the owner's own review and evaluation are recorded separately.
