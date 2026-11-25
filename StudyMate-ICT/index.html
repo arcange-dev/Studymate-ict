@@ -57,6 +57,7 @@
     <symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M4 12h15M13.5 6.5 20 12l-6.5 5.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
     <symbol id="i-trend" viewBox="0 0 24 24"><path d="M3.5 16.5 9 11l3.5 3.5L20 7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 7h5v5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
     <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="12" cy="12" r="4.5" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="12" cy="12" r="1.2" fill="currentColor"/></symbol>
+    <symbol id="i-code" viewBox="0 0 24 24"><path d="m8 8-4.5 4L8 16M16 8l4.5 4L16 16M13.5 4.5l-3 15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
   </svg>
 
   <div class="app-shell">
@@ -92,6 +93,9 @@
         <a class="nav-link" href="#/saved" data-route="saved" data-tip="Saved Learning"><svg class="icon" aria-hidden="true"><use href="#i-saved"/></svg><span class="nav-text">Saved Learning</span><span class="nav-badge" id="nav-saved-count" hidden>0</span></a>
         <a class="nav-link" href="#/settings" data-route="settings" data-tip="Settings"><svg class="icon" aria-hidden="true"><use href="#i-gear"/></svg><span class="nav-text">Settings</span></a>
         <a class="nav-link" href="#/about" data-route="about" data-tip="About StudyMate"><svg class="icon" aria-hidden="true"><use href="#i-info"/></svg><span class="nav-text">About StudyMate</span></a>
+
+        <p class="nav-label"><span>Developers</span></p>
+        <a class="nav-link" href="#/api" data-route="api" data-tip="API Reference"><svg class="icon" aria-hidden="true"><use href="#i-code"/></svg><span class="nav-text">API Reference</span></a>
       </nav>
 
       <div class="sidebar-foot">
@@ -926,6 +930,252 @@
         </section>
 
         <!-- ============ ABOUT ============ -->
+        <!-- ============ API REFERENCE ============ -->
+        <section class="view" id="view-api" data-view="api" aria-labelledby="api-h1" hidden>
+          <div class="page-head">
+            <p class="eyebrow">For developers, markers and integrators</p>
+            <h1 id="api-h1">API Reference</h1>
+            <p class="lede">StudyMate ICT exposes two HTTP endpoints on its own origin and a small browser API. This page documents the code that ships with the app: the live values come from this deployment's own health check, not from a screenshot.</p>
+          </div>
+
+          <section class="card" aria-labelledby="api-live-h">
+            <div class="card-head">
+              <div>
+                <h2 id="api-live-h">This deployment</h2>
+                <p class="card-sub">Read from <code>GET /api/health</code> when this page opens.</p>
+              </div>
+              <span class="status-chip" id="api-status-chip" data-mode="unknown"><span class="dot" aria-hidden="true"></span><span id="api-mode">Checking…</span></span>
+            </div>
+            <dl class="api-facts">
+              <div><dt>Server key</dt><dd id="api-config">Checking…</dd></div>
+              <div><dt>Provider</dt><dd id="api-provider">Checking…</dd></div>
+              <div><dt>Model</dt><dd id="api-model">Checking…</dd></div>
+              <div><dt>Rate limit</dt><dd id="api-rate">Checking…</dd></div>
+              <div><dt>Daily cap</dt><dd id="api-daily">Checking…</dd></div>
+            </dl>
+            <p class="tiny" id="api-mode-note">Checking this deployment…</p>
+          </section>
+
+          <section class="card prose doc-section" aria-labelledby="api-conv-h">
+            <h2 id="api-conv-h">Conventions</h2>
+            <ul>
+              <li><strong>Base URL</strong> is the origin you are reading this on, for example <code>https://studymate-ict-04s0d8.freebuff.site</code>. There is no version prefix, no API key of its own and no SDK.</li>
+              <li><strong>JSON in, JSON out.</strong> Send <code>content-type: application/json</code>; every response is JSON with <code>cache-control: no-store</code>.</li>
+              <li><strong>Same origin only.</strong> <code>POST /api/ai</code> rejects a foreign <code>Origin</code> header with <code>403</code>. Command-line clients such as <code>curl</code> send no Origin and are allowed.</li>
+              <li><strong>Size limit.</strong> A request body larger than 64 KiB is rejected with <code>413</code>.</li>
+            </ul>
+          </section>
+
+          <section class="card doc-section" aria-labelledby="api-health-h">
+            <div class="card-head">
+              <div>
+                <h2 id="api-health-h"><span class="api-method get">GET</span> /api/health</h2>
+                <p class="card-sub">Public status of the server side. Never includes the key, only whether one exists.</p>
+              </div>
+            </div>
+            <pre class="doc-code"><code>{
+  "ok": true,
+  "service": "StudyMate ICT",
+  "ai": {
+    "configured": false,
+    "provider": "openai-compatible",
+    "model": null,
+    "mode": "prompt-only"
+  },
+  "limits": { "rateLimit": 20, "rateWindowMs": 600000, "dailyCap": 300 }
+}</code></pre>
+            <div class="doc-scroll">
+              <table class="doc-table">
+                <thead><tr><th>Field</th><th>Meaning</th></tr></thead>
+                <tbody>
+                  <tr><td><code>ai.mode</code></td><td><code>live</code> when the deployment has its own key, otherwise <code>prompt-only</code>.</td></tr>
+                  <tr><td><code>ai.model</code></td><td>The configured model, or <code>null</code> when there is no key. A model name is never reported without one.</td></tr>
+                  <tr><td><code>limits.*</code></td><td>The rate limiter actually in force for this deployment, in requests and milliseconds.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <section class="card doc-section" aria-labelledby="api-ai-h">
+            <div class="card-head">
+              <div>
+                <h2 id="api-ai-h"><span class="api-method post">POST</span> /api/ai</h2>
+                <p class="card-sub">One endpoint, two operations. The server validates the input, calls an OpenAI-compatible provider, then validates the model's JSON before replying.</p>
+              </div>
+            </div>
+
+            <h3>Explain a topic</h3>
+            <div class="doc-scroll">
+              <table class="doc-table doc-fields">
+                <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Allowed values</th></tr></thead>
+                <tbody>
+                  <tr><td><code>op</code></td><td>string</td><td>yes</td><td><code>explain</code></td></tr>
+                  <tr><td><code>topic</code></td><td>string</td><td>yes</td><td>2–120 characters</td></tr>
+                  <tr><td><code>level</code></td><td>string</td><td>no</td><td><code>beginner</code> (default), <code>intermediate</code>, <code>advanced</code></td></tr>
+                  <tr><td><code>prior</code></td><td>string</td><td>no</td><td>What the learner already knows, up to 200 characters</td></tr>
+                  <tr><td><code>length</code></td><td>string</td><td>no</td><td><code>short</code>, <code>medium</code> (default), <code>long</code></td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <h3>Build a quiz from notes</h3>
+            <div class="doc-scroll">
+              <table class="doc-table doc-fields">
+                <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Allowed values</th></tr></thead>
+                <tbody>
+                  <tr><td><code>op</code></td><td>string</td><td>yes</td><td><code>quiz</code></td></tr>
+                  <tr><td><code>notes</code></td><td>string</td><td>yes</td><td>The only permitted source of facts, 50–12,000 characters</td></tr>
+                  <tr><td><code>count</code></td><td>number</td><td>yes</td><td>3–20 questions</td></tr>
+                  <tr><td><code>difficulty</code></td><td>string</td><td>no</td><td><code>easy</code>, <code>medium</code> (default), <code>hard</code></td></tr>
+                  <tr><td><code>type</code></td><td>string</td><td>no</td><td><code>mixed</code> (default), <code>mcq</code>, <code>truefalse</code>, <code>short</code></td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <h3>Example</h3>
+            <pre class="doc-code"><code>curl -s -X POST https://studymate-ict-04s0d8.freebuff.site/api/ai \
+  -H 'content-type: application/json' \
+  -d '{"op":"explain","topic":"What is a subnet mask?","level":"beginner"}'</code></pre>
+          </section>
+
+          <section class="card doc-section" aria-labelledby="api-res-h">
+            <h2 id="api-res-h">Successful responses</h2>
+            <p>On success the reply is <code>{ ok: true, op, model, data, usage }</code>. <code>usage</code> is <code>null</code> when the provider reports no token counts. The fields inside <code>data</code> are fixed by the validator, so a caller can rely on them.</p>
+            <h3><code>op: "explain"</code></h3>
+            <pre class="doc-code"><code>{
+  "ok": true,
+  "op": "explain",
+  "model": "gpt-4o-mini",
+  "data": {
+    "definition": "…",
+    "whyItMatters": "…",
+    "steps": ["…"],
+    "example": "…",
+    "realWorld": "…",
+    "misconceptions": [{ "belief": "…", "correction": "…" }],
+    "vocabulary": [{ "term": "…", "meaning": "…" }],
+    "summary": "…",
+    "questions": [{ "q": "…", "a": "…" }]
+  },
+  "usage": { "promptTokens": 812, "completionTokens": 604 }
+}</code></pre>
+            <p class="tiny">Exactly five revision questions are required; a reply with a different count is rejected as a schema error rather than shown half-complete.</p>
+            <h3><code>op: "quiz"</code></h3>
+            <pre class="doc-code"><code>{
+  "ok": true,
+  "op": "quiz",
+  "model": "gpt-4o-mini",
+  "data": {
+    "questions": [
+      { "id": 1, "type": "mcq", "prompt": "…", "options": ["…", "…", "…", "…"],
+        "answerIndex": 0, "answer": "…", "explanation": "…", "source": "…" },
+      { "id": 2, "type": "truefalse", "prompt": "…", "answer": true,
+        "explanation": "…", "source": "…" },
+      { "id": 3, "type": "short", "prompt": "…", "answer": "…",
+        "keywords": ["…"], "explanation": "…", "source": "…" }
+    ]
+  },
+  "usage": null
+}</code></pre>
+            <p class="tiny">Questions are renumbered from 1 after validation. Multiple-choice questions must have four distinct options; short answers carry the keywords used for marking.</p>
+          </section>
+
+          <section class="card prose doc-section" aria-labelledby="api-err-h">
+            <h2 id="api-err-h">Errors</h2>
+            <p>Failures use <code>{ ok: false, error, message }</code>. The message is written for a learner and can be shown as-is.</p>
+            <div class="doc-scroll">
+              <table class="doc-table">
+                <thead><tr><th>Status</th><th><code>error</code></th><th>When</th></tr></thead>
+                <tbody>
+                  <tr><td>400</td><td><code>invalid-request</code></td><td>A field is missing, too short, too long or not one of the allowed values.</td></tr>
+                  <tr><td>400</td><td><code>invalid-json</code></td><td>The body is not valid JSON.</td></tr>
+                  <tr><td>403</td><td><code>forbidden-origin</code></td><td>A browser sent a foreign <code>Origin</code> header.</td></tr>
+                  <tr><td>405</td><td><code>method-not-allowed</code></td><td>Wrong method for the route.</td></tr>
+                  <tr><td>413</td><td><code>invalid-body</code></td><td>The body is larger than 64 KiB.</td></tr>
+                  <tr><td>429</td><td><code>local-rate-limit</code></td><td>This deployment's own limiter refused the request; includes <code>retryAfter</code> and a <code>retry-after</code> header.</td></tr>
+                  <tr><td>500</td><td><code>unauthorized</code></td><td>The provider rejected the server's key.</td></tr>
+                  <tr><td>502</td><td><code>network</code>, <code>empty</code>, <code>not-json</code>, <code>schema</code>, <code>provider</code></td><td>The provider was unreachable, returned nothing, returned malformed JSON, broke the schema, or answered with an error status.</td></tr>
+                  <tr><td>503</td><td><code>ai-not-configured</code></td><td>This deployment has no server key, so it stays in prompt mode.</td></tr>
+                  <tr><td>504</td><td><code>timeout</code></td><td>The provider did not answer within the configured timeout.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <section class="card prose doc-section" aria-labelledby="api-host-h">
+            <h2 id="api-host-h">Running your own copy</h2>
+            <p>Both server targets — the Cloudflare Worker and the zero-dependency Node server — import the same <code>sites/ai-core.js</code>, so their behaviour and error codes match.</p>
+            <pre class="doc-code"><code>npm install
+npm start                 # http://localhost:3000, serving dist/
+node --test tests/        # the full suite
+./build.sh                # rebuild dist/ and restamp the service worker</code></pre>
+            <p>Configuration is entirely by environment variable. Nothing is read from the browser.</p>
+            <div class="doc-scroll">
+              <table class="doc-table">
+                <thead><tr><th>Variable</th><th>Default</th><th>Purpose</th></tr></thead>
+                <tbody>
+                  <tr><td><code>AI_API_KEY</code> or <code>OPENAI_API_KEY</code></td><td>empty</td><td>The provider key. Empty means prompt mode and a <code>503</code> from <code>/api/ai</code>.</td></tr>
+                  <tr><td><code>AI_BASE_URL</code></td><td><code>https://api.openai.com/v1</code></td><td>Any OpenAI-compatible base URL.</td></tr>
+                  <tr><td><code>AI_MODEL</code></td><td><code>gpt-4o-mini</code></td><td>Model name passed to the provider.</td></tr>
+                  <tr><td><code>AI_PROVIDER</code></td><td><code>openai-compatible</code></td><td>A label shown in health and in the UI; it does not change the protocol.</td></tr>
+                  <tr><td><code>AI_TIMEOUT_MS</code></td><td><code>30000</code></td><td>Provider timeout, clamped to 8,000–60,000 ms.</td></tr>
+                  <tr><td><code>AI_RATE_LIMIT</code></td><td><code>20</code></td><td>Requests allowed per window, per client, clamped to 1–200.</td></tr>
+                  <tr><td><code>AI_RATE_WINDOW_MS</code></td><td><code>600000</code></td><td>Window length in milliseconds, clamped to 1 minute–24 hours.</td></tr>
+                  <tr><td><code>AI_DAILY_CAP</code></td><td><code>300</code></td><td>Requests per UTC day across all clients; <code>0</code> removes the cap.</td></tr>
+                  <tr><td><code>AI_JSON_MODE</code></td><td><code>on</code></td><td>Set to <code>off</code> for providers that reject <code>response_format</code>.</td></tr>
+                  <tr><td><code>AI_ALLOWED_ORIGINS</code></td><td>empty</td><td>Extra origins allowed to call <code>/api/ai</code> (Node server only, comma separated).</td></tr>
+                  <tr><td><code>PORT</code>, <code>HOST</code>, <code>SERVE_DIR</code></td><td><code>3000</code>, <code>0.0.0.0</code>, <code>dist</code></td><td>Listen address and the directory served (Node server only).</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="tiny">On Cloudflare, set the same names as Worker variables or secrets. A secret is the right place for <code>AI_API_KEY</code>; it is never bundled into the page.</p>
+          </section>
+
+          <section class="card doc-section" aria-labelledby="api-browser-h">
+            <div class="card-head">
+              <div>
+                <h2 id="api-browser-h">Browser API</h2>
+                <p class="card-sub">Every tool in the app is built on these globals, exposed as <code>window.SM</code>.</p>
+              </div>
+            </div>
+            <div class="doc-scroll">
+              <table class="doc-table">
+                <thead><tr><th>Global</th><th>What it does</th></tr></thead>
+                <tbody>
+                  <tr><td><code>SM.core</code></td><td>Pure logic, no DOM or network: <code>keywords</code>, <code>markAnswer</code>, <code>markQuiz</code>, <code>planProgress</code>, <code>normaliseSettings</code>.</td></tr>
+                  <tr><td><code>SM.store</code></td><td>LocalStorage persistence under <code>studymate.ict.v1</code>: <code>get</code>, <code>subscribe</code>, <code>addTopic</code>, <code>addPrompt</code>, <code>setSettings</code>, <code>addQuizResult</code>, <code>savePlan</code>, <code>toggleSession</code>, <code>exportData</code>, <code>importData</code>, <code>clear</code>, <code>resetAll</code>.</td></tr>
+                  <tr><td><code>SM.ai</code></td><td>Client for the endpoints above: <code>state()</code>, <code>subscribe(fn)</code>, <code>explain(input)</code>, <code>quiz(input)</code>, <code>check()</code>, <code>label()</code>. A caller-supplied key outranks the server key.</td></tr>
+                  <tr><td><code>SM.providers</code></td><td>The 47-preset catalogue: <code>list</code>, <code>count()</code>, <code>get(id)</code>, <code>detect(url)</code>, <code>chatUrl(provider)</code>.</td></tr>
+                  <tr><td><code>SM.localAi</code></td><td>Bring-your-own-key path: <code>get</code>, <code>set</code>, <code>clear</code>, <code>isEnabled()</code>, <code>inspect()</code>, <code>test()</code>, <code>run(messages)</code> and its <code>STORE_KEY</code>.</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <pre class="doc-code"><code>// A validated lesson, or a rejected promise — never a fake answer.
+const lesson = await SM.ai.explain({ topic: 'RAM', level: 'beginner' });
+console.log(lesson.definition, lesson.questions.length); // 5
+
+// Which path is this tab using right now?
+console.log(SM.ai.state().mode); // 'live' | 'prompt' | 'offline'</code></pre>
+          </section>
+
+          <section class="card prose doc-section" aria-labelledby="api-byok-h">
+            <h2 id="api-byok-h">Bring your own key</h2>
+            <p>With a key saved in Settings the page skips this server entirely and calls the provider directly. The key is kept in LocalStorage under <code>studymate.ict.localai.v1</code>, in this browser only, and is sent nowhere except the provider you chose.</p>
+            <div class="doc-scroll">
+              <table class="doc-table">
+                <thead><tr><th>Protocol</th><th>Request</th><th>Credential header</th></tr></thead>
+                <tbody>
+                  <tr><td><code>openai</code></td><td><code>POST {base}/chat/completions</code></td><td><code>authorization: Bearer &lt;key&gt;</code></td></tr>
+                  <tr><td><code>anthropic</code></td><td><code>POST {base}/messages</code></td><td><code>x-api-key</code> plus <code>anthropic-version</code></td></tr>
+                  <tr><td><code>gemini</code></td><td><code>POST {base}/models/{model}:generateContent</code></td><td><code>x-goog-api-key</code></td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p>A browser can only reach a provider that sends CORS headers. The catalogue records what is known per provider, and the panel says so before you save a key. Local runtimes such as Ollama are reachable on this machine; hosted providers that block browsers need the server endpoint instead.</p>
+            <p class="tiny">StudyMate ICT <span id="api-version">2.4.0</span> · the prompts, validation and response checks live in one shared file, <code>js/ai-contract.js</code>, used by both the browser and the server.</p>
+          </section>
+        </section>
+
         <section class="view" id="view-about" data-view="about" aria-labelledby="about-h1" hidden>
           <div class="page-head">
             <p class="eyebrow">Capstone project</p>
@@ -1022,6 +1272,7 @@
   <script src="js/app.js"></script>
   <script src="js/key-panel.js"></script>
   <script src="js/landing.js"></script>
+  <script src="js/api-docs.js"></script>
   <script>
     // Offline install support. A service worker needs a secure origin, so this is
     // skipped when the app is opened straight from disk with file://.

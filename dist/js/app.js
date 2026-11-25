@@ -16,7 +16,8 @@
     library: { title: 'Prompt Library', hint: 'Reusable study prompts', group: 'Learning tools' },
     saved: { title: 'Saved Learning', hint: 'Everything you have saved', group: 'Your learning' },
     settings: { title: 'Settings', hint: 'Appearance, access and your data', group: 'Your learning' },
-    about: { title: 'About StudyMate', hint: 'Why this app exists', group: 'Your learning' }
+    about: { title: 'About StudyMate', hint: 'Why this app exists', group: 'Your learning' },
+    api: { title: 'API Reference', hint: 'HTTP endpoints and the browser API', group: 'Developers' }
   };
 
   var SHELL_KEY = 'studymate.ict.shell.v1';
@@ -179,7 +180,7 @@
         group: 'Pages',
         title: ROUTES[route].title,
         sub: ROUTES[route].hint,
-        icon: route === 'home' ? 'i-home' : route === 'dashboard' ? 'i-grid' : route === 'saved' ? 'i-saved' : route === 'settings' ? 'i-gear' : route === 'about' ? 'i-info' : route === 'glossary' ? 'i-glossary' : route === 'quiz' ? 'i-quiz' : route === 'planner' ? 'i-calendar' : route === 'source' ? 'i-shield' : route === 'library' ? 'i-library' : 'i-book',
+        icon: route === 'home' ? 'i-home' : route === 'dashboard' ? 'i-grid' : route === 'saved' ? 'i-saved' : route === 'settings' ? 'i-gear' : route === 'about' ? 'i-info' : route === 'api' ? 'i-code' : route === 'glossary' ? 'i-glossary' : route === 'quiz' ? 'i-quiz' : route === 'planner' ? 'i-calendar' : route === 'source' ? 'i-shield' : route === 'library' ? 'i-library' : 'i-book',
         href: '#/' + route
       });
     });

@@ -2,7 +2,7 @@
 
 **Project:** StudyMate ICT — AI-assisted ICT learning and study assistant
 **Type:** Final capstone project, AI and Prompt Engineering internship, Ishvexa Hub
-**Version:** 2.3.1
+**Version:** 2.4.0
 **Date:** 25 November 2026
 **Stack:** HTML5, CSS3, vanilla JavaScript, LocalStorage. No frontend framework or build step; live AI is optional and comes either from a key the learner adds in this browser or from the zero-dependency Node/Worker endpoint (`/api/ai`).
 
@@ -121,6 +121,7 @@ Hash-based routes, mapped in `js/app.js`:
 | `#/saved` | view-saved | Saved learning and activity |
 | `#/settings` | view-settings | Appearance, defaults, accessibility and local data |
 | `#/about` | view-about | Project information |
+| `#/api` | view-api | API reference: HTTP endpoints, error map, self-hosting variables and the browser API |
 
 Unknown routes fall back to the dashboard. The router updates the document title, the breadcrumb, `aria-current="page"` on navigation, keyboard focus and scroll position.
 
@@ -264,7 +265,7 @@ See [`README.md`](README.md) for setup, [`TESTING_REPORT.md`](TESTING_REPORT.md)
 ### 12.1 Two deployment targets, one AI core
 
 ```
-StudyMate-ICT/         static SPA — 10 views, 16 classic scripts, LocalStorage
+StudyMate-ICT/         static SPA — 12 views, 17 classic scripts, LocalStorage
         │  POST /api/ai (same origin, JSON)
         ▼
 sites/ai-core.js       shared: validation → prompt → provider → schema check → limits

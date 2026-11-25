@@ -40,7 +40,8 @@ var SHELL = [
   './js/settings.js',
   './js/app.js',
   './js/key-panel.js',
-  './js/landing.js'
+  './js/landing.js',
+  './js/api-docs.js'
 ];
 
 self.addEventListener('install', function (event) {

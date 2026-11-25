@@ -4,7 +4,7 @@ An ICT study assistant for beginner and intermediate students: AI-generated conc
 
 **Live demo (production):** <https://studymate-ict-04s0d8.freebuff.site/> · **Preview:** <https://studymate-ict-04s0d8-preview.freebuff.site/>
 
-Both addresses serve the same 2.3.1 build from the same `dist/` bundle, so every view — including the `#/home` landing page — looks and behaves identically on each. If you visited either address before the latest deployment, reload once (or clear the site's cached service worker) to pick up the new shell.
+Both addresses serve the same 2.4.0 build from the same `dist/` bundle, so every view — including the `#/home` landing page and the `#/api` API Reference page — looks and behaves identically on each. If you visited either address before the latest deployment, reload once (or clear the site's cached service worker) to pick up the new shell.
 
 The public demo has no AI key configured, so it runs in **prompt mode** and says so in the status chip. Every tool works; the AI buttons are disabled until a key is added. See [AI setup](#ai-setup).
 
@@ -21,7 +21,7 @@ The public demo has no AI key configured, so it runs in **prompt mode** and says
 | `tests/` | 54 automated tests: AI validation, HTTP surface, security, quiz marking, settings, learner-key mode, navigation |
 | `docs/` | Deployment, provider, troubleshooting and changelog documents |
 | `build.sh` | Regenerates `dist/`, the deploy bundle |
-| `dist/` | The committed deploy bundle (29 files) that both hosting configs serve |
+| `dist/` | The committed deploy bundle (30 files) that both hosting configs serve |
 | `wrangler.jsonc` | Root Workers config (`sites/worker.js` + `./dist` assets) — what Freebuff **Publish** detects |
 | `render.yaml` | Render Blueprint (one Web Service) |
 
@@ -77,7 +77,7 @@ All captured from the 2.3.1 live build on 25 November 2026 (including the Home b
 ```bash
 git clone <this repo>
 cd <repo>
-./build.sh                  # writes dist/ (29 files)
+./build.sh                  # writes dist/ (30 files)
 node server/node-server.js  # http://localhost:3000
 ```
 
@@ -118,7 +118,7 @@ npm test
 
 54 tests, no dependencies, using Node's built-in runner. They cover request validation and schema enforcement, provider failures, rate limiting, key non-disclosure, HTTP headers, path-traversal protection, the SPA fallback, quiz marking, settings normalisation, the learner-key path (base-URL checks, the provider being called with the learner's own key, rejected keys, and refusal of malformed model output), the provider catalogue (unique ids, valid HTTPS bases, grouping, URL normalisation and detection, search), the three request protocols (OpenAI, Anthropic Messages, Gemini), including the automatic URL probe and its CORS/timeout/refused-key reporting, and the app shell (every navigation entry has a view; Home is reachable from the topbar and the sidebar). Results and the full QA table are in [`StudyMate-ICT/TESTING_REPORT.md`](StudyMate-ICT/TESTING_REPORT.md) §2–§9.
 
-Manual browser checks during the 2.2.0 redesign (Chromium, Playwright): the dashboard-first route and no-login entry; all 11 views rendering with one `h1` each; horizontal overflow measured at 320, 375, 390, 430, 768, 1024, 1280, 1440 and 1920 px (zero everywhere); sidebar collapse, tooltips and persistence; mobile drawer open/close/`Escape`/route change; search ranking, grouping and `Enter` deep link; saved search and category filter; quiz generation against a stubbed OpenAI-compatible endpoint, full marking at 100% and the dashboard metrics updating; planner build (3 days, 9 activities), save, tick and persistence across reload; theme persistence; offline reload from the service worker; and an accessibility sweep (duplicate IDs, unlabelled fields, unnamed buttons, missing `alt`, heading order). For 2.3.1, all 11 routes were re-checked at 1440px and 390px on both live addresses (one `h1` each, zero horizontal overflow, no console errors) and all 29 deployed files were compared byte-for-byte between preview and production. **A real third-party AI provider was not tested — only a stubbed endpoint — and no screen reader, Safari or Firefox pass was run.** The full matrix is in [`StudyMate-ICT/TESTING_REPORT.md`](StudyMate-ICT/TESTING_REPORT.md).
+Manual browser checks during the 2.2.0 redesign (Chromium, Playwright): the dashboard-first route and no-login entry; all 11 views rendering with one `h1` each; horizontal overflow measured at 320, 375, 390, 430, 768, 1024, 1280, 1440 and 1920 px (zero everywhere); sidebar collapse, tooltips and persistence; mobile drawer open/close/`Escape`/route change; search ranking, grouping and `Enter` deep link; saved search and category filter; quiz generation against a stubbed OpenAI-compatible endpoint, full marking at 100% and the dashboard metrics updating; planner build (3 days, 9 activities), save, tick and persistence across reload; theme persistence; offline reload from the service worker; and an accessibility sweep (duplicate IDs, unlabelled fields, unnamed buttons, missing `alt`, heading order). For 2.3.1, all 11 routes were re-checked at 1440px and 390px on both live addresses (one `h1` each, zero horizontal overflow, no console errors) and all 29 deployed files were compared byte-for-byte between preview and production. For 2.4.0, the new `#/api` page was checked at 1440px and 390px on the preview address and at 1440px on production (7 documentation tables and 6 code blocks, zero horizontal overflow, live values read from `/api/health`), and all 30 deployed files were again byte-identical between the two hosts. **A real third-party AI provider was not tested — only a stubbed endpoint — and no screen reader, Safari or Firefox pass was run.** The full matrix is in [`StudyMate-ICT/TESTING_REPORT.md`](StudyMate-ICT/TESTING_REPORT.md).
 
 ## Deploy
 

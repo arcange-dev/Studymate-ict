@@ -1,6 +1,6 @@
 # Limitations and Future Work — StudyMate ICT
 
-This document states plainly what the project does not do, so the demonstration and the written report stay honest. It reflects the 2.3.1 build of 25 November 2026: a real AI endpoint, a browser-side provider panel with 47 presets, practice quizzes with in-browser marking, study-plan progress tracking, a settings page and a Home page reachable from the top bar and sidebar.
+This document states plainly what the project does not do, so the demonstration and the written report stay honest. It reflects the 2.4.0 build of 25 November 2026: a real AI endpoint, a browser-side provider panel with 47 presets, practice quizzes with in-browser marking, study-plan progress tracking, a settings page, a Home page reachable from the top bar and sidebar, and an API Reference page that documents the endpoints it actually ships.
 
 ---
 

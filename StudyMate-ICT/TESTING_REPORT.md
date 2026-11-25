@@ -1,7 +1,7 @@
 # Testing Report — StudyMate ICT
 
-**Version tested:** 2.3.1 (automated suite and navigation checks); the visual and tool checks in §4–§7 were executed on the 2.2.0 build and are unchanged by 2.3.0–2.3.1, which add the provider panel and a Home button only.
-**Test date:** 24 November 2026 (2.2.0 pass); re-run 25 November 2026 for 2.3.1
+**Version tested:** 2.4.0 (automated suite, the new API Reference page and the live deployment parity check); the visual and tool checks in §4–§7 were executed on the 2.2.0 build and are unchanged by 2.3.0–2.3.1 (provider panel, Home button) and 2.4.0 (API Reference page, request-size limit).
+**Test date:** 24 November 2026 (2.2.0 pass); re-run 25 November 2026 for 2.3.1 and 2.4.0
 **Method:** the automated Node suite (`npm test`) plus a scripted Chromium (Playwright) pass over the real interface served by `node server/node-server.js` on port 3000, through the deployment preview origin the app is signed in to.
 
 > Everything below was executed in this release. Where a check could not be run (a real AI provider, a screen reader, Safari/Firefox), it is listed as **not tested** rather than assumed. The demo data used for screenshots and data checks was saved through the app's own LocalStorage schema.
@@ -12,7 +12,7 @@
 
 | Item | Detail |
 |---|---|
-| Application | StudyMate ICT 2.3.1, `dist/` served by `server/node-server.js` (prompt mode, no server AI key) |
+| Application | StudyMate ICT 2.4.0, `dist/` served by `server/node-server.js` (prompt mode, no server AI key) |
 | Browser | Chromium via Playwright, desktop 1440×1000, tablet 820×1180, mobile 430/390/375/320 |
 | Service worker | Unregistered and caches cleared before visual checks, so no stale shell could mask a change; re-registered for the offline test |
 | Storage | LocalStorage; both zero state and a demo state (3 saved topics, 2 prompts, 4 marked quizzes, 2 plans, 1 personal term, display name "Amina") |
@@ -25,7 +25,7 @@
 
 ```
 npm test → tests 54 · pass 54 · fail 0
-./build.sh → Built dist/ (29 files)
+./build.sh → Built dist/ (30 files)
 ```
 
 Coverage: AI request validation, schema enforcement, provider failures and error mapping, rate limiting, key non-disclosure, HTTP headers, path-traversal protection, the SPA fallback, quiz marking, settings normalisation, the learner-key path (base-URL validation, provider called with the learner's own key, rejected keys, malformed model output), the 47-provider catalogue, the OpenAI/Anthropic/Gemini request protocols and URL probe, and the app shell navigation (every entry has a view; Home is reachable from the topbar and the sidebar).
@@ -101,6 +101,7 @@ Coverage: AI request validation, schema enforcement, provider failures and error
 | Keyboard | First `Tab` shows a visible focus ring; all controls reachable; modal traps focus | **PASS** |
 | Screen-reader structure | One `h1` per view, no heading-level jumps, no duplicate IDs, no unlabelled field, no unnamed button, no image without `alt`, no broken icon symbol | **PASS** |
 | Contrast of secondary text | Measured 3.09:1 before the fix, 4.65:1 after | **FIXED** (see §8) |
+| API Reference page (2.4.0) | `#/api` is reachable from the sidebar and the global search, renders its 7 tables and 6 code blocks at 1440px and 390px with no horizontal overflow, and fills its status card from this deployment's own `/api/health` | **PASS** — live values read on preview and production (`Prompt mode`, `openai-compatible`, no model, 20 requests / 10 min, 300 / day); no console or page errors |
 | Live deployment audit (2.3.1) | All 11 routes at 1440px and 390px on the preview and production addresses: one `h1` each, no horizontal overflow, Home button present (and marked current only on Home), no console or page errors, and all 29 deployed files byte-identical between the two hosts | **PASS** — 46 route/viewport checks (including a 320px topbar check); the only measured difference is 4px of scroll height on the animated Home cube, with identical text and width and no visible difference |
 
 ---
@@ -123,7 +124,7 @@ Coverage: AI request validation, schema enforcement, provider failures and error
 - **A real AI provider.** Only a stubbed OpenAI-compatible endpoint was used; provider-specific CORS behaviour, model quality and rate limits were not exercised. Server-side live AI was not available in this environment.
 - **Screen readers.** Structure and labels were checked programmatically, not with NVDA, JAWS or VoiceOver.
 - **Safari, Firefox and real mobile devices.** Chromium emulation only.
-- **Deployment.** §4–§8 cover the local/preview origin from the 2.2.0 pass. The 2.3.1 build was deployed to both the preview and production demo environments and the two hosts were compared byte-for-byte; the AI path against a real provider below remains untested on that deployment.
+- **Deployment.** §4–§8 cover the local/preview origin from the 2.2.0 pass. The 2.3.1 and 2.4.0 builds were deployed to both the preview and production demo environments and the two hosts were compared byte-for-byte (all 30 files identical for 2.4.0); the AI path against a real provider below remains untested on that deployment.
 - **Performance budgets.** No Lighthouse run was performed; the app ships no third-party runtime dependencies.
 
 ---

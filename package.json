@@ -1,6 +1,6 @@
 {
   "name": "studymate-ict",
-  "version": "2.3.1",
+  "version": "2.4.0",
   "private": true,
   "description": "StudyMate ICT — an ICT study assistant with a static app, a server-side AI endpoint and in-browser quiz marking.",
   "type": "module",

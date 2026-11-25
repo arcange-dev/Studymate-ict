@@ -922,6 +922,88 @@ input[aria-invalid="true"], textarea[aria-invalid="true"] { border-color: var(--
 .limits li { color: var(--ink-700); }
 
 /* ============================================================
+   API reference
+   ============================================================ */
+
+.doc-section { margin-top: 14px; }
+.doc-section h3 {
+  margin: 18px 0 8px; font-size: .84rem; letter-spacing: .01em;
+  color: var(--ink-700);
+}
+.doc-section h3:first-of-type { margin-top: 4px; }
+.doc-section .card-sub { max-width: 72ch; }
+.api-facts {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 9px; margin: 0 0 10px;
+}
+.api-facts > div {
+  border: 1px solid var(--line); border-radius: 9px;
+  background: var(--surface-2); padding: 8px 11px; min-width: 0;
+}
+.api-facts dt {
+  font-size: .66rem; font-weight: 700; letter-spacing: .07em;
+  text-transform: uppercase; color: var(--ink-500); margin-bottom: 3px;
+}
+.api-facts dd {
+  margin: 0; font-size: .82rem; font-weight: 600; color: var(--ink-900);
+  overflow-wrap: anywhere;
+}
+.api-method {
+  display: inline-block; font-family: var(--mono); font-size: .68rem;
+  font-weight: 700; letter-spacing: .05em; padding: 2px 7px;
+  border-radius: 5px; vertical-align: 2px;
+  background: var(--surface-3); border: 1px solid var(--line);
+}
+.api-method.get { color: var(--teal-600); }
+.api-method.post { color: var(--indigo); }
+.doc-scroll { overflow-x: auto; margin: 10px 0 0; }
+.doc-table { width: 100%; border-collapse: collapse; font-size: .8rem; }
+.doc-table th, .doc-table td {
+  text-align: left; vertical-align: top;
+  padding: 8px 10px; border-bottom: 1px solid var(--line);
+}
+.doc-table thead th {
+  font-size: .68rem; font-weight: 700; letter-spacing: .07em;
+  text-transform: uppercase; color: var(--ink-500); white-space: nowrap;
+}
+.doc-table tbody tr:last-child td { border-bottom: 0; }
+.doc-table td { color: var(--ink-700); }
+.doc-table code { white-space: nowrap; }
+.doc-code {
+  margin: 10px 0 0; padding: 13px 15px;
+  background: #0b1b34; color: #d3e3f1;
+  border: 1px solid #1e3350; border-radius: 10px;
+  font-size: .76rem; line-height: 1.7; overflow-x: auto;
+}
+.doc-code code { color: inherit; background: none; padding: 0; white-space: pre; }
+.prose code {
+  background: var(--surface-3); border: 1px solid var(--line);
+  border-radius: 5px; padding: 1px 5px; font-size: .76rem;
+  overflow-wrap: anywhere;
+}
+/* A code block inside .prose must not pick up the inline-code chip above. */
+.doc-code code, .prose .doc-code code {
+  background: none; border: 0; border-radius: 0; padding: 0;
+  font-size: inherit; color: inherit; overflow-wrap: normal;
+}
+
+@media (max-width: 640px) {
+  .doc-table { font-size: .74rem; }
+  .doc-table th, .doc-table td { padding: 7px 8px; overflow-wrap: anywhere; }
+  .doc-table th + th, .doc-table td + td { border-left: 1px solid var(--line); }
+  .doc-table thead th { letter-spacing: .03em; }
+  .doc-table code { white-space: normal; }
+  /* On a phone the request tables are four narrow columns; fixed layout plus
+     wrapping keeps them inside the card instead of a horizontal scroll. */
+  .doc-table.doc-fields { table-layout: fixed; }
+  .doc-table.doc-fields th:nth-child(1) { width: 27%; }
+  .doc-table.doc-fields th:nth-child(2),
+  .doc-table.doc-fields th:nth-child(3) { width: 17%; }
+  .doc-code { font-size: .7rem; white-space: pre-wrap; overflow-wrap: anywhere; }
+  .doc-code code { white-space: pre-wrap; }
+}
+
+/* ============================================================
    Toast, dialogs and feedback
    ============================================================ */
 

@@ -23,7 +23,10 @@
     notesMin: 50,
     notesMax: 12000,
     questionMin: 3,
-    questionMax: 20
+    questionMax: 20,
+    // Both servers already answer 413 for an oversized body; this is the
+    // limit they check against.
+    bodyMax: 65536
   };
 
   var LEVELS = {

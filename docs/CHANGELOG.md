@@ -2,6 +2,25 @@
 
 All dates are 2026. The project follows a simple `MAJOR.MINOR.PATCH` scheme; the app version is shown in `package.json`.
 
+## 2.4.0 — 25 November 2026
+
+The reference page for the API the app already had.
+
+### Added
+
+- **API Reference page** (`#/api`, sidebar group *Developers*, and in global search). It documents `GET /api/health` and `POST /api/ai` — request fields and limits, successful response shapes for explanations and quizzes, the full error map with status codes, the environment variables for self-hosting on Node or Cloudflare, the `window.SM` browser API and the three bring-your-own-key protocols. Its status card is filled from this deployment's own `/api/health`, so the page reports the real mode, provider, model and rate limits instead of an example.
+- The page is precached by the service worker with the rest of the shell, and falls back to the documented defaults when the health check cannot run.
+
+### Fixed
+
+- **The 64 KiB request limit now exists.** Both servers already answered `413` for oversized bodies, but the check compared against `LIMITS.bodyMax`, which was never defined — so nothing was actually limited. `bodyMax: 65536` is now part of the shared contract.
+- **Code blocks on the new page no longer inherit the inline-code chip style** that `.prose code` applies; the environment-variable example had rendered as light text on a light background.
+
+### Tests
+
+- 54 Node tests pass (`npm test`); `./build.sh` writes 30 files.
+- The page was checked at 1440px and 390px on the preview address and at 1440px on production: no horizontal overflow, live health values, no console errors. All 30 deployed files were byte-identical between the two hosts afterwards.
+
 ## 2.3.1 — 25 November 2026
 
 The last navigation gap before submission.
