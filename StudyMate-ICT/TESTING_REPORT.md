@@ -38,7 +38,7 @@ Coverage: AI request validation, schema enforcement, provider failures and error
 |---|---|---|
 | Open the app with no hash | Dashboard is the first screen | **PASS** — redirected to `#/dashboard`, welcome panel rendered |
 | Login, registration, email or account screen | None exists | **PASS** — no auth UI or credential request anywhere; only optional "Display name" |
-| Every sidebar route | View renders, breadcrumb and title update | **PASS** — dashboard, explain, quiz, planner, source, glossary, library, saved, settings, about, home |
+| Every sidebar route | View renders, breadcrumb and title update | **PASS** — dashboard, explain, quiz, planner, source, glossary, library, saved, settings, about, home, and api (added in 2.4.0) |
 | Home button in the topbar | Opens `#/home` from any route on desktop and on a phone, and is marked current while the landing page is open; the sidebar entry and global search reach it too | **PASS** — button, sidebar entry and search result all opened the landing page; no layout change at 390px; re-verified on 2.4.0 on both live addresses at 1440px and 390px, marked current only on Home |
 | Old links (`#/home`, etc.) | Still work | **PASS** |
 | Collapse sidebar | Shrinks 272→84px, labels stay for screen readers, tooltip on hover, choice persists after reload | **PASS** |
@@ -93,11 +93,11 @@ Coverage: AI request validation, schema enforcement, provider failures and error
 
 | Check | Result |
 |---|---|
-| Horizontal overflow at 320 / 375 / 390 / 430 / 768 / 1024 / 1280 / 1440 / 1920 on all 11 routes | **PASS** — zero overflow in every combination |
+| Horizontal overflow at 320 / 375 / 390 / 430 / 768 / 1024 / 1280 / 1440 / 1920 on all 11 routes (2.2.0 pass) | **PASS** — zero overflow in every combination |
 | Topbar at 390px | Home icon, search icon, AI chip and theme fit; primary action and hint hidden; no wrap | **PASS** |
 | Dashboard at 390px | Single column, two-column stats, readable type, 48px targets | **PASS** |
 | Theme toggle | Switches tokens immediately, persists across reload, no mixed-theme text | **PASS** |
-| Offline reload | With the worker registered: reload with the network off restored the dashboard, styles, 10 nav links and 6 stat cards | **PASS** |
+| Offline reload | With the worker registered: reload with the network off restored the dashboard, styles, 10 nav links and 6 stat cards (2.2.0 shell) | **PASS** |
 | Keyboard | First `Tab` shows a visible focus ring; all controls reachable; modal traps focus | **PASS** |
 | Screen-reader structure | One `h1` per view, no heading-level jumps, no duplicate IDs, no unlabelled field, no unnamed button, no image without `alt`, no broken icon symbol | **PASS** |
 | Contrast of secondary text | Measured 3.09:1 before the fix, 4.65:1 after | **FIXED** (see §8) |

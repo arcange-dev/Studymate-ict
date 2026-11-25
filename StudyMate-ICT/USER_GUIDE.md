@@ -203,7 +203,21 @@ Counts update immediately whenever you save, delete or generate something.
 
 ---
 
-## 10. Keyboard and accessibility
+## 10. API Reference page
+
+**Developers → API Reference** documents the HTTP API this build ships, for anyone self-hosting it or writing against it. It is documentation only: it makes no AI request and changes nothing.
+
+1. **Endpoints** — `GET /api/health` and `POST /api/ai`, with every request field, its rules and its limits.
+2. **Responses** — the success shape for an explanation and for a quiz, plus the full error map with status codes (for example `503 ai-not-configured` when the server has no key).
+3. **Self-hosting** — the environment variables the Node server and the Cloudflare Worker read, and the request-size limit (64 KiB).
+4. **Browser API** — the `window.SM` surface, and the three protocols the key panel speaks: OpenAI-compatible, Anthropic Messages and native Gemini.
+5. **Live status** — the card reads this deployment's own `/api/health`, so it shows the real mode, provider, model and rate limits. On the public demo that is prompt mode with no key, which is expected.
+
+Like the rest of the app, the page works offline after the first visit.
+
+---
+
+## 11. Keyboard and accessibility
 
 - `Tab` / `Shift+Tab` move through every control; focus rings are always visible.
 - Press `/` or `Ctrl/Cmd + K` anywhere to open global search. Type to filter pages, glossary terms, saved items and your plan; use `↑` / `↓` to choose a result, `Enter` to open it and `Escape` to close.
@@ -216,7 +230,7 @@ Counts update immediately whenever you save, delete or generate something.
 
 ---
 
-## 11. Troubleshooting
+## 12. Troubleshooting
 
 | Problem | What to do |
 |---|---|
@@ -229,13 +243,13 @@ Counts update immediately whenever you save, delete or generate something.
 
 ---
 
-## 12. Remember
+## 13. Remember
 
 StudyMate ICT helps you ask better questions. It cannot make an AI answer correct. Always check generated content against your class notes, textbook or lecturer, and follow your institution's rules on AI assistance.
 
 ---
 
-## 13. AI mode: what changes when a key is configured
+## 14. AI mode: what changes when a key is configured
 
 The app runs in one of two modes, and the chip in the top bar always tells you which:
 
@@ -244,7 +258,7 @@ The app runs in one of two modes, and the chip in the top bar always tells you w
 
 When AI is enabled you will also see a short orange note above the AI button saying your topic or notes are sent to the provider. Nothing is sent until you press the button.
 
-### 13.1 Explain a topic with AI
+### 14.1 Explain a topic with AI
 
 1. Open **Explain ICT**.
 2. Type a topic (for example `RAM`), choose your learner level, prior knowledge and how long you want the explanation.
@@ -257,7 +271,7 @@ If something goes wrong, the message under the button explains it and **Retry** 
 
 Still want a prompt? Press **Build copy-paste prompt** — that path is unchanged and works offline.
 
-### 13.2 Practise a quiz and get marked
+### 14.2 Practise a quiz and get marked
 
 1. Open **Quiz Generator** and paste your notes (the quiz can only use what you paste).
 2. Choose the number of questions, difficulty and question type.
@@ -269,14 +283,14 @@ Still want a prompt? Press **Build copy-paste prompt** — that path is unchange
 
 Your score is saved and appears on the dashboard. Use **New quiz** to generate another set from the same notes.
 
-### 13.3 Tick off your study plan
+### 14.3 Tick off your study plan
 
 1. Build a plan in **Study Planner** as usual, then press **Save plan**.
 2. Each study, revision and self-assessment activity now has a checkbox.
 3. Tick activities as you finish them. The progress bar and “x of y activities done” update immediately.
 4. Come back later: the planner restores your most recent saved plan with its ticks, and the dashboard shows the same progress.
 
-## 14. Settings, themes and backups
+## 15. Settings, themes and backups
 
 **Settings** has four groups.
 
@@ -295,13 +309,13 @@ Your score is saved and appears on the dashboard. Use **New quiz** to generate a
 
 Choose **Match my device** to follow your operating system, or force light/dark. The choice applies before the first paint, so there is no flash of the wrong colours, and it persists across reloads.
 
-## 15. If a button is greyed out
+## 16. If a button is greyed out
 
 - **Explain with AI** / **Generate & practise** — disabled when the deployment has no key (prompt mode), when you are offline, or while a request is already running. The note above the button says which.
 - **Save explanation** — enable after an explanation exists.
 - **Mark my answers** — disappears once you have marked that quiz; use **New quiz** to start again.
 
-## 16. Adding your own AI key (recommended)
+## 17. Adding your own AI key (recommended)
 
 StudyMate works without any key — it builds prompts you can paste into an AI assistant. To get real answers inside the app, add your own key. It is free to add, and it stays on this computer.
 

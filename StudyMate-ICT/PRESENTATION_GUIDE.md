@@ -30,7 +30,7 @@ A five-minute capstone demonstration. Rehearse twice with a timer. Open the app 
 >
 > So I didn't build another chatbot. I built the prompt layer: six tools that turn a beginner's inputs into structured, constrained prompts — plus an offline glossary and planner that need no AI at all. Important: this application makes no AI calls and holds no API key. You copy the prompt into an assistant you trust. That keeps it free, offline and honest."
 
-**Point at:** the sidebar (six tools), the "Prompt mode · no API key" chip, the "Works offline" badge.
+**Point at:** the sidebar's six study tools, the "Prompt mode · no API key" chip, the "Works offline" badge.
 
 ---
 
@@ -122,7 +122,9 @@ A five-minute capstone demonstration. Rehearse twice with a timer. Open the app 
 
 > "What it does not do: this public demo has no server key, so it runs in prompt mode and answer accuracy depends on the assistant the student uses — I didn't measure that. You can add your own provider key in the browser and it will call the provider directly. The planner is a straightforward scheduler, not an optimiser. Saved data is LocalStorage only — this browser, this device, no backup. And the coverage check is a keyword heuristic, not understanding.
 >
-> The biggest lesson was that prompt engineering is software engineering: constraints, output contracts and refusal rules are testable requirements. I ran seventeen browser checks during development — functional flows, validation, storage, navigation, three screen sizes and console errors — and for the final build I re-checked all eleven routes at desktop and phone width on both live addresses, with no layout or console errors. I found six real defects along the way and fixed all of them.
+> The biggest lesson was that prompt engineering is software engineering: constraints, output contracts and refusal rules are testable requirements. I ran seventeen browser checks during development — functional flows, validation, storage, navigation, three screen sizes and console errors — and for the final build I re-checked all twelve routes at desktop and phone width on both live addresses, with no layout or console errors. I found six real defects along the way and fixed all of them.
+>
+> One last screen: **Developers → API Reference**. The app documents the API it actually ships — the health check and the AI endpoint, every field and error code, and this deployment's live status, read from `/api/health` rather than hard-coded. It's the page a lecturer would need to self-host it.
 >
 > Next steps would be real-provider evaluation, shared rate limiting, export and backup, and spaced repetition from quiz results.
 >

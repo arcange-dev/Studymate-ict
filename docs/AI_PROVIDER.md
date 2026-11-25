@@ -33,7 +33,7 @@ Both server targets import the same module, so a fix in `ai-core.js` applies to 
 
 ## 3. Request contract
 
-`POST /api/ai`, `content-type: application/json`, body ≤ 24 000 characters.
+`POST /api/ai`, `content-type: application/json`, body ≤ 65 536 bytes (64 KiB) — anything larger is rejected with `413` (`LIMITS.bodyMax`). Individual field limits are below; `notes` stays capped at 12 000 characters.
 
 ```json
 { "op": "explain", "topic": "RAM", "level": "beginner", "prior": "", "length": "short" }

@@ -212,6 +212,9 @@ Purpose, demonstrated skills, technology, AI status, responsible-use rules and h
 ### 5.10 Bring your own AI provider
 A panel on Home and in Settings with a searchable catalogue of 47 presets, grouped by region (global, Asia, platform, local and custom). Choosing a provider fills its base URL, default model and protocol. The base URL is probed automatically as it is typed (`{base}/models`): the panel reports reachability, latency, the models the key may use and whether the provider refuses browser (CORS) requests. **Fetch models** lists them; **Test connection** sends one tiny request with the typed values before anything is saved, so a new key cannot overwrite a working one. **Remove** deletes the key. Keys are stored in this browser only and are never sent to this app's server.
 
+### 5.11 API Reference
+A documentation page at `#/api` (sidebar group *Developers*, also reachable from global search) for the API this build actually ships. It lists `GET /api/health` and `POST /api/ai` with every request field and limit, the success shapes for explanations and quizzes, the full error map with status codes, the environment variables for self-hosted Node and Cloudflare deployments, the `window.SM` browser API and the three protocols the bring-your-own-key panel speaks. Its status card is filled from this deployment's own `/api/health`, so it reports the real mode, provider, model and rate limits instead of an example. The page makes no AI request and changes no data.
+
 ## 6. Technologies and design decisions
 
 | Decision | Rationale |
@@ -240,6 +243,7 @@ A learner should be able to:
 5. Look up a term and copy a definition without internet access.
 6. Keep their prompts, topics and terms across sessions on the same browser.
 7. Present the whole project in five minutes.
+8. Read the API contract for the endpoints the app ships, including this deployment's live mode and limits, without leaving the app.
 
 ## 8. Future improvements
 
@@ -265,7 +269,7 @@ See [`README.md`](README.md) for setup, [`TESTING_REPORT.md`](TESTING_REPORT.md)
 ### 12.1 Two deployment targets, one AI core
 
 ```
-StudyMate-ICT/         static SPA — 12 views, 17 classic scripts, LocalStorage
+StudyMate-ICT/         static SPA — 12 views, 22 classic scripts, LocalStorage
         │  POST /api/ai (same origin, JSON)
         ▼
 sites/ai-core.js       shared: validation → prompt → provider → schema check → limits
