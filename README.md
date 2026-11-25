@@ -136,11 +136,12 @@ Manual browser checks during the 2.2.0 redesign (Chromium, Playwright): the dash
 ## Documentation
 
 - [`StudyMate-ICT/README.md`](StudyMate-ICT/README.md) — project overview and how to run it
+- [`StudyMate-ICT/FINAL_CAPSTONE_REPORT.md`](StudyMate-ICT/FINAL_CAPSTONE_REPORT.md) — final internship submission report
 - [`StudyMate-ICT/PROJECT_DOCUMENTATION.md`](StudyMate-ICT/PROJECT_DOCUMENTATION.md) — architecture, features, data model, security
 - [`StudyMate-ICT/USER_GUIDE.md`](StudyMate-ICT/USER_GUIDE.md) — student-facing guide
 - [`StudyMate-ICT/TESTING_REPORT.md`](StudyMate-ICT/TESTING_REPORT.md) — test cases, results, what was not tested
 - [`StudyMate-ICT/LIMITATIONS_AND_FUTURE_WORK.md`](StudyMate-ICT/LIMITATIONS_AND_FUTURE_WORK.md) — honest limitations
-- [`StudyMate-ICT/PRESENTATION_GUIDE.md`](StudyMate-ICT/PRESENTATION_GUIDE.md) — three-minute demonstration script
+- [`StudyMate-ICT/PRESENTATION_GUIDE.md`](StudyMate-ICT/PRESENTATION_GUIDE.md) — five-minute demonstration script, plus a three-minute version
 - [`StudyMate-ICT/PROMPTS_USED.md`](StudyMate-ICT/PROMPTS_USED.md) — the prompt-engineering record
 - [`docs/AI_PROVIDER.md`](docs/AI_PROVIDER.md) · [`docs/RENDER_DEPLOYMENT.md`](docs/RENDER_DEPLOYMENT.md) · [`docs/TROUBLESHOOTING.md`](docs/TROUBLESHOOTING.md) · [`docs/CHANGELOG.md`](docs/CHANGELOG.md)
 
