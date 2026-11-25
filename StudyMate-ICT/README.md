@@ -62,7 +62,7 @@ Plus: no login or registration, offline operation, LocalStorage persistence, res
 
 ## Screenshots
 
-All eleven screenshots were captured from the live 2.4.0 build on 25 November 2026 (including the Home button and the API Reference page that 2.4.0 added), so the API Reference sidebar entry appears in every desktop image. The data shown is demo data saved in the browser.
+All thirteen screenshots were captured from the live 2.4.0 build on 25 November 2026 (including the Home button, the API Reference page that 2.4.0 added and the About page's author credit), so the API Reference sidebar entry appears in every desktop image. The data shown is demo data saved in the browser.
 
 | ICT Concept Explainer | Smart Study Planner |
 |---|---|
@@ -83,6 +83,10 @@ All eleven screenshots were captured from the live 2.4.0 build on 25 November 20
 | API Reference | API Reference (mobile) |
 |---|---|
 | ![API Reference](assets/screenshots/10-api-reference-desktop.png) | ![API Reference mobile](assets/screenshots/11-api-reference-mobile.png) |
+
+| About the project | About the project (mobile) |
+|---|---|
+| ![About StudyMate ICT](assets/screenshots/12-about-desktop.png) | ![About StudyMate ICT mobile](assets/screenshots/13-about-mobile.png) |
 
 ## Technology stack
 

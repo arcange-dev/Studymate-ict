@@ -62,7 +62,7 @@ The app opens on a **workspace dashboard**, not a marketing page. There is no lo
 
 ## Screenshots
 
-All eleven screenshots were captured from the live 2.4.0 build on 25 November 2026 (including the Home button and the API Reference page that 2.4.0 added), so the API Reference sidebar entry appears in every desktop image. The data shown is demo data saved in the browser.
+All thirteen screenshots were captured from the live 2.4.0 build on 25 November 2026 (including the Home button, the API Reference page that 2.4.0 added and the About page's author credit), so the API Reference sidebar entry appears in every desktop image. The data shown is demo data saved in the browser.
 
 | Dashboard | Mobile dashboard |
 |---|---|
@@ -75,6 +75,10 @@ All eleven screenshots were captured from the live 2.4.0 build on 25 November 20
 | API Reference | API Reference on a phone |
 |---|---|
 | ![API Reference](StudyMate-ICT/assets/screenshots/10-api-reference-desktop.png) | ![API Reference on a phone](StudyMate-ICT/assets/screenshots/11-api-reference-mobile.png) |
+
+| About the project | About the project on a phone |
+|---|---|
+| ![About StudyMate ICT](StudyMate-ICT/assets/screenshots/12-about-desktop.png) | ![About StudyMate ICT on a phone](StudyMate-ICT/assets/screenshots/13-about-mobile.png) |
 
 ## Quick start
 
