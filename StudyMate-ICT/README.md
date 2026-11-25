@@ -62,7 +62,7 @@ Plus: no login or registration, offline operation, LocalStorage persistence, res
 
 ## Screenshots
 
-Captured from the 2.3.1 build on 25 November 2026; the data shown is demo data saved in the browser.
+Captured on 25 November 2026 from the live build; the data shown is demo data saved in the browser. These views are unchanged in 2.4.0, which added the API Reference page.
 
 | ICT Concept Explainer | Smart Study Planner |
 |---|---|

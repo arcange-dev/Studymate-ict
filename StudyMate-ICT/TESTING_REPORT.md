@@ -1,7 +1,7 @@
 # Testing Report — StudyMate ICT
 
-**Version tested:** 2.4.0 (automated suite, the new API Reference page and the live deployment parity check); the visual and tool checks in §4–§7 were executed on the 2.2.0 build and are unchanged by 2.3.0–2.3.1 (provider panel, Home button) and 2.4.0 (API Reference page, request-size limit).
-**Test date:** 24 November 2026 (2.2.0 pass); re-run 25 November 2026 for 2.3.1 and 2.4.0
+**Version tested:** 2.4.0 (automated suite, all twelve routes on both live addresses, and the API Reference page); the deeper visual and tool checks in §4–§7 were executed on the 2.2.0 build. Later releases changed the provider panel and added the Home button (2.3.x) and added the API Reference page plus a request-size limit (2.4.0); the 2.4.0 live audit in §7 re-checks every route at both widths on both hosts.
+**Test date:** 24 November 2026 (2.2.0 pass); re-run 25 November 2026 for 2.4.0
 **Method:** the automated Node suite (`npm test`) plus a scripted Chromium (Playwright) pass over the real interface served by `node server/node-server.js` on port 3000, through the deployment preview origin the app is signed in to.
 
 > Everything below was executed in this release. Where a check could not be run (a real AI provider, a screen reader, Safari/Firefox), it is listed as **not tested** rather than assumed. The demo data used for screenshots and data checks was saved through the app's own LocalStorage schema.
@@ -39,7 +39,7 @@ Coverage: AI request validation, schema enforcement, provider failures and error
 | Open the app with no hash | Dashboard is the first screen | **PASS** — redirected to `#/dashboard`, welcome panel rendered |
 | Login, registration, email or account screen | None exists | **PASS** — no auth UI or credential request anywhere; only optional "Display name" |
 | Every sidebar route | View renders, breadcrumb and title update | **PASS** — dashboard, explain, quiz, planner, source, glossary, library, saved, settings, about, home |
-| Home button in the topbar (2.3.1) | Opens `#/home` from any route on desktop and on a phone, and is marked current while the landing page is open; the sidebar entry and global search reach it too | **PASS** — button, sidebar entry and search result all opened the landing page; no layout change at 390px |
+| Home button in the topbar | Opens `#/home` from any route on desktop and on a phone, and is marked current while the landing page is open; the sidebar entry and global search reach it too | **PASS** — button, sidebar entry and search result all opened the landing page; no layout change at 390px; re-verified on 2.4.0 on both live addresses at 1440px and 390px, marked current only on Home |
 | Old links (`#/home`, etc.) | Still work | **PASS** |
 | Collapse sidebar | Shrinks 272→84px, labels stay for screen readers, tooltip on hover, choice persists after reload | **PASS** |
 | Mobile drawer (390px) | `☰` opens, route tap closes, `Escape` closes, focus returns to the button | **PASS** |
@@ -102,7 +102,7 @@ Coverage: AI request validation, schema enforcement, provider failures and error
 | Screen-reader structure | One `h1` per view, no heading-level jumps, no duplicate IDs, no unlabelled field, no unnamed button, no image without `alt`, no broken icon symbol | **PASS** |
 | Contrast of secondary text | Measured 3.09:1 before the fix, 4.65:1 after | **FIXED** (see §8) |
 | API Reference page (2.4.0) | `#/api` is reachable from the sidebar and the global search, renders its 7 tables and 6 code blocks at 1440px and 390px with no horizontal overflow, and fills its status card from this deployment's own `/api/health` | **PASS** — live values read on preview and production (`Prompt mode`, `openai-compatible`, no model, 20 requests / 10 min, 300 / day); no console or page errors |
-| Live deployment audit (2.3.1) | All 11 routes at 1440px and 390px on the preview and production addresses: one `h1` each, no horizontal overflow, Home button present (and marked current only on Home), no console or page errors, and all 29 deployed files byte-identical between the two hosts | **PASS** — 46 route/viewport checks (including a 320px topbar check); the only measured difference is 4px of scroll height on the animated Home cube, with identical text and width and no visible difference |
+| Live deployment audit (2.4.0) | All twelve routes at 1440px and 390px on the preview and production addresses: the right view rendered with its own single `h1`, its sidebar entry marked current, the Home button present (and marked current only on Home), zero horizontal overflow, no console or page errors, and the deployed files byte-identical between the two hosts | **PASS** — 48 route/viewport checks (12 routes × 2 widths × 2 hosts), zero overflow and zero errors everywhere, identical `h1` text and identical `/api/health` payload on both hosts, and 30/30 deployed files byte-identical |
 
 ---
 
@@ -124,7 +124,7 @@ Coverage: AI request validation, schema enforcement, provider failures and error
 - **A real AI provider.** Only a stubbed OpenAI-compatible endpoint was used; provider-specific CORS behaviour, model quality and rate limits were not exercised. Server-side live AI was not available in this environment.
 - **Screen readers.** Structure and labels were checked programmatically, not with NVDA, JAWS or VoiceOver.
 - **Safari, Firefox and real mobile devices.** Chromium emulation only.
-- **Deployment.** §4–§8 cover the local/preview origin from the 2.2.0 pass. The 2.3.1 and 2.4.0 builds were deployed to both the preview and production demo environments and the two hosts were compared byte-for-byte (all 30 files identical for 2.4.0); the AI path against a real provider below remains untested on that deployment.
+- **Deployment.** §4–§8 cover the local/preview origin from the 2.2.0 pass. The 2.4.0 build is deployed to both the preview and production demo environments; all twelve routes were re-checked at 1440px and 390px on both addresses (§7) and all 30 deployed files are byte-identical between the hosts. The AI path against a real provider remains untested on that deployment.
 - **Performance budgets.** No Lighthouse run was performed; the app ships no third-party runtime dependencies.
 
 ---
