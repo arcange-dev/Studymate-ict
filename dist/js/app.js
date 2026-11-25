@@ -25,6 +25,7 @@
   var navLinks = ui.$all('.nav-link');
   var crumb = ui.$('#page-crumb');
   var crumbParent = ui.$('#crumb-parent');
+  var topbarHome = ui.$('#topbar-home');
   var pageHint = ui.$('#page-hint');
   var sidebar = ui.$('#sidebar');
   var scrim = ui.$('#scrim');
@@ -67,6 +68,10 @@
       if (link.dataset.route === route) link.setAttribute('aria-current', 'page');
       else link.removeAttribute('aria-current');
     });
+    if (topbarHome) {
+      if (route === 'home') topbarHome.setAttribute('aria-current', 'page');
+      else topbarHome.removeAttribute('aria-current');
+    }
 
     var meta = ROUTES[route];
     crumb.textContent = meta.title;
@@ -170,12 +175,11 @@
   function searchIndex() {
     var items = [];
     Object.keys(ROUTES).forEach(function (route) {
-      if (route === 'home') return;
       items.push({
         group: 'Pages',
         title: ROUTES[route].title,
         sub: ROUTES[route].hint,
-        icon: route === 'dashboard' ? 'i-grid' : route === 'saved' ? 'i-saved' : route === 'settings' ? 'i-gear' : route === 'about' ? 'i-info' : route === 'glossary' ? 'i-glossary' : route === 'quiz' ? 'i-quiz' : route === 'planner' ? 'i-calendar' : route === 'source' ? 'i-shield' : route === 'library' ? 'i-library' : 'i-book',
+        icon: route === 'home' ? 'i-home' : route === 'dashboard' ? 'i-grid' : route === 'saved' ? 'i-saved' : route === 'settings' ? 'i-gear' : route === 'about' ? 'i-info' : route === 'glossary' ? 'i-glossary' : route === 'quiz' ? 'i-quiz' : route === 'planner' ? 'i-calendar' : route === 'source' ? 'i-shield' : route === 'library' ? 'i-library' : 'i-book',
         href: '#/' + route
       });
     });

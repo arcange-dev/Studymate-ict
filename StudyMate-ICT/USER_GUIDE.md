@@ -13,7 +13,7 @@ StudyMate ICT runs entirely in your browser. Nothing is installed, nothing is up
    ```
    then visit <http://localhost:8000>.
 2. The **Dashboard** opens first. It shows your saved items and the six study tools.
-3. Use the sidebar to move between tools. On a phone or tablet, tap the **menu button** (☰) at the top-left; press `Escape` to close it.
+3. Use the sidebar to move between tools, or the **Home** button in the top bar to return to the landing page and the API-key panel. On a phone or tablet, tap the **menu button** (☰) at the top-left; press `Escape` to close it.
 
 ### Installing StudyMate as an app
 
@@ -308,7 +308,7 @@ StudyMate works without any key — it builds prompts you can paste into an AI a
 ### Step by step
 
 1. Open **Home** in the sidebar (or **Settings**).
-2. Choose your provider in the **Provider** list — OpenAI, OpenRouter, Groq, Google Gemini, Mistral, DeepSeek, Together or Z.ai. Choose **Other provider** if your provider is not listed.
+2. Choose your provider in the **Provider** list — search or scroll through 47 presets (OpenAI, Anthropic Claude, Google Gemini, OpenRouter, Groq, Mistral, DeepSeek, Together, Qwen, Kimi, local Ollama and many more). Choose **Other provider** if your provider is not listed.
 3. Check the **Base URL**. It is the address your provider gives for its OpenAI-compatible API (for example `https://api.openai.com/v1`). It must **not** end in `/chat/completions`; StudyMate adds that part itself.
 4. Check the **Model** name — it must be a model your key is allowed to use.
 5. Paste your **API key** and press **Save & test key**.

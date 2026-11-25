@@ -1,7 +1,7 @@
 # Testing Report — StudyMate ICT
 
-**Version tested:** 2.2.0 (dashboard-first redesign)
-**Test date:** 24 November 2026
+**Version tested:** 2.3.1 (automated suite and navigation checks); the visual and tool checks in §4–§7 were executed on the 2.2.0 build and are unchanged by 2.3.0–2.3.1, which add the provider panel and a Home button only.
+**Test date:** 24 November 2026 (2.2.0 pass); re-run 25 November 2026 for 2.3.1
 **Method:** the automated Node suite (`npm test`) plus a scripted Chromium (Playwright) pass over the real interface served by `node server/node-server.js` on port 3000, through the deployment preview origin the app is signed in to.
 
 > Everything below was executed in this release. Where a check could not be run (a real AI provider, a screen reader, Safari/Firefox), it is listed as **not tested** rather than assumed. The demo data used for screenshots and data checks was saved through the app's own LocalStorage schema.
@@ -12,7 +12,7 @@
 
 | Item | Detail |
 |---|---|
-| Application | StudyMate ICT 2.2.0, `dist/` served by `server/node-server.js` (prompt mode, no server AI key) |
+| Application | StudyMate ICT 2.3.1, `dist/` served by `server/node-server.js` (prompt mode, no server AI key) |
 | Browser | Chromium via Playwright, desktop 1440×1000, tablet 820×1180, mobile 430/390/375/320 |
 | Service worker | Unregistered and caches cleared before visual checks, so no stale shell could mask a change; re-registered for the offline test |
 | Storage | LocalStorage; both zero state and a demo state (3 saved topics, 2 prompts, 4 marked quizzes, 2 plans, 1 personal term, display name "Amina") |
@@ -24,11 +24,11 @@
 ## 2. Automated suite — **PASS**
 
 ```
-npm test → tests 36 · pass 36 · fail 0
-./build.sh → Built dist/ (28 files)
+npm test → tests 54 · pass 54 · fail 0
+./build.sh → Built dist/ (29 files)
 ```
 
-Coverage: AI request validation, schema enforcement, provider failures and error mapping, rate limiting, key non-disclosure, HTTP headers, path-traversal protection, the SPA fallback, quiz marking, settings normalisation, and the learner-key path (base-URL validation, provider called with the learner's own key, rejected keys, malformed model output).
+Coverage: AI request validation, schema enforcement, provider failures and error mapping, rate limiting, key non-disclosure, HTTP headers, path-traversal protection, the SPA fallback, quiz marking, settings normalisation, the learner-key path (base-URL validation, provider called with the learner's own key, rejected keys, malformed model output), the 47-provider catalogue, the OpenAI/Anthropic/Gemini request protocols and URL probe, and the app shell navigation (every entry has a view; Home is reachable from the topbar and the sidebar).
 
 ---
 
@@ -39,6 +39,7 @@ Coverage: AI request validation, schema enforcement, provider failures and error
 | Open the app with no hash | Dashboard is the first screen | **PASS** — redirected to `#/dashboard`, welcome panel rendered |
 | Login, registration, email or account screen | None exists | **PASS** — no auth UI or credential request anywhere; only optional "Display name" |
 | Every sidebar route | View renders, breadcrumb and title update | **PASS** — dashboard, explain, quiz, planner, source, glossary, library, saved, settings, about, home |
+| Home button in the topbar (2.3.1) | Opens `#/home` from any route on desktop and on a phone, and is marked current while the landing page is open; the sidebar entry and global search reach it too | **PASS** — button, sidebar entry and search result all opened the landing page; no layout change at 390px |
 | Old links (`#/home`, etc.) | Still work | **PASS** |
 | Collapse sidebar | Shrinks 272→84px, labels stay for screen readers, tooltip on hover, choice persists after reload | **PASS** |
 | Mobile drawer (390px) | `☰` opens, route tap closes, `Escape` closes, focus returns to the button | **PASS** |
@@ -93,7 +94,7 @@ Coverage: AI request validation, schema enforcement, provider failures and error
 | Check | Result |
 |---|---|
 | Horizontal overflow at 320 / 375 / 390 / 430 / 768 / 1024 / 1280 / 1440 / 1920 on all 11 routes | **PASS** — zero overflow in every combination |
-| Topbar at 390px | Search icon, AI chip and theme fit; primary action and hint hidden; no wrap | **PASS** |
+| Topbar at 390px | Home icon, search icon, AI chip and theme fit; primary action and hint hidden; no wrap | **PASS** |
 | Dashboard at 390px | Single column, two-column stats, readable type, 48px targets | **PASS** |
 | Theme toggle | Switches tokens immediately, persists across reload, no mixed-theme text | **PASS** |
 | Offline reload | With the worker registered: reload with the network off restored the dashboard, styles, 10 nav links and 6 stat cards | **PASS** |
@@ -121,7 +122,7 @@ Coverage: AI request validation, schema enforcement, provider failures and error
 - **A real AI provider.** Only a stubbed OpenAI-compatible endpoint was used; provider-specific CORS behaviour, model quality and rate limits were not exercised. Server-side live AI was not available in this environment.
 - **Screen readers.** Structure and labels were checked programmatically, not with NVDA, JAWS or VoiceOver.
 - **Safari, Firefox and real mobile devices.** Chromium emulation only.
-- **Deployment.** This report covers the local/preview origin; the public demo site was not redeployed for this version.
+- **Deployment.** §4–§8 cover the local/preview origin from the 2.2.0 pass. The 2.3.1 build was deployed to both the preview and production demo environments and the two hosts were compared byte-for-byte; the AI path against a real provider below remains untested on that deployment.
 - **Performance budgets.** No Lighthouse run was performed; the app ships no third-party runtime dependencies.
 
 ---

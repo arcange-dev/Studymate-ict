@@ -2,6 +2,21 @@
 
 All dates are 2026. The project follows a simple `MAJOR.MINOR.PATCH` scheme; the app version is shown in `package.json`.
 
+## 2.3.1 — 25 November 2026
+
+The last navigation gap before submission.
+
+### Added
+
+- **A Home button in the top bar**, on every screen. The 3D landing page and its provider panel already existed, but only `#/home` in the address bar reached them; the button opens it in one click and is marked current while it is open, on desktop and on mobile (icon only below 760px).
+- **A Home entry at the top of the sidebar's *Workspace* group**, so the landing page is reachable from the drawer and the collapsed icon rail too — the user guide already told learners to open Home in the sidebar.
+- Global search now lists **Home** with the other pages instead of skipping it.
+
+### Tests
+
+- 54 Node tests pass (`npm test`), up from 51: new `tests/navigation.test.js` checks that every navigation entry has a matching view and that Home is reachable from the topbar and the sidebar.
+- Version bumped to 2.3.1.
+
 ## 2.3.0 — 24 November 2026
 
 The **Add an AI provider** panel: every provider, tested automatically.

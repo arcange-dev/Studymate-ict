@@ -266,6 +266,10 @@ svg.icon-lg { width: 30px; height: 30px; }
 
 .topbar-actions { margin-left: auto; display: flex; align-items: center; gap: 8px; }
 
+.topbar-home { flex: none; }
+.topbar-home .icon { width: 16px; height: 16px; }
+.topbar-home[aria-current="page"] { background: var(--surface-3); color: var(--ink-900); }
+
 .search-trigger {
   display: inline-flex; align-items: center; gap: 8px;
   height: 36px; padding: 0 9px 0 11px;
@@ -1324,6 +1328,8 @@ html[data-theme="dark"] .search-trigger { background: var(--surface-3); }
 }
 
 @media (max-width: 760px) {
+  .topbar-home span { display: none; }
+  .topbar-home { width: 36px; padding: 0; }
   .topbar-cta span { display: none; }
   .topbar-cta { width: 36px; padding: 0; }
   .topbar-hint { display: none; }

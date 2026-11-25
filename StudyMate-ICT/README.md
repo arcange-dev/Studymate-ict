@@ -55,7 +55,7 @@ StudyMate ICT solves that by owning the prompt layer:
 | 7 | **Learning Dashboard** | The first screen: welcome panel, six real metrics (saved topics, saved prompts, quizzes marked, average score, plan progress, glossary terms), continue learning, plan progress, tool cards, quiz-score chart, recent activity and study focus. Empty states instead of invented numbers. |
 | 8 | **Saved Learning** | View, copy and delete saved topics, saved prompts, saved glossary terms and activity history. |
 | 9 | **About the Project** | Purpose, technologies, AI status and honest limitations. |
-| 10 | **Workspace shell and search** | Collapsible sidebar with grouped navigation and a saved-items badge, topbar with breadcrumbs, theme toggle and real AI status, a mobile drawer, and global search (`/` or `Ctrl/Cmd + K`) across pages, glossary, saved items and the active plan. |
+| 10 | **Workspace shell and search** | Collapsible sidebar led by Home, with grouped navigation and a saved-items badge, a topbar with a Home button, breadcrumbs, theme toggle and real AI status, a mobile drawer, and global search (`/` or `Ctrl/Cmd + K`) across pages, glossary, saved items and the active plan. |
 
 Plus: no login or registration, offline operation, LocalStorage persistence, responsive layouts from 320px to 1920px, keyboard navigation, visible focus states, empty states, inline validation, a dark theme and print/PDF export of study plans.
 
@@ -236,7 +236,7 @@ The app began as a prompt-only assistant. It now has an optional **live AI path*
 - **Practice quizzes** — generate questions from your notes, answer them in the app, and get an exact score with review of every wrong answer. Marking happens in the browser, so it is deterministic and works without a second model call.
 - **Study-plan progress** — saved plans keep tick marks, show a progress bar, and restore on your next visit.
 - **Settings** — light/dark/device theme, default level, preferred subjects, reduced motion, larger text and JSON backup export/import.
-- **Tests** — 29 automated tests (`npm test`) plus a documented browser test run.
+- **Tests** — 54 automated tests (`npm test`) plus a documented browser test run.
 
 New documents: [`../docs/AI_PROVIDER.md`](../docs/AI_PROVIDER.md), [`../docs/RENDER_DEPLOYMENT.md`](../docs/RENDER_DEPLOYMENT.md), [`../docs/TROUBLESHOOTING.md`](../docs/TROUBLESHOOTING.md) and [`../docs/CHANGELOG.md`](../docs/CHANGELOG.md).
 
