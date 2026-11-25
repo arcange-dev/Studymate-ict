@@ -146,7 +146,7 @@ Then open <http://localhost:8000>.
 2. Wait for the first load to finish, then use the browser's **Install** / **Add to Home screen** action.
 3. Launch it from the app icon: it opens full-screen with no address bar.
 
-`sw.js` precaches the app shell — `/`, the stylesheet, all thirteen scripts, the manifest and the icons (20 files). After one visit the app reloads and navigates with the network switched off, and `manifest.webmanifest` supplies the name, colours and icons the browser needs to install it.
+`sw.js` precaches the app shell — `/`, the stylesheet, all 21 scripts, the manifest and the icons (28 files). After one visit the app reloads and navigates with the network switched off, and `manifest.webmanifest` supplies the name, colours and icons the browser needs to install it.
 
 **Network behaviour:** every runtime request is same-origin — there are no fonts, CDNs, analytics or third-party images, so there is nothing that can fail or leak while offline.
 

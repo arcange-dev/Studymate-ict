@@ -101,6 +101,7 @@ Coverage: AI request validation, schema enforcement, provider failures and error
 | Keyboard | First `Tab` shows a visible focus ring; all controls reachable; modal traps focus | **PASS** |
 | Screen-reader structure | One `h1` per view, no heading-level jumps, no duplicate IDs, no unlabelled field, no unnamed button, no image without `alt`, no broken icon symbol | **PASS** |
 | Contrast of secondary text | Measured 3.09:1 before the fix, 4.65:1 after | **FIXED** (see §8) |
+| Live deployment audit (2.3.1) | All 11 routes at 1440px and 390px on the preview and production addresses: one `h1` each, no horizontal overflow, Home button present (and marked current only on Home), no console or page errors, and all 29 deployed files byte-identical between the two hosts | **PASS** — 46 route/viewport checks (including a 320px topbar check); the only measured difference is 4px of scroll height on the animated Home cube, with identical text and width and no visible difference |
 
 ---
 

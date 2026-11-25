@@ -1,6 +1,6 @@
 # Limitations and Future Work — StudyMate ICT
 
-This document states plainly what the project does not do, so the demonstration and the written report stay honest. It reflects the build dated 20 November 2026, which adds a real AI endpoint, practice quizzes with in-browser marking, study-plan progress tracking and a settings page.
+This document states plainly what the project does not do, so the demonstration and the written report stay honest. It reflects the 2.3.1 build of 25 November 2026: a real AI endpoint, a browser-side provider panel with 47 presets, practice quizzes with in-browser marking, study-plan progress tracking, a settings page and a Home page reachable from the top bar and sidebar.
 
 ---
 
@@ -10,7 +10,8 @@ This document states plainly what the project does not do, so the demonstration 
 The application now has a genuine AI path: `POST /api/ai` on the server validates the request, calls one OpenAI-compatible provider with a server-side key, and validates the JSON that comes back. It is **not** switched on in the public demo, because no provider key has been supplied.
 
 **Consequences**
-- The public demo runs in **prompt mode**: every tool works, but it builds a prompt instead of contacting a model. The status chip says so.
+- The public demo runs in **prompt mode** because it has no server-side key: every tool works, but it builds a prompt instead of contacting a model. The status chip says so.
+- A learner can still switch AI on for themselves: the panel on **Home** (or **Settings**) accepts any of 47 provider presets or a custom base URL, tests the URL automatically, and stores the key in this browser only. Three protocols are native — OpenAI-compatible, Anthropic Messages and Gemini. A provider that blocks browser (CORS) requests needs the server option instead.
 - "AI live" is only shown after a real request succeeds; a configured-but-unused key shows "AI ready".
 - The AI path has been verified end to end against a **local stub provider** (a fake HTTP server implementing the same contract), not against a real model. Real-model behaviour — refusal quality, hallucination rate, latency — was therefore not measured. See `TESTING_REPORT.md` §8.
 - Model choice, cost and data-processing terms are the deployment owner's decision.
@@ -22,7 +23,7 @@ The server checks the *shape* of the model's JSON (fields present, four distinct
 Multiple-choice and true/false answers are marked exactly. Short answers are marked by keyword coverage of the model answer: all keywords present → correct, at least 60% → flagged for self-check, otherwise incorrect. Wording that is correct but uses different vocabulary can be flagged or marked wrong. The interface labels flagged answers instead of silently failing them.
 
 ### 1.4 Prompt mode remains the only offline path
-AI requests need a network connection and a configured key. Offline, the app falls back to prompt mode and says so. The offline shell (`sw.js`) caches 23 application files; AI responses are never cached, and `/api/*` is excluded from the service worker so a cached health check can never misreport the deployment's mode.
+AI requests need a network connection and a configured key (in the browser or on the server). Offline, the app falls back to prompt mode and says so. The offline shell (`sw.js`) caches 28 application URLs; AI responses are never cached, and `/api/*` is excluded from the service worker so a cached health check can never misreport the deployment's mode.
 
 ### 1.5 Rate limits are per-instance and in memory
 `AI_RATE_LIMIT`, `AI_RATE_WINDOW_MS` and `AI_DAILY_CAP` are enforced in the server process. They reset on restart and are counted separately on each instance, so a multi-instance deployment can allow more traffic than the configured cap. The client IP comes from `x-forwarded-for`, which is trustworthy only behind a proxy that sets it (Render does). A shared store (Redis, D1) would be needed for strict global limits.

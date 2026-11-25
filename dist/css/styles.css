@@ -269,6 +269,7 @@ svg.icon-lg { width: 30px; height: 30px; }
 .topbar-home { flex: none; }
 .topbar-home .icon { width: 16px; height: 16px; }
 .topbar-home[aria-current="page"] { background: var(--surface-3); color: var(--ink-900); }
+.topbar-home:focus-visible { outline: 2px solid var(--indigo-600); outline-offset: 2px; }
 
 .search-trigger {
   display: inline-flex; align-items: center; gap: 8px;
@@ -1373,7 +1374,12 @@ html[data-theme="dark"] .search-trigger { background: var(--surface-3); }
   .topbar-cta { display: none; }
   .topbar-title { gap: 0; }
   .status-chip { font-size: .66rem; padding: 3px 7px; }
-  .status-chip #ai-status-text { max-width: 92px; overflow: hidden; text-overflow: ellipsis; }
+  /* Keep the mode available to screen readers and on hover, but give the page
+     title its room back now that the topbar also carries a Home button. */
+  .status-chip #ai-status-text {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+  }
   .stat-grid { grid-template-columns: 1fr 1fr; }
   .welcome-actions { flex-direction: column; }
   .welcome-actions .btn { width: 100%; }

@@ -11,6 +11,7 @@ The last navigation gap before submission.
 - **A Home button in the top bar**, on every screen. The 3D landing page and its provider panel already existed, but only `#/home` in the address bar reached them; the button opens it in one click and is marked current while it is open, on desktop and on mobile (icon only below 760px).
 - **A Home entry at the top of the sidebar's *Workspace* group**, so the landing page is reachable from the drawer and the collapsed icon rail too — the user guide already told learners to open Home in the sidebar.
 - Global search now lists **Home** with the other pages instead of skipping it.
+- On phones the AI-mode chip collapses to its status dot at 430px and below (its text stays in the DOM for screen readers and in the tooltip), so the extra button no longer squeezes the page title. The two longest breadcrumbs use shorter labels ("ICT Explainer", "Source-Grounded") so nothing ellipsizes at 375px or wider.
 
 ### Tests
 

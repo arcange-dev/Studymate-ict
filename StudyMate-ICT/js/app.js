@@ -8,10 +8,10 @@
   var ROUTES = {
     home: { title: 'Home', hint: 'Welcome to StudyMate ICT', group: 'Workspace' },
     dashboard: { title: 'Dashboard', hint: 'Your learning at a glance', group: 'Workspace' },
-    explain: { title: 'ICT Concept Explainer', hint: 'Turn a topic into a structured lesson', group: 'Learning tools' },
+    explain: { title: 'ICT Concept Explainer', crumb: 'ICT Explainer', hint: 'Turn a topic into a structured lesson', group: 'Learning tools' },
     quiz: { title: 'Quiz Generator', hint: 'Practise from your own notes', group: 'Learning tools' },
     planner: { title: 'Study Planner', hint: 'Plan the time you actually have', group: 'Learning tools' },
-    source: { title: 'Source-Grounded Learning', hint: 'Answers only from your notes', group: 'Learning tools' },
+    source: { title: 'Source-Grounded Learning', crumb: 'Source-Grounded', hint: 'Answers only from your notes', group: 'Learning tools' },
     glossary: { title: 'ICT Glossary', hint: 'Plain-language ICT definitions', group: 'Learning tools' },
     library: { title: 'Prompt Library', hint: 'Reusable study prompts', group: 'Learning tools' },
     saved: { title: 'Saved Learning', hint: 'Everything you have saved', group: 'Your learning' },
@@ -74,7 +74,7 @@
     }
 
     var meta = ROUTES[route];
-    crumb.textContent = meta.title;
+    crumb.textContent = meta.crumb || meta.title;
     pageHint.textContent = meta.hint;
     if (crumbParent) {
       crumbParent.textContent = meta.group;

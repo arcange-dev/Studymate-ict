@@ -2,9 +2,9 @@
 
 **Project:** StudyMate ICT — AI-assisted ICT learning and study assistant
 **Type:** Final capstone project, AI and Prompt Engineering internship, Ishvexa Hub
-**Version:** 1.0
-**Date:** November 2026
-**Stack:** HTML5, CSS3, vanilla JavaScript, LocalStorage. No backend, no build step, no AI API.
+**Version:** 2.3.1
+**Date:** 25 November 2026
+**Stack:** HTML5, CSS3, vanilla JavaScript, LocalStorage. No frontend framework or build step; live AI is optional and comes either from a key the learner adds in this browser or from the zero-dependency Node/Worker endpoint (`/api/ai`).
 
 ---
 
@@ -28,9 +28,9 @@ Beginner ICT students — especially TVET Level 4 learners and first-year comput
 | O3 | Ground quizzes in the student's own notes | Notes embedded in the prompt; explicit "only permitted source" rule; per-question source line; answer key |
 | O4 | Produce a realistic, time-bounded study plan | Deterministic scheduling algorithm in the browser, with an enforced minutes invariant |
 | O5 | Handle incomplete information honestly | Required validation, empty states, coverage indicator and a mandatory refusal sentence |
-| O6 | Build a lightweight, offline application | Static files only; no network calls; LocalStorage persistence |
+| O6 | Build a lightweight, offline application | Static files for the whole app; the network is used only when a key is added; LocalStorage persistence |
 | O7 | Be demonstrable in five minutes | Single-page app, clear navigation, one action per tool |
-| O8 | Document and test professionally | Seven documents plus a 16-case browser test report |
+| O8 | Document and test professionally | Seven documents, a testing report and 54 automated tests |
 
 ### Non-goals
 
@@ -52,26 +52,36 @@ Assumed context: a shared or personal computer with a modern browser, often limi
 
 ### 4.1 Architecture
 
-The application is a **client-side single-page application** with a hash router. There is no server component.
+The application is a **client-side single-page application** with a hash router. It needs no backend: prompt mode, the planner, quiz marking, the glossary and saved learning all run from static files.
+
+Live AI is an optional layer with two routes that share the same contract:
+
+- the learner adds **their own provider key** in the browser (stored under `studymate.ict.localai.v1`, sent only to that provider), speaking OpenAI-compatible, Anthropic Messages or Gemini natively;
+- or a deployment owner supplies a server key and the zero-dependency Node server / Cloudflare Worker answers `POST /api/ai`.
 
 ```
-┌──────────────────────────────────────────────────────────────┐
-│                        Browser (no network)                  │
-│                                                              │
-│  index.html                                                  │
-│    ├── css/styles.css        design system + responsive       │
-│    └── js/                                                    │
-│         storage.js  ──────► LocalStorage (studymate.ict.v1)   │
-│         ui.js        helpers: DOM, toast, clipboard           │
-│         prompts.js   prompt engine + 8 templates              │
-│         glossary-data.js  41 curated terms                    │
-│         feature modules: explainer, quiz, planner,            │
-│                          glossary, source, library            │
-│         dashboard.js, saved.js                                │
-│         app.js       hash router + navigation                 │
-│                                                              │
-│  Output: prompt text  ──► clipboard  ──► external AI (user)   │
-└──────────────────────────────────────────────────────────────┘
+Browser (static app, offline-capable)
+  │  prompt mode ──► clipboard ──► external AI (the learner's choice)
+  │
+  ├── learner key in LocalStorage ──► provider API (direct, browser to provider)
+  │
+  └── POST /api/ai ──► server/node-server.js  |  sites/worker.js
+                        └── js/ai-contract.js ──► provider (server key)
+
+index.html
+  ├── css/styles.css        design system + responsive
+  └── js/
+       storage.js  ──────► LocalStorage (studymate.ict.v1)
+       ui.js        helpers: DOM, toast, clipboard
+       providers.js 47 provider presets, protocols, URL helpers
+       local-ai.js  browser-side key, protocol adapters, URL probe
+       ai-contract.js  prompts, validation and JSON schemas (shared)
+       prompts.js   prompt engine + 8 templates
+       glossary-data.js  41 curated terms
+       feature modules: explainer, quiz, planner,
+                        glossary, source, library
+       dashboard.js, saved.js, settings.js, key-panel.js
+       app.js       hash router + navigation
 ```
 
 ### 4.2 Prompt pipeline
@@ -92,7 +102,7 @@ User input ─► validation ─► prompt builder (prompts.js) ─► formatted
                               Save ─► LocalStorage ─► Saved Learning
 ```
 
-The application deliberately stops before "AI answer". This keeps it free, offline-capable, safe to demonstrate and impossible to mistake for an oracle.
+Prompt mode is the default and needs no key or network. When a key exists — the learner's own, or a server-side key — the request is validated against `js/ai-contract.js` before it is sent, and the returned JSON is checked against the same schema before anything is rendered. A refusal or malformed answer is an explicit error, never a half-drawn screen.
 
 ### 4.3 Routing and views
 
@@ -100,6 +110,7 @@ Hash-based routes, mapped in `js/app.js`:
 
 | Route | View | Purpose |
 |---|---|---|
+| `#/home` | view-home | 3D landing page, key panel and the add-a-provider steps |
 | `#/dashboard` | view-dashboard | Overview, stats, recent activity, study focus |
 | `#/explain` | view-explain | ICT concept explainer |
 | `#/quiz` | view-quiz | Quiz generator |
@@ -108,6 +119,7 @@ Hash-based routes, mapped in `js/app.js`:
 | `#/source` | view-source | Source-grounded learning |
 | `#/library` | view-library | Prompt library |
 | `#/saved` | view-saved | Saved learning and activity |
+| `#/settings` | view-settings | Appearance, defaults, accessibility and local data |
 | `#/about` | view-about | Project information |
 
 Unknown routes fall back to the dashboard. The router updates the document title, the breadcrumb, `aria-current="page"` on navigation, keyboard focus and scroll position.
@@ -196,6 +208,9 @@ Grouped lists for saved topics, saved prompts, saved glossary terms and activity
 ### 5.9 About the Project
 Purpose, demonstrated skills, technology, AI status, responsible-use rules and honest limitations.
 
+### 5.10 Bring your own AI provider
+A panel on Home and in Settings with a searchable catalogue of 47 presets, grouped by region (global, Asia, platform, local and custom). Choosing a provider fills its base URL, default model and protocol. The base URL is probed automatically as it is typed (`{base}/models`): the panel reports reachability, latency, the models the key may use and whether the provider refuses browser (CORS) requests. **Fetch models** lists them; **Test connection** sends one tiny request with the typed values before anything is saved, so a new key cannot overwrite a working one. **Remove** deletes the key. Keys are stored in this browser only and are never sent to this app's server.
+
 ## 6. Technologies and design decisions
 
 | Decision | Rationale |
@@ -203,7 +218,8 @@ Purpose, demonstrated skills, technology, AI status, responsible-use rules and h
 | Vanilla JS, no framework | Fits the brief; zero tooling; beginner-readable; runs from a USB stick |
 | Classic scripts, no ES modules | ES modules fail on `file://`; classic scripts keep double-click-to-run working |
 | One LocalStorage key with a normaliser | Simple migration path and resilience to corrupted data |
-| No AI API | No secret exposure, no cost, no network dependency, honest demonstration |
+| Prompt-first, AI optional | Works with no key and no network; a learner can add their own key in this browser, and an owner can add a server-side key |
+| One AI contract for every path | The browser adapters and the server endpoint share `js/ai-contract.js`, so requests and answers are validated identically |
 | Hash routing | Works from the filesystem without server rewrites |
 | CSS custom properties + grid | Consistent theme and fast responsive changes |
 | Planner computed locally | Deterministic, inspectable and guaranteed to respect the time budget |
@@ -226,12 +242,12 @@ A learner should be able to:
 
 ## 8. Future improvements
 
-- Optional bring-your-own-key integration through a **server-side proxy** (never in frontend code), with a documented model allowlist.
+- Real-provider evaluation across several vendors, recording latency, refusals and answer quality instead of using a stub.
+- A documented model allowlist and shared (not per-instance) rate limits for a multi-user deployment.
 - Spaced-repetition scheduling using stored quiz results.
 - Export/import of the whole workspace as JSON for backup and device transfer.
 - Expand the glossary and add a "commonly confused with" field.
 - Multi-day plans with varying daily availability.
-- Offline PWA install with a service worker and an app manifest.
 - Swahili and other local-language prompt variants.
 - Printable worksheet generation from a quiz prompt.
 

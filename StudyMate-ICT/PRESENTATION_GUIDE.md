@@ -120,11 +120,11 @@ A five-minute capstone demonstration. Rehearse twice with a timer. Open the app 
 
 **Say:**
 
-> "What it does not do: it doesn't call an AI, so answer accuracy depends on whatever assistant the student uses, and I didn't measure that. The planner is a straightforward scheduler, not an optimiser. Saved data is LocalStorage only — this browser, this device, no backup. And the coverage check is a keyword heuristic, not understanding.
+> "What it does not do: this public demo has no server key, so it runs in prompt mode and answer accuracy depends on the assistant the student uses — I didn't measure that. You can add your own provider key in the browser and it will call the provider directly. The planner is a straightforward scheduler, not an optimiser. Saved data is LocalStorage only — this browser, this device, no backup. And the coverage check is a keyword heuristic, not understanding.
 >
-> The biggest lesson was that prompt engineering is software engineering: constraints, output contracts and refusal rules are testable requirements. I ran seventeen browser checks against this build — functional flows, validation, storage, navigation, three screen sizes and console errors — found six real defects, and fixed all of them.
+> The biggest lesson was that prompt engineering is software engineering: constraints, output contracts and refusal rules are testable requirements. I ran seventeen browser checks during development — functional flows, validation, storage, navigation, three screen sizes and console errors — and for the final build I re-checked all eleven routes at desktop and phone width on both live addresses, with no layout or console errors. I found six real defects along the way and fixed all of them.
 >
-> Next steps would be a server-side proxy for an AI key, export and backup, and spaced repetition from quiz results.
+> Next steps would be real-provider evaluation, shared rate limiting, export and backup, and spaced repetition from quiz results.
 >
 > Thank you — I'm happy to take questions."
 
@@ -133,7 +133,7 @@ A five-minute capstone demonstration. Rehearse twice with a timer. Open the app 
 ## Likely questions and short answers
 
 **"Why isn't it connected to an AI? Is that a weakness?"**
-It's a deliberate scope decision. Connecting an AI needs a server-side proxy to protect the key, plus cost and rate limits. Keeping the prompt layer separate makes the project free, offline and impossible to confuse with an answer machine. The proxy is the first item on the future-work list.
+The public demo has no key, so it deliberately stays in prompt mode and says so. But the app is not prompt-only: the panel on Home accepts your own provider key — 47 presets, automatic URL testing, native OpenAI, Anthropic and Gemini protocols — and the repository also ships a server endpoint for an owner-supplied key. Keeping the prompt layer as the default makes the project free, offline-capable and impossible to confuse with an answer machine.
 
 **"How do you know the prompts work?"**
 I can show the structure and the constraints, and I tested the app end to end. Response quality depends on the model, which is why I don't claim measured accuracy — I claim measurable prompt structure, and I say that in the testing report.
@@ -179,7 +179,8 @@ Rehearse this against the live URL in prompt mode. Do not claim the AI is live o
 3. Say: “Nine sections, a level, a length, and a rule against invented facts. Press Copy and it runs in any assistant the student is allowed to use.”
 
 **[1:05–1:45] Live AI, when a key exists**
-1. Switch to the locally running server (or state plainly that the key is not on the demo).
+1. Open **Home** and point at the provider panel: choose a provider, watch the URL test run, press **Test connection**. Say: “The key stays in this browser; the app proves the URL and the key before saving anything.”
+2. Switch to the locally running server (or state plainly that the key is not on the demo).
 2. **Explain ICT** → *Explain with AI*. The chip changes to *AI live* only after the answer arrives.
 3. Show sections 1–3 and open one revision answer.
 4. Say: “The key never reaches the browser. The server validates the request, calls one provider, and rejects any answer that is not the exact JSON shape — so a broken answer is an error, not a half-drawn page.”
@@ -197,7 +198,7 @@ Rehearse this against the live URL in prompt mode. Do not claim the AI is live o
 4. **Settings** → toggle dark theme; mention the JSON backup.
 
 **[2:45–3:00] Close**
-> “Twenty-nine automated tests cover the AI contract, the HTTP surface and the marking logic. Offline was verified with the server stopped. Known limitations — no key on this demo, heuristic short-answer marking, per-instance rate limits — are written down rather than hidden. The source and the full test report are on GitHub.”
+> “Fifty-four automated tests cover the AI contract, the HTTP surface, the marking logic, the provider catalogue and the navigation. Offline was verified with the server stopped. Known limitations — no key on this demo, heuristic short-answer marking, per-instance rate limits — are written down rather than hidden. The source and the full test report are on GitHub.”
 
 ### Questions you should be ready for
 
