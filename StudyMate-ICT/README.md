@@ -218,6 +218,7 @@ More detail: [`LIMITATIONS_AND_FUTURE_WORK.md`](LIMITATIONS_AND_FUTURE_WORK.md).
 | Document | Contents |
 |---|---|
 | [FINAL_CAPSTONE_REPORT.md](FINAL_CAPSTONE_REPORT.md) | Final internship submission report: summary, features, weeks 4–6, testing, limitations, references |
+| [WEEK6_USER_TESTING_KIT.md](WEEK6_USER_TESTING_KIT.md) | Week 6 session materials: consent note, tester tasks, feedback form, change-log template |
 | [PROJECT_DOCUMENTATION.md](PROJECT_DOCUMENTATION.md) | Problem statement, objectives, audience, system design, features, expected results |
 | [USER_GUIDE.md](USER_GUIDE.md) | Step-by-step instructions for every feature |
 | [PROMPTS_USED.md](PROMPTS_USED.md) | All prompts, their purpose, inputs, outputs and examples |

@@ -166,7 +166,7 @@ Completed in this stage:
 - Verified both hosts serve a byte-identical `index.html` and identical `/api/health` output.
 - Ran the automated suite after each change (54 passing) and rebuilt the deploy bundle from source each time.
 
-Not completed: **user testing with two external participants, anonymised feedback, and a change log of improvements derived from that feedback.** No testers were recruited, so no feedback is reported. This remains the largest gap against the handbook's Week 6 requirement and is stated rather than simulated.
+Not completed: **user testing with two external participants, anonymised feedback, and a change log of improvements derived from that feedback.** No testers were recruited, so no feedback is reported. This remains the largest gap against the handbook's Week 6 requirement and is stated rather than simulated. The session materials are prepared and ready to run in [`WEEK6_USER_TESTING_KIT.md`](WEEK6_USER_TESTING_KIT.md) — consent note, five rehearsed tasks with success signals, a feedback form and a change-log template — and every field in them is intentionally empty until two real sessions have taken place.
 
 # 12. Testing and Quality Evaluation
 
