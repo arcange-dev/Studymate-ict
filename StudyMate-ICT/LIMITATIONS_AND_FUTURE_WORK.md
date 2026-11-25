@@ -23,7 +23,7 @@ The server checks the *shape* of the model's JSON (fields present, four distinct
 Multiple-choice and true/false answers are marked exactly. Short answers are marked by keyword coverage of the model answer: all keywords present → correct, at least 60% → flagged for self-check, otherwise incorrect. Wording that is correct but uses different vocabulary can be flagged or marked wrong. The interface labels flagged answers instead of silently failing them.
 
 ### 1.4 Prompt mode remains the only offline path
-AI requests need a network connection and a configured key (in the browser or on the server). Offline, the app falls back to prompt mode and says so. The offline shell (`sw.js`) caches 28 application URLs; AI responses are never cached, and `/api/*` is excluded from the service worker so a cached health check can never misreport the deployment's mode.
+AI requests need a network connection and a configured key (in the browser or on the server). Offline, the app falls back to prompt mode and says so. The offline shell (`sw.js`) caches 29 application URLs; AI responses are never cached, and `/api/*` is excluded from the service worker so a cached health check can never misreport the deployment's mode.
 
 ### 1.5 Rate limits are per-instance and in memory
 `AI_RATE_LIMIT`, `AI_RATE_WINDOW_MS` and `AI_DAILY_CAP` are enforced in the server process. They reset on restart and are counted separately on each instance, so a multi-instance deployment can allow more traffic than the configured cap. The client IP comes from `x-forwarded-for`, which is trustworthy only behind a proxy that sets it (Render does). A shared store (Redis, D1) would be needed for strict global limits.

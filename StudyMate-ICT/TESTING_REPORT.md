@@ -124,7 +124,7 @@ Coverage: AI request validation, schema enforcement, provider failures and error
 - **A real AI provider.** Only a stubbed OpenAI-compatible endpoint was used; provider-specific CORS behaviour, model quality and rate limits were not exercised. Server-side live AI was not available in this environment.
 - **Screen readers.** Structure and labels were checked programmatically, not with NVDA, JAWS or VoiceOver.
 - **Safari, Firefox and real mobile devices.** Chromium emulation only.
-- **Deployment.** §4–§8 cover the local/preview origin from the 2.2.0 pass. The 2.4.0 build is deployed to both the preview and production demo environments; all twelve routes were re-checked at 1440px and 390px on both addresses (§7) and all 30 deployed files are byte-identical between the hosts. The AI path against a real provider remains untested on that deployment.
+- **Deployment.** §4–§7 cover the local/preview origin from the 2.2.0 pass. The 2.4.0 build is deployed to both the preview and production demo environments; all twelve routes were re-checked at 1440px and 390px on both addresses (§7) and all 30 deployed files are byte-identical between the hosts. The AI path against a real provider remains untested on that deployment.
 - **Performance budgets.** No Lighthouse run was performed; the app ships no third-party runtime dependencies.
 
 ---

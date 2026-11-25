@@ -47,7 +47,7 @@ OpenAI-compatible provider  ←  AI_API_KEY (server env only)
 - A learner can instead **bring their own key** (`js/local-ai.js`): it stays in their browser's LocalStorage and is sent only to the provider they chose, never to this server.
 - The server validates the request, applies timeouts and per-client/daily limits, then validates the model's JSON against a strict schema. Malformed output is a 502, not a half-drawn screen. The prompts and those checks live once, in `js/ai-contract.js`, and are applied identically on the browser path.
 - Without a key the endpoint answers `503 ai-not-configured` and the app stays in prompt mode, which needs no network at all.
-- The service worker precaches 28 app-shell URLs and never intercepts `/api/*`, so a cached health check cannot misreport the deployment. `build.sh` stamps its cache name with a hash of the built shell, so a browser holding an older worker cannot keep serving stale HTML, CSS or JS after a build.
+- The service worker precaches 29 app-shell URLs and never intercepts `/api/*`, so a cached health check cannot misreport the deployment. `build.sh` stamps its cache name with a hash of the built shell, so a browser holding an older worker cannot keep serving stale HTML, CSS or JS after a build.
 
 ## Interface and design system
 

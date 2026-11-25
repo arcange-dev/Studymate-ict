@@ -312,7 +312,7 @@ Older records normalise forward: every field is type-checked on load, unknown sh
 | Key exposure | Server env only; `/api/health` returns `{configured, provider, model}`; tests assert the key never appears in a response |
 | Prompt injection from the client | Messages are built server-side from validated fields; notes are inserted inside delimiters with explicit “only source” rules |
 | Model output injection | JSON schema + `textContent` rendering |
-| Abuse / cost | Per-client window limit, per-instance daily cap, 24 000-character body cap, 30 s timeout |
+| Abuse / cost | Per-client window limit, per-instance daily cap, 65 536-byte (64 KiB) body cap, 30 s timeout |
 | Cross-origin abuse | Same-origin only; foreign `Origin` → 403 |
 | Path traversal | `normalize(join(root, path))` prefix check; raw and encoded variants tested |
 | Clickjacking / sniffing | CSP, `X-Frame-Options: DENY`, `nosniff`, `Referrer-Policy`, minimal permissions policy |
