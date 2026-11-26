@@ -204,6 +204,6 @@ Still unresolved: [list].
 
 - **Satisfies:** Week 6 items 1–5 — two consenting testers, observed struggle, anonymised summary, at least three justified improvements, rerun results — once the sessions are actually run and the tables filled.
 - **Does not satisfy:** the social post requirement. The Wednesday "feedback" post and the Friday final-demonstration post still need to be published and linked in the submission.
-- **Does not replace:** the Week 4 ten-case grounded-assistant test set, which is a separate gap recorded in the report.
+- **Does not replace:** the Week 4 ten-case grounded-assistant test set, which is recorded separately in [`WEEK4_GROUNDED_TEST_SET.md`](WEEK4_GROUNDED_TEST_SET.md) at the prompt layer; its reply-level scoring is still open.
 
 Do not fill these tables from imagination. An empty row is defensible; a fabricated session is not.

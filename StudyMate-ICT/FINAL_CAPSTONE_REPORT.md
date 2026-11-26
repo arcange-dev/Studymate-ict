@@ -142,7 +142,14 @@ What was implemented:
 - A visible "required fallback in every answer" panel, so the learner can see the refusal contract before generating.
 - The same behaviour in the grounded prompt used by the app and in the manual workflow described in the user guide.
 
-What was **not** separately completed: the handbook's ten recorded Week 4 tests (six answerable, two absent, two override attempts) as a scored table. The refusal and injection rules are implemented and documented, but they were not run as a numbered test set with saved outputs, so they are not claimed as such here.
+**The ten recorded tests were run on 26 November 2026:** six answerable cases, two cases whose answer is absent from the notes, and two instruction-override attempts, executed against the production demo and recorded case by case in [`WEEK4_GROUNDED_TEST_SET.md`](WEEK4_GROUNDED_TEST_SET.md).
+
+Results, stated at the layer the live demo can actually be observed at:
+
+- **Prompt composition — 60/60 checks, 10/10 cases.** Every case produced a prompt that carries the notes verbatim inside the `<<<NOTES … NOTES>>>` fence, forbids outside knowledge, contains the exact refusal sentence, labels inference, and carries the injection rule. The notes were accepted in every case with no false rejection.
+- **Coverage heuristic — 5 exact, 1 partial, 4 false alarms, 0 dangerous false "supported".** It caught the absent case (G07) and erred towards caution on answerable questions; the partial case (G08) shows the documented weakness, where a topic the notes merely mention gets a mild warning instead of a refusal prediction.
+- **The first baseline run found a real defect.** The injection rule this section describes was missing from the shipped grounded prompt (0/10) although it was claimed here. The prompt engine was corrected, the suite re-run (54/54), and both hosts redeployed; the unchanged ten cases then passed 10/10, so the claim above is accurate for the current build. `PROMPTS_USED.md` was corrected to match.
+- **Replies were not scored.** The public demo runs in prompt mode with no key, so no model answer exists to score; refusal on G07 and G08, premise correction on G06 and override resistance on G09 and G10 are recorded as *expected* reply behaviour, explicitly not as observed passes. A reply-level score needs a key and is listed as further work.
 
 # 10. Week 5 — Capstone Development
 
@@ -235,7 +242,7 @@ What the project demonstrated:
 
 StudyMate ICT explores where prompt engineering genuinely helps an educational tool and where deterministic software does the job better. The result is an offline-first study assistant with twelve routes, six study tools, an inspectable prompt library, honest refusal behaviour and a documented evidence base.
 
-Further work would follow the gaps recorded above: a scored ten-case grounded-assistant test set, two consenting testers with an anonymised feedback and change log, a paid-provider end-to-end run, accessibility and cross-browser testing, and a provider-backed live mode that keeps the key server-side.
+Further work would follow the gaps recorded above: a reply-level score for the ten grounded-assistant cases (the prompt layer is now recorded in `WEEK4_GROUNDED_TEST_SET.md`), two consenting testers with an anonymised feedback and change log, a paid-provider end-to-end run, accessibility and cross-browser testing, and a provider-backed live mode that keeps the key server-side.
 
 # 17. References and Resources
 

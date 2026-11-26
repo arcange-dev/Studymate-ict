@@ -138,6 +138,7 @@ Manual browser checks during the 2.2.0 redesign (Chromium, Playwright): the dash
 - [`StudyMate-ICT/README.md`](StudyMate-ICT/README.md) — project overview and how to run it
 - [`StudyMate-ICT/FINAL_CAPSTONE_REPORT.md`](StudyMate-ICT/FINAL_CAPSTONE_REPORT.md) — final internship submission report
 - [`StudyMate-ICT/WEEK6_USER_TESTING_KIT.md`](StudyMate-ICT/WEEK6_USER_TESTING_KIT.md) — consent note, tester tasks, feedback form and change-log template
+- [`StudyMate-ICT/WEEK4_GROUNDED_TEST_SET.md`](StudyMate-ICT/WEEK4_GROUNDED_TEST_SET.md) — Week 4 ten-case grounded-assistant test set, run against the live demo with per-case results
 - [`StudyMate-ICT/PROJECT_DOCUMENTATION.md`](StudyMate-ICT/PROJECT_DOCUMENTATION.md) — architecture, features, data model, security
 - [`StudyMate-ICT/USER_GUIDE.md`](StudyMate-ICT/USER_GUIDE.md) — student-facing guide
 - [`StudyMate-ICT/TESTING_REPORT.md`](StudyMate-ICT/TESTING_REPORT.md) — test cases, results, what was not tested

@@ -164,7 +164,7 @@ A server-side AI proxy with a key and rate limits, JSON export/import for backup
 
 ---
 
-## 3-minute demonstration script (version 2.0)
+## 3-minute demonstration script (version 2.4.0)
 
 Rehearse this against the live URL in prompt mode. Do not claim the AI is live on the public demo — the chip says prompt mode, and the script says so too.
 
